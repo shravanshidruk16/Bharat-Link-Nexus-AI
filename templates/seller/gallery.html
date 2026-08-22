@@ -26,7 +26,10 @@
     </div>
 
     <h3 style="color: #ffffff; font-size: 1.1rem; margin-bottom: 0.25rem;">{{ p.name }}</h3>
-    <span style="color: var(--amber-gold); font-size: 0.85rem; display: block; margin-bottom: 0.5rem;">{{ p.category }} • ₹{{ "{:,.2f}".format(p.price) }}</span>
+    <div style="font-size: 0.8rem; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.35rem;">
+      🏬 Seller: {{ p.seller_name or (p.seller_profiles.business_name if p.seller_profiles else "Artisan Guild") }}
+    </div>
+    <span style="color: var(--text-muted); font-size: 0.85rem; display: block; margin-bottom: 0.5rem;">{{ p.category }} • ₹{{ "{:,.2f}".format(p.price) }}</span>
     <span style="background: rgba(16, 185, 129, 0.2); color: #34d399; padding: 0.2rem 0.6rem; border-radius: 0.4rem; font-size: 0.75rem; font-weight: bold;">
       ✓ Published to Buyer Search
     </span>

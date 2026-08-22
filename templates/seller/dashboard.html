@@ -10,7 +10,7 @@
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1.25rem; margin-bottom: 2.5rem;">
   <div class="glass-card">
-    <span style="color: var(--text-muted); font-size: 0.85rem;">My Published Products</span>
+    <span style="color: var(--text-muted); font-size: 0.85rem;">{% if is_admin %}Total Platform Products{% else %}My Published Products{% endif %}</span>
     <h2 style="font-size: 2.2rem; color: #ffffff; margin-top: 0.35rem;">{{ products|length }}</h2>
   </div>
   <div class="glass-card">
@@ -25,14 +25,14 @@
 
 <div class="glass-card">
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
-    <h3 style="color: #ffffff; font-size: 1.25rem;">My Product Catalog & Stock Status</h3>
+    <h3 style="color: #ffffff; font-size: 1.25rem;">{% if is_admin %}Platform Catalog & Artisan Stock Status{% else %}My Product Catalog & Stock Status{% endif %}</h3>
     <a href="/seller-central/products/new" class="btn-amber" style="padding: 0.45rem 1rem; font-size: 0.85rem;">+ Add Product</a>
   </div>
 
   <table>
     <thead>
       <tr>
-        <th>Product Name</th>
+        <th>Product & Seller Info</th>
         <th>Category & Region</th>
         <th>Price (INR)</th>
         <th>Available Stock</th>
@@ -43,7 +43,12 @@
     <tbody>
       {% for p in products %}
       <tr>
-        <td style="font-weight: bold; color: #ffffff;">{{ p.name }}</td>
+        <td style="font-weight: bold; color: #ffffff;">
+          <div>{{ p.name }}</div>
+          <div style="font-size: 0.78rem; color: var(--amber-gold); font-weight: bold; margin-top: 0.15rem;">
+            🏬 Seller: {{ p.seller_name or (p.seller_profiles.business_name if p.seller_profiles else "Artisan Guild") }}
+          </div>
+        </td>
         <td>{{ p.category }} ({{ p.region }})</td>
         <td style="color: var(--amber-gold); font-weight: bold;">₹{{ "{:,.2f}".format(p.price) }}</td>
         <td>{{ p.available_stock }} units</td>

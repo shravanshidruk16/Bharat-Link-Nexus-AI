@@ -198,6 +198,86 @@ class DatabaseService:
         return analytics
 
     @staticmethod
+    def get_admin_analytics():
+        client = get_supabase_client()
+        analytics = {
+            "is_admin": True,
+            "total_products_count": 0,
+            "total_sellers_count": 0,
+            "inquiries_count": 0,
+            "total_sourced_value": 0.0,
+            "delivered_orders_count": 0,
+            "delivered_sourced_value": 0.0,
+            "pending_orders_count": 0,
+            "top_selling_sellers": [],
+            "orders": []
+        }
+
+        try:
+            sellers = client.table("seller_profiles").select("*").execute()
+            analytics["total_sellers_count"] = len(sellers.data) if sellers.data else 0
+
+            prods = client.table("seller_products").select("*").eq("active", True).execute()
+            analytics["total_products_count"] = len(prods.data) if prods.data else 0
+
+            res = client.table("procurement_results").select("*, procurement_requests(raw_prompt, destination)").order("created_at", desc=True).execute()
+            if res.data:
+                orders = []
+                delivered_count = 0
+                delivered_val = 0.0
+                pending_count = 0
+
+                seller_stats = {}
+
+                for item in res.data:
+                    raw_req = item.get("procurement_requests") or {}
+                    order_status = item.get("status") or "Pending"
+                    total_cost = float(item.get("total_cost") or 0.0)
+                    s_name = item.get("supplier_name", "Artisan Seller")
+
+                    if s_name not in seller_stats:
+                        seller_stats[s_name] = {"seller_name": s_name, "total_orders": 0, "total_value": 0.0, "delivered_orders": 0}
+
+                    seller_stats[s_name]["total_orders"] += 1
+                    seller_stats[s_name]["total_value"] += total_cost
+
+                    if order_status == "Stock Delivered":
+                        delivered_count += 1
+                        delivered_val += total_cost
+                        seller_stats[s_name]["delivered_orders"] += 1
+                    else:
+                        pending_count += 1
+
+                    orders.append({
+                        "id": item["id"],
+                        "createdAt": item["created_at"],
+                        "rawPrompt": raw_req.get("raw_prompt") or f"Order for {item['quantity']} units",
+                        "supplierName": s_name,
+                        "productName": item["product_name"],
+                        "quantity": item["quantity"],
+                        "totalCost": total_cost,
+                        "deliveryDays": item["delivery_days"],
+                        "riskLevel": item["risk_level"],
+                        "status": order_status,
+                        "destination": raw_req.get("destination") or "International"
+                    })
+
+                analytics["orders"] = orders
+                analytics["inquiries_count"] = len(orders)
+                analytics["total_sourced_value"] = sum(o["totalCost"] for o in orders)
+                analytics["delivered_orders_count"] = delivered_count
+                analytics["delivered_sourced_value"] = delivered_val
+                analytics["pending_orders_count"] = pending_count
+
+                # Sort sellers by total revenue & order volume
+                sorted_sellers = sorted(seller_stats.values(), key=lambda x: x["total_value"], reverse=True)
+                analytics["top_selling_sellers"] = sorted_sellers
+        except Exception as e:
+            print("Admin analytics query notice:", e)
+
+        return analytics
+
+    @staticmethod
     def save_procurement_run(req_prompt, result_data, user_id=None):
         client = get_supabase_client()
         try:

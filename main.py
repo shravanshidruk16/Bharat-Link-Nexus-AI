@@ -267,20 +267,29 @@ def seller_dashboard(request: Request):
     if not seller_user:
         return RedirectResponse(url="/seller-central/login", status_code=303)
 
+    user = seller_user.get("user") or {}
+    is_admin = (user.get("role") == "admin" or user.get("email") == "admin@bharatlink.com")
+
     seller_info = seller_user.get("seller") if seller_user else None
     seller_id = seller_info.get("id") if seller_info else None
     seller_business_name = seller_info.get("business_name") if seller_info else None
 
-    products = DatabaseService.get_products(seller_id=seller_id) if seller_id else []
-    sellers = DatabaseService.get_sellers()
-    analytics = DatabaseService.get_seller_analytics(seller_business_name=seller_business_name, seller_id=seller_id)
+    if is_admin:
+        products = DatabaseService.get_products()
+        sellers = DatabaseService.get_sellers(active_only=False)
+        analytics = DatabaseService.get_admin_analytics()
+    else:
+        products = DatabaseService.get_products(seller_id=seller_id) if seller_id else []
+        sellers = DatabaseService.get_sellers()
+        analytics = DatabaseService.get_seller_analytics(seller_business_name=seller_business_name, seller_id=seller_id)
 
     return templates.TemplateResponse(request=request, name="seller/dashboard.html", context={
         "seller_user": seller_user,
         "active_page": "dashboard",
         "products": products,
         "sellers": sellers,
-        "analytics": analytics
+        "analytics": analytics,
+        "is_admin": is_admin
     })
 
 @app.get("/seller-central/products", response_class=HTMLResponse)
@@ -289,14 +298,22 @@ def seller_products(request: Request):
     if not seller_user:
         return RedirectResponse(url="/seller-central/login", status_code=303)
 
+    user = seller_user.get("user") or {}
+    is_admin = (user.get("role") == "admin" or user.get("email") == "admin@bharatlink.com")
+
     seller_info = seller_user.get("seller") if seller_user else None
     seller_id = seller_info.get("id") if seller_info else None
 
-    products = DatabaseService.get_products(seller_id=seller_id) if seller_id else []
+    if is_admin:
+        products = DatabaseService.get_products()
+    else:
+        products = DatabaseService.get_products(seller_id=seller_id) if seller_id else []
+
     return templates.TemplateResponse(request=request, name="seller/products.html", context={
         "seller_user": seller_user,
         "active_page": "products",
-        "products": products
+        "products": products,
+        "is_admin": is_admin
     })
 
 @app.get("/seller-central/products/new", response_class=HTMLResponse)
@@ -376,18 +393,26 @@ def seller_inventory(request: Request):
     if not seller_user:
         return RedirectResponse(url="/seller-central/login", status_code=303)
 
+    user = seller_user.get("user") or {}
+    is_admin = (user.get("role") == "admin" or user.get("email") == "admin@bharatlink.com")
+
     seller_info = seller_user.get("seller") if seller_user else None
     seller_business_name = seller_info.get("business_name") if seller_info else None
     seller_id = seller_info.get("id") if seller_info else None
 
-    products = DatabaseService.get_products(seller_id=seller_id) if seller_id else []
-    analytics = DatabaseService.get_seller_analytics(seller_business_name=seller_business_name, seller_id=seller_id)
+    if is_admin:
+        products = DatabaseService.get_products()
+        analytics = DatabaseService.get_admin_analytics()
+    else:
+        products = DatabaseService.get_products(seller_id=seller_id) if seller_id else []
+        analytics = DatabaseService.get_seller_analytics(seller_business_name=seller_business_name, seller_id=seller_id)
 
     return templates.TemplateResponse(request=request, name="seller/inventory.html", context={
         "seller_user": seller_user,
         "active_page": "inventory",
         "products": products,
-        "analytics": analytics
+        "analytics": analytics,
+        "is_admin": is_admin
     })
 
 @app.post("/seller-central/inventory/update")
@@ -402,26 +427,62 @@ def seller_order_status_update(req: OrderStatusUpdateRequest):
 @app.get("/seller-central/reviews", response_class=HTMLResponse)
 def seller_reviews(request: Request):
     seller_user = get_current_seller(request)
+    user = seller_user.get("user") or {}
+    is_admin = (user.get("role") == "admin" or user.get("email") == "admin@bharatlink.com")
+
     seller_info = seller_user.get("seller") if seller_user else None
     seller_business_name = seller_info.get("business_name") if seller_info else None
     seller_id = seller_info.get("id") if seller_info else None
 
-    analytics = DatabaseService.get_seller_analytics(seller_business_name=seller_business_name, seller_id=seller_id)
+    if is_admin:
+        analytics = DatabaseService.get_admin_analytics()
+    else:
+        analytics = DatabaseService.get_seller_analytics(seller_business_name=seller_business_name, seller_id=seller_id)
 
     return templates.TemplateResponse(request=request, name="seller/reviews.html", context={
         "seller_user": seller_user,
         "active_page": "reviews",
-        "analytics": analytics
+        "analytics": analytics,
+        "is_admin": is_admin
     })
 
 @app.get("/seller-central/gallery", response_class=HTMLResponse)
 def seller_gallery(request: Request):
     seller_user = get_current_seller(request)
+    user = seller_user.get("user") or {}
+    is_admin = (user.get("role") == "admin" or user.get("email") == "admin@bharatlink.com")
+
     seller_info = seller_user.get("seller") if seller_user else None
     seller_id = seller_info.get("id") if seller_info else None
 
-    products = DatabaseService.get_products(seller_id=seller_id) if seller_id else []
-    return templates.TemplateResponse(request=request, name="seller/gallery.html", context={"seller_user": seller_user, "active_page": "gallery", "products": products})
+    if is_admin:
+        products = DatabaseService.get_products()
+    else:
+        products = DatabaseService.get_products(seller_id=seller_id) if seller_id else []
+
+    return templates.TemplateResponse(request=request, name="seller/gallery.html", context={"seller_user": seller_user, "active_page": "gallery", "products": products, "is_admin": is_admin})
+
+@app.get("/seller-central/analytics", response_class=HTMLResponse)
+def seller_analytics(request: Request):
+    seller_user = get_current_seller(request)
+    user = seller_user.get("user") or {}
+    is_admin = (user.get("role") == "admin" or user.get("email") == "admin@bharatlink.com")
+
+    seller_info = seller_user.get("seller") if seller_user else None
+    seller_business_name = seller_info.get("business_name") if seller_info else None
+    seller_id = seller_info.get("id") if seller_info else None
+
+    if is_admin:
+        analytics = DatabaseService.get_admin_analytics()
+    else:
+        analytics = DatabaseService.get_seller_analytics(seller_business_name=seller_business_name, seller_id=seller_id)
+
+    return templates.TemplateResponse(request=request, name="seller/analytics.html", context={
+        "seller_user": seller_user,
+        "active_page": "analytics",
+        "analytics": analytics,
+        "is_admin": is_admin
+    })
 
 @app.get("/seller-central/analytics", response_class=HTMLResponse)
 def seller_analytics(request: Request):

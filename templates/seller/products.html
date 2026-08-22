@@ -15,11 +15,23 @@
   window.productsData = {{ products | tojson | safe }};
 </script>
 
+{% if is_admin %}
+<div style="background: rgba(245, 158, 11, 0.15); border: 1px solid var(--border-amber); padding: 0.85rem 1.25rem; border-radius: 0.6rem; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+  <div>
+    <strong style="color: var(--amber-gold); font-size: 1rem;">👑 BHARATLINK GLOBAL ADMIN CATALOG VIEW</strong>
+    <p style="color: #ffffff; font-size: 0.85rem; margin-top: 0.2rem;">Viewing all active products published across all registered artisan sellers on the platform.</p>
+  </div>
+  <span style="background: rgba(16, 185, 129, 0.2); color: #34d399; padding: 0.3rem 0.75rem; border-radius: 0.4rem; font-size: 0.82rem; font-weight: bold;">
+    {{ products|length }} Platform Products
+  </span>
+</div>
+{% endif %}
+
 <div class="glass-card">
   <table>
     <thead>
       <tr>
-        <th>Product Name</th>
+        <th>Product & Seller Info</th>
         <th>Category</th>
         <th>Unit Price</th>
         <th>Stock Level</th>
@@ -33,7 +45,10 @@
       <tr>
         <td>
           <div style="font-weight: bold; color: #ffffff; font-size: 1.05rem;">{{ p.name }}</div>
-          <div style="font-size: 0.8rem; color: var(--text-muted);">{{ p.description[:50] if p.description else "GI Certified Authentic" }}...</div>
+          <div style="font-size: 0.8rem; color: var(--amber-gold); font-weight: bold; margin-top: 0.15rem;">
+            🏬 Seller: {{ p.seller_name or (p.seller_profiles.business_name if p.seller_profiles else "Artisan Guild") }}
+          </div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.15rem;">{{ p.description[:50] if p.description else "GI Certified Authentic" }}...</div>
         </td>
         <td><span style="background: rgba(245, 158, 11, 0.15); border: 1px solid var(--border-amber); color: var(--amber-gold); padding: 0.2rem 0.6rem; border-radius: 0.4rem; font-size: 0.82rem;">{{ p.category }}</span></td>
         <td style="color: #34d399; font-weight: bold; font-size: 1.05rem;">₹{{ "{:,.2f}".format(p.price) }}</td>

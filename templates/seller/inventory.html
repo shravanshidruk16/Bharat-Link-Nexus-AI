@@ -25,7 +25,12 @@
     <tbody>
       {% for p in products %}
       <tr>
-        <td style="font-weight: bold; color: #ffffff;">{{ p.name }}</td>
+        <td style="font-weight: bold; color: #ffffff;">
+          <div>{{ p.name }}</div>
+          <div style="font-size: 0.78rem; color: var(--amber-gold); font-weight: bold; margin-top: 0.15rem;">
+            🏬 Seller: {{ p.seller_name or (p.seller_profiles.business_name if p.seller_profiles else "Artisan Guild") }}
+          </div>
+        </td>
         <td><span style="background: rgba(245, 158, 11, 0.15); border: 1px solid var(--border-amber); color: var(--amber-gold); padding: 0.2rem 0.6rem; border-radius: 0.4rem; font-size: 0.82rem;">{{ p.category }}</span></td>
         <td style="color: var(--amber-gold); font-weight: bold; font-size: 1.1rem;">{{ p.available_stock }} units</td>
         <td>{{ p.minimum_order_quantity }} units</td>
