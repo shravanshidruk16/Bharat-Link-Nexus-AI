@@ -3,12 +3,12 @@
 {% block title %}Product Image Gallery — BharatLink Seller Central{% endblock %}
 
 {% block content %}
-<div style="margin-bottom: 2.5rem; display: flex; justify-content: space-between; align-items: center;">
+<div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
   <div>
-    <h1 style="font-size: 2.5rem; color: #ffffff; margin-bottom: 0.5rem;">Product Image Gallery</h1>
-    <p style="color: var(--amber-gold); font-size: 1.1rem; font-weight: bold;">High-Resolution Product Photos & Catalog Visuals</p>
+    <h1 style="font-size: clamp(1.6rem, 3.5vw, 2.5rem); color: #ffffff; margin-bottom: 0.5rem;">Product Image Gallery</h1>
+    <p style="color: var(--amber-gold); font-size: clamp(0.9rem, 1.8vw, 1.1rem); font-weight: bold;">High-Resolution Product Photos & Catalog Visuals</p>
   </div>
-  <a href="/seller-central/products/new" class="btn-amber">+ Upload New Product</a>
+  <a href="/seller-central/products/new" class="btn-amber" style="padding: 0.65rem 1.25rem; font-size: 0.95rem;">+ Upload New Product</a>
 </div>
 
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); gap: 1.5rem;">

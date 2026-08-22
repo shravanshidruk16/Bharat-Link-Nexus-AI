@@ -3,30 +3,30 @@
 {% block title %}Dashboard — BharatLink Seller Central{% endblock %}
 
 {% block content %}
-<div style="margin-bottom: 2.5rem;">
-  <h1 style="font-size: 2.5rem; color: #ffffff; margin-bottom: 0.5rem;">Seller Management Dashboard</h1>
-  <p style="color: var(--text-muted); font-size: 1.1rem;">Monitor active products, inventory stock health, and incoming buyer procurement queries.</p>
+<div style="margin-bottom: 2rem;">
+  <h1 style="font-size: clamp(1.6rem, 3.5vw, 2.5rem); color: #ffffff; margin-bottom: 0.5rem;">Seller Management Dashboard</h1>
+  <p style="color: var(--text-muted); font-size: clamp(0.9rem, 1.8vw, 1.1rem);">Monitor active products, inventory stock health, and incoming buyer procurement queries.</p>
 </div>
 
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1.25rem; margin-bottom: 2.5rem;">
   <div class="glass-card">
-    <span style="color: var(--text-muted); font-size: 0.9rem;">My Published Products</span>
-    <h2 style="font-size: 2.5rem; color: #ffffff; margin-top: 0.5rem;">{{ products|length }}</h2>
+    <span style="color: var(--text-muted); font-size: 0.85rem;">My Published Products</span>
+    <h2 style="font-size: 2.2rem; color: #ffffff; margin-top: 0.35rem;">{{ products|length }}</h2>
   </div>
   <div class="glass-card">
-    <span style="color: var(--text-muted); font-size: 0.9rem;">Registered Artisan Network</span>
-    <h2 style="font-size: 2.5rem; color: var(--amber-gold); margin-top: 0.5rem;">{{ sellers|length }}</h2>
+    <span style="color: var(--text-muted); font-size: 0.85rem;">Registered Artisan Network</span>
+    <h2 style="font-size: 2.2rem; color: var(--amber-gold); margin-top: 0.35rem;">{{ sellers|length }}</h2>
   </div>
   <div class="glass-card">
-    <span style="color: var(--text-muted); font-size: 0.9rem;">GI Certification Status</span>
-    <h2 style="font-size: 1.8rem; color: #34d399; margin-top: 0.75rem;">✓ Verified Artisan Guild</h2>
+    <span style="color: var(--text-muted); font-size: 0.85rem;">GI Certification Status</span>
+    <h2 style="font-size: 1.5rem; color: #34d399; margin-top: 0.5rem;">✓ Verified Artisan Guild</h2>
   </div>
 </div>
 
 <div class="glass-card">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-    <h3 style="color: #ffffff; font-size: 1.4rem;">My Product Catalog & Stock Status</h3>
-    <a href="/seller-central/products/new" class="btn-amber" style="padding: 0.5rem 1.25rem; font-size: 0.9rem;">+ Add Product</a>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+    <h3 style="color: #ffffff; font-size: 1.25rem;">My Product Catalog & Stock Status</h3>
+    <a href="/seller-central/products/new" class="btn-amber" style="padding: 0.45rem 1rem; font-size: 0.85rem;">+ Add Product</a>
   </div>
 
   <table>

@@ -3,12 +3,12 @@
 {% block title %}Products — BharatLink Seller Central{% endblock %}
 
 {% block content %}
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
   <div>
-    <h1 style="font-size: 2.5rem; color: #ffffff; margin-bottom: 0.5rem;">Product Catalog Management</h1>
-    <p style="color: var(--text-muted); font-size: 1.1rem;">Manage artisan products, unit prices, image links, stock counts, or remove catalog items.</p>
+    <h1 style="font-size: clamp(1.6rem, 3.5vw, 2.5rem); color: #ffffff; margin-bottom: 0.5rem;">Product Catalog Management</h1>
+    <p style="color: var(--text-muted); font-size: clamp(0.9rem, 1.8vw, 1.1rem);">Manage artisan products, unit prices, image links, stock counts, or remove catalog items.</p>
   </div>
-  <a href="/seller-central/products/new" class="btn-amber" style="font-size: 1rem; padding: 0.75rem 1.5rem;">+ Add New Product</a>
+  <a href="/seller-central/products/new" class="btn-amber" style="font-size: 0.95rem; padding: 0.65rem 1.25rem;">+ Add New Product</a>
 </div>
 
 <script>
