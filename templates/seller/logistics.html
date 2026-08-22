@@ -1,0 +1,50 @@
+{% extends "seller/base_seller.html" %}
+
+{% block title %}Logistics Gateway — BharatLink Seller Central{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2.5rem;">
+  <h1 style="font-size: 2.5rem; color: #ffffff; margin-bottom: 0.5rem;">Multi-Modal Logistics Gateway</h1>
+  <p style="color: var(--text-muted); font-size: 1.1rem;">Calculate freight rates across Air, Rail, and Road transport corridors.</p>
+</div>
+
+<div class="glass-card-amber" style="max-width: 45rem; margin-bottom: 2rem;">
+  <h3 style="color: var(--amber-gold); font-size: 1.3rem; margin-bottom: 1rem;">Freight Rate Calculator</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+    <div>
+      <label style="color: var(--text-muted); font-size: 0.85rem;">Origin City</label>
+      <input type="text" value="Maharashtra (Yeola/Mumbai)" readonly style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff; margin-top: 0.25rem;">
+    </div>
+    <div>
+      <label style="color: var(--text-muted); font-size: 0.85rem;">Destination City</label>
+      <input type="text" value="Pune, India" readonly style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff; margin-top: 0.25rem;">
+    </div>
+  </div>
+</div>
+
+<div class="glass-card">
+  <h3 style="color: #ffffff; font-size: 1.3rem; margin-bottom: 1rem;">Calculated Corridor Transport Routes</h3>
+  <div style="display: grid; gap: 1rem;">
+    <div style="background: rgba(15, 23, 42, 0.7); padding: 1.25rem; border-radius: 0.75rem; border: 1px solid var(--border-amber); display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <div style="color: var(--amber-gold); font-weight: bold; font-size: 1.1rem;">Air Freight Express</div>
+        <div style="color: var(--text-muted); font-size: 0.9rem;">Carrier: Air India Cargo / DHL Express</div>
+      </div>
+      <div>
+        <div style="color: #34d399; font-weight: bold;">3 Days ETA</div>
+        <div style="color: var(--amber-gold); font-weight: bold;">₹250 / kg</div>
+      </div>
+    </div>
+    <div style="background: rgba(15, 23, 42, 0.7); padding: 1.25rem; border-radius: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <div style="color: #ffffff; font-weight: bold; font-size: 1.1rem;">Rail Container Express</div>
+        <div style="color: var(--text-muted); font-size: 0.9rem;">Carrier: CONCOR Indian Railways</div>
+      </div>
+      <div>
+        <div style="color: #34d399; font-weight: bold;">2 Days ETA</div>
+        <div style="color: var(--amber-gold); font-weight: bold;">₹110 / kg</div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

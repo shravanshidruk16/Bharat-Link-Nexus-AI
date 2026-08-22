@@ -1,0 +1,84 @@
+{% extends "seller/base_seller.html" %}
+
+{% block title %}Add Product — BharatLink Seller Central{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2.5rem;">
+  <h1 style="font-size: 2.5rem; color: #ffffff; margin-bottom: 0.5rem;">Add New Artisan Product</h1>
+  <p style="color: var(--text-muted); font-size: 1.1rem;">Publish a new handicraft product into the Supabase database with image links and categories for global buyer discovery.</p>
+</div>
+
+<div class="glass-card-amber" style="max-width: 48rem;">
+  <form action="/seller-central/products/new" method="POST">
+    <div style="display: grid; gap: 1.25rem;">
+      <div>
+        <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">Product Name</label>
+        <input type="text" name="name" required placeholder="e.g. Authentic Paithani Silk Saree" style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
+      </div>
+
+      <div>
+        <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">Description</label>
+        <textarea name="description" rows="3" required placeholder="Detailed artisan craft description, weaving techniques, GI tag authenticity..." style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;"></textarea>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div>
+          <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">Product Category</label>
+          <select name="category" required style="width: 100%; background: rgba(9, 15, 33, 0.9); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff; font-weight: 500;">
+            <option value="Textiles & Apparel">Textiles & Apparel</option>
+            <option value="Handicrafts & Handloom">Handicrafts & Handloom</option>
+            <option value="Jewellery & Accessories">Jewellery & Accessories</option>
+            <option value="Art & Paintings">Art & Paintings</option>
+            <option value="Home & Lifestyle">Home & Lifestyle</option>
+            <option value="Food & Beverages">Food & Beverages</option>
+            <option value="Natural & Organic Products">Natural & Organic Products</option>
+            <option value="Pottery & Ceramics">Pottery & Ceramics</option>
+            <option value="Wood & Bamboo Crafts">Wood & Bamboo Crafts</option>
+            <option value="Metal Crafts">Metal Crafts</option>
+            <option value="Agricultural Products">Agricultural Products</option>
+            <option value="Beauty & Wellness">Beauty & Wellness</option>
+            <option value="Leather Craft & Goods">Leather Craft & Goods</option>
+            <option value="Stone & Marble Crafts">Stone & Marble Crafts</option>
+            <option value="Glass & Crystal Craft">Glass & Crystal Craft</option>
+            <option value="Toys & Traditional Games">Toys & Traditional Games</option>
+            <option value="Musical Instruments">Musical Instruments</option>
+            <option value="Paper & Papier-Mâché Crafts">Paper & Papier-Mâché Crafts</option>
+            <option value="Spiritual & Pooja Essentials">Spiritual & Pooja Essentials</option>
+            <option value="Furniture & Wooden Decor">Furniture & Wooden Decor</option>
+          </select>
+        </div>
+
+        <div>
+          <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">Origin State / Region</label>
+          <input type="text" name="region" value="Maharashtra" required style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+        <div>
+          <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">Unit Price (INR ₹)</label>
+          <input type="number" step="0.01" name="price" value="3500" required style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
+        </div>
+
+        <div>
+          <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">Available Stock</label>
+          <input type="number" name="availableStock" value="100" required style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
+        </div>
+
+        <div>
+          <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">Weight (kg)</label>
+          <input type="number" step="0.1" name="weightKg" value="0.5" required style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
+        </div>
+      </div>
+
+      <div>
+        <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">Product Image Link URL</label>
+        <input type="url" name="imageUrl" placeholder="https://images.unsplash.com/photo-1610030469983-98e550d6193c" style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
+        <span style="color: var(--text-muted); font-size: 0.8rem; display: block; margin-top: 0.3rem;">Paste a direct image URL (e.g. Unsplash, Imgur, Google Drive public image link).</span>
+      </div>
+
+      <button type="submit" class="btn-amber" style="margin-top: 1rem; padding: 1rem; font-size: 1.1rem;">Publish Product to Catalog →</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

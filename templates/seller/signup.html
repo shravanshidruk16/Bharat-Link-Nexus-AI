@@ -1,0 +1,101 @@
+{% extends "seller/base_seller.html" %}
+
+{% block title %}Register Artisan Seller Account — BharatLink Seller Central{% endblock %}
+
+{% block content %}
+<div style="max-width: 34rem; margin: 3rem auto;">
+  <div class="glass-card-amber">
+    <h2 style="font-size: 2rem; color: #ffffff; margin-bottom: 0.5rem; text-align: center;">Register Artisan Seller Account</h2>
+    <p style="color: var(--amber-gold); text-align: center; margin-bottom: 2rem;">Publish your artisan products to institutional global buyers</p>
+
+    {% if error %}
+    <div style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 1.5rem; font-size: 0.9rem;">
+      {{ error }}
+    </div>
+    {% endif %}
+
+    {% if pending_msg %}
+    <div style="background: rgba(245, 158, 11, 0.2); border: 1px solid var(--amber-gold); color: #fef08a; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; text-align: center;">
+      <h3 style="font-size: 1.1rem; color: var(--amber-gold); margin-bottom: 0.25rem;">Registration Submitted!</h3>
+      <p style="font-size: 0.9rem;">{{ pending_msg }}</p>
+    </div>
+    {% endif %}
+
+    <form action="/seller-central/signup" method="POST">
+      <div style="margin-bottom: 1.25rem;">
+        <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">Business / Weaver Guild Name</label>
+        <input type="text" name="business_name" required placeholder="Yeola Master Weavers Collective" style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
+      </div>
+
+      <div style="margin-bottom: 1.25rem;">
+        <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">Contact Representative Name</label>
+        <input type="text" name="contact_person" required placeholder="Rameshwar Yeole" style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+        <div>
+          <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">Contact Phone Number</label>
+          <input type="tel" name="phone" required placeholder="+91 98230 12345" style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
+        </div>
+        <div>
+          <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">WhatsApp Number</label>
+          <input type="tel" name="whatsapp_number" required placeholder="+91 98230 12345" style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+        <div>
+          <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">State</label>
+          <input type="text" name="state" required placeholder="Maharashtra" style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
+        </div>
+        <div>
+          <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">City / District</label>
+          <input type="text" name="city" required placeholder="Yeola" style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
+        </div>
+      </div>
+
+      <div style="margin-bottom: 1.25rem;">
+        <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">Craft Category</label>
+        <select name="craft_category" style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
+          <option value="Textiles & Apparel">Textiles & Apparel</option>
+          <option value="Handicrafts & Handloom">Handicrafts & Handloom</option>
+          <option value="Jewellery & Accessories">Jewellery & Accessories</option>
+          <option value="Art & Paintings">Art & Paintings</option>
+          <option value="Home & Lifestyle">Home & Lifestyle</option>
+          <option value="Food & Beverages">Food & Beverages</option>
+          <option value="Natural & Organic Products">Natural & Organic Products</option>
+          <option value="Pottery & Ceramics">Pottery & Ceramics</option>
+          <option value="Wood & Bamboo Crafts">Wood & Bamboo Crafts</option>
+          <option value="Metal Crafts">Metal Crafts</option>
+          <option value="Agricultural Products">Agricultural Products</option>
+          <option value="Beauty & Wellness">Beauty & Wellness</option>
+          <option value="Religious & Cultural Products">Religious & Cultural Products</option>
+          <option value="Toys & Traditional Games">Toys & Traditional Games</option>
+          <option value="Leather & Accessories">Leather & Accessories</option>
+          <option value="Gifts & Souvenirs">Gifts & Souvenirs</option>
+          <option value="Craft Supplies & Materials">Craft Supplies & Materials</option>
+          <option value="MSME & Manufactured Goods">MSME & Manufactured Goods</option>
+          <option value="Fibres & Natural Materials">Fibres & Natural Materials</option>
+          <option value="Other Indian Products">Other Indian Products</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom: 1.25rem;">
+        <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">Seller Email Address</label>
+        <input type="email" name="email" required placeholder="contact@yeola-weavers.org" style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
+      </div>
+
+      <div style="margin-bottom: 2rem;">
+        <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">Password</label>
+        <input type="password" name="password" required placeholder="••••••••" style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
+      </div>
+
+      <button type="submit" class="btn-amber" style="width: 100%; padding: 0.85rem; font-size: 1.1rem;">Submit Registration for Verification →</button>
+    </form>
+
+    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.95rem; color: var(--text-muted);">
+      Already registered? <a href="/seller-central/login" style="color: var(--amber-gold); font-weight: bold;">Sign In</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

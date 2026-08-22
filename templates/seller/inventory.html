@@ -1,0 +1,148 @@
+{% extends "seller/base_seller.html" %}
+
+{% block title %}Inventory & Fulfillment Control — BharatLink Seller Central{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2.5rem;">
+  <h1 style="font-size: 2.5rem; color: #ffffff; margin-bottom: 0.5rem;">Inventory Control & Order Fulfillment</h1>
+  <p style="color: var(--amber-gold); font-size: 1.1rem; font-weight: bold;">Manage warehouse stock counts and update buyer order delivery status (Stock Delivered, Pending, Not Accepted).</p>
+</div>
+
+<!-- Section A: Catalog Live Stock Level Control -->
+<div class="glass-card" style="margin-bottom: 3rem;">
+  <h3 style="color: #ffffff; font-size: 1.4rem; margin-bottom: 1.5rem;">Warehouse Catalog Live Stock Levels</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Product Name</th>
+        <th>Category</th>
+        <th>Live Stock Level</th>
+        <th>MOQ</th>
+        <th>Lead Time</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in products %}
+      <tr>
+        <td style="font-weight: bold; color: #ffffff;">{{ p.name }}</td>
+        <td><span style="background: rgba(245, 158, 11, 0.15); border: 1px solid var(--border-amber); color: var(--amber-gold); padding: 0.2rem 0.6rem; border-radius: 0.4rem; font-size: 0.82rem;">{{ p.category }}</span></td>
+        <td style="color: var(--amber-gold); font-weight: bold; font-size: 1.1rem;">{{ p.available_stock }} units</td>
+        <td>{{ p.minimum_order_quantity }} units</td>
+        <td>2 Days</td>
+        <td>
+          <button type="button" onclick="quickAdjustStock('{{ p.id }}', '{{ p.name }}', {{ p.available_stock }})" class="btn-amber" style="padding: 0.35rem 0.75rem; font-size: 0.85rem;">
+            ⚡ Adjust Stock Level
+          </button>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">No products listed in catalog yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Section B: Buyer Orders Fulfillment Status Tracking -->
+<div class="glass-card-amber">
+  <h3 style="color: #ffffff; font-size: 1.4rem; margin-bottom: 0.5rem;">Buyer Sourcing Orders & Delivery Status</h3>
+  <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">Mark orders as <strong>Stock Delivered</strong> when dispatched to record your verified revenue in the Analytics tab.</p>
+
+  {% if analytics.orders and analytics.orders|length > 0 %}
+  <table>
+    <thead>
+      <tr>
+        <th>Order Date & Prompt</th>
+        <th>Product Sourced</th>
+        <th>Quantity</th>
+        <th>Total Value</th>
+        <th>Current Status</th>
+        <th>Fulfillment Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for o in analytics.orders %}
+      <tr>
+        <td>
+          <div style="color: var(--amber-gold); font-size: 0.85rem;">{{ o.createdAt }}</div>
+          <div style="color: #ffffff; font-size: 0.95rem; margin-top: 0.2rem;">"{{ o.rawPrompt }}"</div>
+        </td>
+        <td style="font-weight: bold; color: #ffffff;">{{ o.productName }}</td>
+        <td style="color: var(--amber-gold); font-weight: bold;">{{ o.quantity }} units</td>
+        <td style="color: #34d399; font-weight: bold;">₹{{ "{:,.2f}".format(o.totalCost) }}</td>
+        <td>
+          {% if o.status == "Stock Delivered" %}
+            <span style="background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #34d399; padding: 0.35rem 0.75rem; border-radius: 9999px; font-weight: bold; font-size: 0.85rem;">✓ Stock Delivered</span>
+          {% elif o.status == "Not Accepted" %}
+            <span style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5; padding: 0.35rem 0.75rem; border-radius: 9999px; font-weight: bold; font-size: 0.85rem;">✕ Not Accepted</span>
+          {% else %}
+            <span style="background: rgba(245, 158, 11, 0.2); border: 1px solid var(--border-amber); color: var(--amber-gold); padding: 0.35rem 0.75rem; border-radius: 9999px; font-weight: bold; font-size: 0.85rem;">⏳ Pending Delivery</span>
+          {% endif %}
+        </td>
+        <td>
+          <select onchange="updateOrderStatus('{{ o.id }}', this.value)" style="background: rgba(9, 15, 33, 0.9); border: 1px solid var(--border-amber); color: #ffffff; padding: 0.4rem 0.75rem; border-radius: 0.4rem; font-size: 0.85rem; font-weight: bold; cursor: pointer;">
+            <option value="Pending" {% if o.status == 'Pending' %}selected{% endif %}>⏳ Pending</option>
+            <option value="Stock Delivered" {% if o.status == 'Stock Delivered' %}selected{% endif %}>✓ Stock Delivered</option>
+            <option value="Not Accepted" {% if o.status == 'Not Accepted' %}selected{% endif %}>✕ Not Accepted</option>
+          </select>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div style="text-align: center; padding: 2.5rem; background: rgba(9, 15, 33, 0.6); border-radius: 0.75rem; border: 1px dashed var(--border-amber);">
+    <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">📦</div>
+    <h4 style="color: #ffffff; font-size: 1.1rem; margin-bottom: 0.4rem;">No Buyer Orders Available to Update</h4>
+    <p style="color: var(--text-muted); font-size: 0.9rem;">When buyers select your products in AI Procurement Studio, orders will appear here for stock delivery tracking.</p>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+function quickAdjustStock(productId, productName, currentStock) {
+  const newStock = prompt(`Enter updated live warehouse stock for "${productName}":`, currentStock);
+  if (newStock === null || newStock.trim() === "") return;
+  const count = parseInt(newStock, 10);
+  if (isNaN(count) || count < 0) {
+    alert("Please enter a valid non-negative number.");
+    return;
+  }
+
+  fetch('/seller-central/inventory/update', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ productId: productId, availableStock: count })
+  }).then(res => res.json()).then(data => {
+    if (data.success) {
+      window.location.reload();
+    } else {
+      alert("Error updating stock: " + (data.error || "Unknown error"));
+    }
+  }).catch(err => {
+    console.error(err);
+    alert("Network error updating stock count.");
+  });
+}
+
+function updateOrderStatus(orderId, newStatus) {
+  fetch('/seller-central/inventory/update-order-status', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ orderId: orderId, status: newStatus })
+  }).then(res => res.json()).then(data => {
+    if (data.success) {
+      alert(`Order status updated to "${newStatus}"! Analytics tab updated.`);
+      window.location.reload();
+    } else {
+      alert("Error updating status: " + (data.error || "Unknown error"));
+    }
+  }).catch(err => {
+    console.error(err);
+    alert("Network error updating order status.");
+  });
+}
+</script>
+{% endblock %}

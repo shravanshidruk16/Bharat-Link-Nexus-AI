@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Saved Recommendations — BharatLink Nexus AI{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2.5rem;">
+  <h1 style="font-size: 2.5rem; color: #ffffff; margin-bottom: 0.5rem;">Saved Procurement Plans</h1>
+  <p style="color: var(--text-muted); font-size: 1.1rem;">Bookmarked artisan recommendation plans ready for seller inquiry and order confirmation.</p>
+</div>
+
+<script>
+  window.historyData = {{ history | tojson | safe }};
+</script>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr)); gap: 2rem;">
+  {% for item in history %}
+  <div class="glass-card-amber">
+    <span style="background: rgba(245, 158, 11, 0.2); color: var(--amber-gold); border: 1px solid var(--border-amber); padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.8rem; font-weight: bold;">
+      Bookmarked Recommendation
+    </span>
+    <h3 style="color: #ffffff; font-size: 1.4rem; margin: 0.75rem 0 0.25rem;">{{ item.productName }}</h3>
+    <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.25rem;">Supplier Guild: {{ item.supplierName }}</p>
+
+    <div style="background: rgba(9, 15, 33, 0.8); padding: 1rem; border-radius: 0.75rem; display: flex; justify-content: space-between; margin-bottom: 1.25rem;">
+      <div>
+        <span style="color: var(--text-muted); font-size: 0.8rem;">Quantity</span>
+        <div style="color: #ffffff; font-weight: bold;">{{ item.quantity }} units</div>
+      </div>
+      <div>
+        <span style="color: var(--text-muted); font-size: 0.8rem;">Total Cost</span>
+        <div style="color: var(--amber-gold); font-weight: bold;">₹{{ "{:,.2f}".format(item.totalCost) }}</div>
+      </div>
+      <div>
+        <span style="color: var(--text-muted); font-size: 0.8rem;">ETA</span>
+        <div style="color: #34d399; font-weight: bold;">{{ item.deliveryDays }} Days</div>
+      </div>
+    </div>
+
+    <button type="button" onclick="viewHistoryItem({{ loop.index0 }})" class="btn-amber" style="width: 100%; background: linear-gradient(135deg, #10b981, #059669); color: #ffffff;">
+      💬 Proceed to Purchase / Contact Seller →
+    </button>
+  </div>
+  {% else %}
+  <div class="glass-card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+    <p style="color: var(--text-muted);">No saved procurement plans yet. Run a search in the AI Procurement Studio to bookmark plans!</p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

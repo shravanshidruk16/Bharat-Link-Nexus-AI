@@ -1,0 +1,156 @@
+{% extends "seller/base_seller.html" %}
+
+{% block title %}Products — BharatLink Seller Central{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem;">
+  <div>
+    <h1 style="font-size: 2.5rem; color: #ffffff; margin-bottom: 0.5rem;">Product Catalog Management</h1>
+    <p style="color: var(--text-muted); font-size: 1.1rem;">Manage artisan products, unit prices, image links, stock counts, or remove catalog items.</p>
+  </div>
+  <a href="/seller-central/products/new" class="btn-amber" style="font-size: 1rem; padding: 0.75rem 1.5rem;">+ Add New Product</a>
+</div>
+
+<script>
+  window.productsData = {{ products | tojson | safe }};
+</script>
+
+<div class="glass-card">
+  <table>
+    <thead>
+      <tr>
+        <th>Product Name</th>
+        <th>Category</th>
+        <th>Unit Price</th>
+        <th>Stock Level</th>
+        <th>Region / Origin</th>
+        <th>Image Link</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in products %}
+      <tr>
+        <td>
+          <div style="font-weight: bold; color: #ffffff; font-size: 1.05rem;">{{ p.name }}</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">{{ p.description[:50] if p.description else "GI Certified Authentic" }}...</div>
+        </td>
+        <td><span style="background: rgba(245, 158, 11, 0.15); border: 1px solid var(--border-amber); color: var(--amber-gold); padding: 0.2rem 0.6rem; border-radius: 0.4rem; font-size: 0.82rem;">{{ p.category }}</span></td>
+        <td style="color: #34d399; font-weight: bold; font-size: 1.05rem;">₹{{ "{:,.2f}".format(p.price) }}</td>
+        <td><span style="color: var(--amber-gold); font-weight: bold;">{{ p.available_stock }} units</span></td>
+        <td>{{ p.region if p.region else "India" }}</td>
+        <td>
+          {% if p.image_url %}
+            <a href="{{ p.image_url }}" target="_blank" style="color: #38bdf8; font-size: 0.85rem;">View Image 🔗</a>
+          {% else %}
+            <span style="color: var(--text-muted); font-size: 0.85rem;">No Image Link</span>
+          {% endif %}
+        </td>
+        <td>
+          <button type="button" onclick="openEditProductModal({{ loop.index0 }})" class="btn-amber" style="padding: 0.4rem 0.85rem; font-size: 0.85rem;">
+            ✎ Edit Product
+          </button>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">No active products in catalog. Click "+ Add New Product" to list your first item!</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Comprehensive Product Edit & Delete Modal -->
+<script>
+function openEditProductModal(index) {
+  if (!window.productsData || !window.productsData[index]) return;
+  const p = window.productsData[index];
+
+  const modalHtml = `
+    <div id="edit-product-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 1rem;">
+      <div class="glass-card-amber" style="max-width: 36rem; width: 100%; max-height: 90vh; overflow-y: auto; padding: 2rem; border-radius: 1rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-amber); padding-bottom: 0.75rem;">
+          <h2 style="color: #ffffff; font-size: 1.4rem;">Edit Product Catalog Details</h2>
+          <button type="button" onclick="document.getElementById('edit-product-modal').remove()" style="background: none; border: none; color: #fca5a5; font-size: 1.5rem; cursor: pointer; padding: 0 0.5rem;">✕</button>
+        </div>
+
+        <form action="/seller-central/products/update" method="POST">
+          <input type="hidden" name="productId" value="${p.id}">
+
+          <div style="margin-bottom: 1rem;">
+            <label style="display: block; color: var(--amber-gold); font-weight: bold; font-size: 0.9rem; margin-bottom: 0.3rem;">Product Name</label>
+            <input type="text" name="name" value="${p.name || ''}" required style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); border-radius: 0.5rem; color: #ffffff; padding: 0.75rem; font-size: 1rem;">
+          </div>
+
+          <div style="margin-bottom: 1rem;">
+            <label style="display: block; color: var(--amber-gold); font-weight: bold; font-size: 0.9rem; margin-bottom: 0.3rem;">Description</label>
+            <textarea name="description" rows="2" style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); border-radius: 0.5rem; color: #ffffff; padding: 0.75rem; font-size: 0.95rem;">${p.description || ''}</textarea>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div>
+              <label style="display: block; color: var(--amber-gold); font-weight: bold; font-size: 0.9rem; margin-bottom: 0.3rem;">Category</label>
+              <input type="text" name="category" value="${p.category || ''}" required style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); border-radius: 0.5rem; color: #ffffff; padding: 0.75rem; font-size: 0.95rem;">
+            </div>
+            <div>
+              <label style="display: block; color: var(--amber-gold); font-weight: bold; font-size: 0.9rem; margin-bottom: 0.3rem;">Region / Origin</label>
+              <input type="text" name="region" value="${p.region || ''}" style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); border-radius: 0.5rem; color: #ffffff; padding: 0.75rem; font-size: 0.95rem;">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div>
+              <label style="display: block; color: var(--amber-gold); font-weight: bold; font-size: 0.9rem; margin-bottom: 0.3rem;">Unit Price (₹)</label>
+              <input type="number" step="0.01" name="price" value="${p.price || 0}" required style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); border-radius: 0.5rem; color: #ffffff; padding: 0.75rem; font-size: 1rem;">
+            </div>
+            <div>
+              <label style="display: block; color: var(--amber-gold); font-weight: bold; font-size: 0.9rem; margin-bottom: 0.3rem;">Available Stock Count</label>
+              <input type="number" name="availableStock" value="${p.available_stock || 0}" required style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); border-radius: 0.5rem; color: #ffffff; padding: 0.75rem; font-size: 1rem;">
+            </div>
+          </div>
+
+          <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; color: var(--amber-gold); font-weight: bold; font-size: 0.9rem; margin-bottom: 0.3rem;">Product Image Link URL</label>
+            <input type="url" name="imageUrl" value="${p.image_url || ''}" placeholder="https://images.unsplash.com/..." style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); border-radius: 0.5rem; color: #ffffff; padding: 0.75rem; font-size: 0.95rem;">
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-amber); padding-top: 1.25rem;">
+            <button type="button" onclick="deleteProduct('${p.id}', '${p.name}')" style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5; padding: 0.75rem 1.25rem; border-radius: 0.5rem; font-weight: bold; cursor: pointer;">
+              🗑️ Delete Product
+            </button>
+
+            <button type="submit" class="btn-amber" style="padding: 0.75rem 1.75rem; font-size: 1rem;">
+              ✓ Save Product Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  `;
+
+  const existing = document.getElementById('edit-product-modal');
+  if (existing) existing.remove();
+  document.body.insertAdjacentHTML('beforeend', modalHtml);
+}
+
+function deleteProduct(productId, productName) {
+  if (!confirm(`Are you sure you want to delete "${productName}" from your catalog?`)) return;
+
+  fetch('/seller-central/products/delete', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ productId: productId })
+  }).then(res => res.json()).then(data => {
+    if (data.success) {
+      window.location.reload();
+    } else {
+      alert("Failed to delete product: " + (data.error || "Unknown error"));
+    }
+  }).catch(err => {
+    console.error(err);
+    alert("Error deleting product.");
+  });
+}
+</script>
+{% endblock %}

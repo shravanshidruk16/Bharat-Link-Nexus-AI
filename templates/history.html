@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Procurement History — BharatLink Nexus AI{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2.5rem;">
+  <h1 style="font-size: 2.5rem; color: #ffffff; margin-bottom: 0.5rem;">Procurement Execution History</h1>
+  <p style="color: var(--text-muted); font-size: 1.1rem;">Full audit log of AI-synthesized procurement runs, freight calculations, and supplier allocations.</p>
+</div>
+
+<script>
+  window.historyData = {{ history | tojson | safe }};
+</script>
+
+<div class="glass-card">
+  <table>
+    <thead>
+      <tr>
+        <th>Date & Requirement</th>
+        <th>Product Sourced</th>
+        <th>Supplier</th>
+        <th>Qty & Cost</th>
+        <th>Delivery ETA</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in history %}
+      <tr style="cursor: pointer;" onclick="viewHistoryItem({{ loop.index0 }})">
+        <td>
+          <div style="color: var(--amber-gold); font-size: 0.85rem;">{{ item.createdAt }}</div>
+          <div style="color: #ffffff; font-size: 0.95rem; margin-top: 0.25rem;">"{{ item.rawPrompt }}"</div>
+        </td>
+        <td style="font-weight: bold; color: #ffffff;">{{ item.productName }}</td>
+        <td>{{ item.supplierName }}</td>
+        <td>
+          <div style="color: var(--amber-gold); font-weight: bold;">{{ item.quantity }} units</div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">Total: ₹{{ "{:,.2f}".format(item.totalCost) }}</div>
+        </td>
+        <td>{{ item.deliveryDays }} Days</td>
+        <td>
+          <button type="button" onclick="event.stopPropagation(); viewHistoryItem({{ loop.index0 }})" class="btn-amber" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">
+            🔍 View Session & Contact Seller
+          </button>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">No procurement execution history found. Run a query in AI Procurement Studio to log runs.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

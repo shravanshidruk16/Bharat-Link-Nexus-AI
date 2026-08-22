@@ -1,0 +1,25 @@
+# Environment & Virtualenvs
+venv/
+.venv/
+env/
+ENV/
+.env
+.env.local
+.env.*
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Scratch files
+scratch/
+scratch_*.txt
+*.log
+
+# IDE & OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

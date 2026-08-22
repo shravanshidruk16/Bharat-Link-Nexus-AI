@@ -1,0 +1,114 @@
+{% extends "seller/base_seller.html" %}
+
+{% block title %}Seller Analytics & Sourcing Performance — BharatLink Seller Central{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2.5rem;">
+  <h1 style="font-size: 2.5rem; color: #ffffff; margin-bottom: 0.5rem;">Seller Sourcing & Revenue Analytics</h1>
+  <p style="color: var(--amber-gold); font-size: 1.1rem; font-weight: bold;">Real-Time Sourcing Inquiries, Active Catalog Items, and Sourced Value from Database</p>
+</div>
+
+<!-- Key Metrics Overview Cards -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;">
+  <div class="glass-card">
+    <span style="color: var(--text-muted); font-size: 0.85rem;">Buyer Sourcing Inquiries</span>
+    <h2 style="font-size: 2.5rem; color: var(--amber-gold); margin-top: 0.5rem;">{{ analytics.inquiries_count }}</h2>
+    <span style="color: var(--text-muted); font-size: 0.8rem;">Real-time AI Match Count</span>
+  </div>
+
+  <div class="glass-card">
+    <span style="color: var(--text-muted); font-size: 0.85rem;">Total Sourced Value</span>
+    <h2 style="font-size: 2.5rem; color: #34d399; margin-top: 0.5rem;">₹{{ "{:,.2f}".format(analytics.total_sourced_value) }}</h2>
+    <span style="color: #34d399; font-size: 0.8rem;">Total Buyer Inquiry Value</span>
+  </div>
+
+  <div class="glass-card">
+    <span style="color: var(--text-muted); font-size: 0.85rem;">Active Published Products</span>
+    <h2 style="font-size: 2.5rem; color: #ffffff; margin-top: 0.5rem;">{{ analytics.active_products_count }}</h2>
+    <span style="color: var(--text-muted); font-size: 0.8rem;">Catalog Products Active</span>
+  </div>
+
+  <div class="glass-card">
+    <span style="color: var(--text-muted); font-size: 0.85rem;">Delivery Success Rate</span>
+    <h2 style="font-size: 2.5rem; color: #38bdf8; margin-top: 0.5rem;">{{ analytics.delivery_success_rate }}%</h2>
+    <span style="color: #38bdf8; font-size: 0.8rem;">Orders Delivered Rate</span>
+  </div>
+</div>
+
+<!-- Successfully Delivered Orders & Revenue Progress Section -->
+<div class="glass-card-amber" style="margin-bottom: 3rem;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-amber); padding-bottom: 1rem;">
+    <div>
+      <span style="background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #34d399; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase;">
+        ✓ Verified Progress Tracker
+      </span>
+      <h2 style="font-size: 1.8rem; color: #ffffff; margin-top: 0.5rem;">Successfully Delivered Orders & Verified Revenue</h2>
+    </div>
+    <a href="/seller-central/inventory" class="btn-amber" style="font-size: 0.85rem; padding: 0.5rem 1rem;">Go to Inventory & Deliver Orders →</a>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+    <div style="background: rgba(9, 15, 33, 0.7); padding: 1.25rem; border-radius: 0.75rem; border: 1px solid var(--border-amber);">
+      <span style="color: var(--text-muted); font-size: 0.85rem;">Delivered Orders Revenue</span>
+      <div style="color: #34d399; font-size: 1.8rem; font-weight: bold; margin-top: 0.25rem;">
+        ₹{{ "{:,.2f}".format(analytics.delivered_sourced_value) }}
+      </div>
+    </div>
+
+    <div style="background: rgba(9, 15, 33, 0.7); padding: 1.25rem; border-radius: 0.75rem; border: 1px solid var(--border-amber);">
+      <span style="color: var(--text-muted); font-size: 0.85rem;">Delivered Orders Count</span>
+      <div style="color: #ffffff; font-size: 1.8rem; font-weight: bold; margin-top: 0.25rem;">
+        {{ analytics.delivered_orders_count }} <span style="font-size: 1rem; color: #34d399;">Orders</span>
+      </div>
+    </div>
+
+    <div style="background: rgba(9, 15, 33, 0.7); padding: 1.25rem; border-radius: 0.75rem; border: 1px solid var(--border-amber);">
+      <span style="color: var(--text-muted); font-size: 0.85rem;">Pending Dispatch Orders</span>
+      <div style="color: var(--amber-gold); font-size: 1.8rem; font-weight: bold; margin-top: 0.25rem;">
+        {{ analytics.pending_orders_count }} <span style="font-size: 1rem; color: var(--amber-gold);">Orders</span>
+      </div>
+    </div>
+  </div>
+
+  {% if analytics.orders and analytics.orders|length > 0 %}
+  <h4 style="color: #ffffff; font-size: 1.1rem; margin-bottom: 1rem;">Fulfillment Order Log Status</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Date & Buyer Prompt</th>
+        <th>Product Sourced</th>
+        <th>Quantity</th>
+        <th>Order Value</th>
+        <th>Fulfillment Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for o in analytics.orders %}
+      <tr>
+        <td>
+          <div style="color: var(--amber-gold); font-size: 0.85rem;">{{ o.createdAt }}</div>
+          <div style="color: #ffffff; font-size: 0.9rem; margin-top: 0.25rem;">"{{ o.rawPrompt }}"</div>
+        </td>
+        <td style="font-weight: bold; color: #ffffff;">{{ o.productName }}</td>
+        <td style="color: var(--amber-gold); font-weight: bold;">{{ o.quantity }} units</td>
+        <td style="color: #34d399; font-weight: bold;">₹{{ "{:,.2f}".format(o.totalCost) }}</td>
+        <td>
+          {% if o.status == "Stock Delivered" %}
+            <span style="background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #34d399; padding: 0.25rem 0.65rem; border-radius: 9999px; font-weight: bold; font-size: 0.8rem;">✓ Stock Delivered</span>
+          {% elif o.status == "Not Accepted" %}
+            <span style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5; padding: 0.25rem 0.65rem; border-radius: 9999px; font-weight: bold; font-size: 0.8rem;">✕ Not Accepted</span>
+          {% else %}
+            <span style="background: rgba(245, 158, 11, 0.2); border: 1px solid var(--border-amber); color: var(--amber-gold); padding: 0.25rem 0.65rem; border-radius: 9999px; font-weight: bold; font-size: 0.8rem;">⏳ Pending Delivery</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div style="text-align: center; padding: 2rem; background: rgba(9, 15, 33, 0.6); border-radius: 0.75rem; border: 1px dashed var(--border-amber);">
+    <p style="color: var(--text-muted); font-size: 0.95rem;">No orders logged yet. When buyers select your products and you mark them as <strong>Stock Delivered</strong> in Inventory, your verified progress will update here.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

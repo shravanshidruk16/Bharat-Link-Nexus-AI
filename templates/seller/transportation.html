@@ -1,0 +1,28 @@
+{% extends "seller/base_seller.html" %}
+
+{% block title %}Transport API — BharatLink Seller Central{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2.5rem;">
+  <h1 style="font-size: 2.5rem; color: #ffffff; margin-bottom: 0.5rem;">Logistics API Monitor</h1>
+  <p style="color: var(--text-muted); font-size: 1.1rem;">Status monitoring for external carrier APIs and weather disruption feeds.</p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 1.5rem;">
+  <div class="glass-card">
+    <span style="color: #34d399; font-weight: bold;">● Active & Online</span>
+    <h3 style="color: #ffffff; margin-top: 0.5rem;">CONCOR Indian Railways API</h3>
+    <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">Container tracking & schedule API feed operational.</p>
+  </div>
+  <div class="glass-card">
+    <span style="color: #34d399; font-weight: bold;">● Active & Online</span>
+    <h3 style="color: #ffffff; margin-top: 0.5rem;">Aviationstack Flight Cargo Feed</h3>
+    <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">BOM / DEL air freight schedule data synced.</p>
+  </div>
+  <div class="glass-card">
+    <span style="color: #34d399; font-weight: bold;">● Active & Online</span>
+    <h3 style="color: #ffffff; margin-top: 0.5rem;">Weather & Disruption Engine</h3>
+    <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">Monsoon & corridor delay simulator online.</p>
+  </div>
+</div>
+{% endblock %}

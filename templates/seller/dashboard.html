@@ -1,0 +1,69 @@
+{% extends "seller/base_seller.html" %}
+
+{% block title %}Dashboard — BharatLink Seller Central{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2.5rem;">
+  <h1 style="font-size: 2.5rem; color: #ffffff; margin-bottom: 0.5rem;">Seller Management Dashboard</h1>
+  <p style="color: var(--text-muted); font-size: 1.1rem;">Monitor active products, inventory stock health, and incoming buyer procurement queries.</p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+  <div class="glass-card">
+    <span style="color: var(--text-muted); font-size: 0.9rem;">My Published Products</span>
+    <h2 style="font-size: 2.5rem; color: #ffffff; margin-top: 0.5rem;">{{ products|length }}</h2>
+  </div>
+  <div class="glass-card">
+    <span style="color: var(--text-muted); font-size: 0.9rem;">Registered Artisan Network</span>
+    <h2 style="font-size: 2.5rem; color: var(--amber-gold); margin-top: 0.5rem;">{{ sellers|length }}</h2>
+  </div>
+  <div class="glass-card">
+    <span style="color: var(--text-muted); font-size: 0.9rem;">GI Certification Status</span>
+    <h2 style="font-size: 1.8rem; color: #34d399; margin-top: 0.75rem;">✓ Verified Artisan Guild</h2>
+  </div>
+</div>
+
+<div class="glass-card">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h3 style="color: #ffffff; font-size: 1.4rem;">My Product Catalog & Stock Status</h3>
+    <a href="/seller-central/products/new" class="btn-amber" style="padding: 0.5rem 1.25rem; font-size: 0.9rem;">+ Add Product</a>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Product Name</th>
+        <th>Category & Region</th>
+        <th>Price (INR)</th>
+        <th>Available Stock</th>
+        <th>GI Tag Verification</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in products %}
+      <tr>
+        <td style="font-weight: bold; color: #ffffff;">{{ p.name }}</td>
+        <td>{{ p.category }} ({{ p.region }})</td>
+        <td style="color: var(--amber-gold); font-weight: bold;">₹{{ "{:,.2f}".format(p.price) }}</td>
+        <td>{{ p.available_stock }} units</td>
+        <td>
+          <span style="background: rgba(16, 185, 129, 0.2); color: #34d399; padding: 0.25rem 0.6rem; border-radius: 0.4rem; font-size: 0.8rem; font-weight: bold;">
+            {{ p.authenticity_status }}
+          </span>
+        </td>
+        <td>
+          <a href="/seller-central/products" class="btn-amber" style="padding: 0.35rem 0.75rem; font-size: 0.85rem; text-decoration: none;">
+            Manage Product
+          </a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">No products listed under your seller account. Click "+ Add Product" to publish your first item!</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

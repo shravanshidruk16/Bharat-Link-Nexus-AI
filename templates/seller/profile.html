@@ -1,0 +1,76 @@
+{% extends "seller/base_seller.html" %}
+
+{% block title %}GI Verification & Seller Profile — BharatLink Seller Central{% endblock %}
+
+{% block content %}
+{% set seller = seller_user.seller if seller_user and seller_user.seller else None %}
+
+<div style="margin-bottom: 2.5rem;">
+  <h1 style="font-size: 2.5rem; color: #ffffff; margin-bottom: 0.5rem;">Geographical Indication (GI) Verification</h1>
+  <p style="color: var(--amber-gold); font-size: 1.1rem; font-weight: bold;">Authenticity Certification & Guild Representative Profile</p>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem;">
+  <!-- Left Profile Card -->
+  <div class="glass-card-amber" style="text-align: center;">
+    <div style="width: 5rem; height: 5rem; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #d97706); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: bold; color: #090f21; margin: 0 auto 1.5rem auto;">
+      {{ (seller.business_name[0] if seller and seller.business_name else "A") }}
+    </div>
+
+    <h2 style="color: #ffffff; font-size: 1.5rem; margin-bottom: 0.5rem;">{{ seller.business_name if seller else "Artisan Seller Guild" }}</h2>
+    <span style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #10b981; padding: 0.3rem 0.8rem; border-radius: 2rem; font-size: 0.85rem; font-weight: bold; display: inline-block; margin-bottom: 1.5rem;">
+      ✓ {{ seller.verification_status if seller else "Verified Guild" }}
+    </span>
+
+    <div style="text-align: left; background: rgba(9, 15, 33, 0.6); padding: 1rem; border-radius: 0.5rem; border: 1px solid var(--border-amber);">
+      <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Representative Contact</div>
+      <div style="color: #ffffff; font-weight: bold; margin-bottom: 0.75rem;">{{ seller.contact_person if seller else "Representative Manager" }}</div>
+
+      <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Phone Number</div>
+      <div style="color: var(--amber-gold); font-weight: bold; margin-bottom: 0.75rem;">📞 {{ seller.phone if seller else "+91 98230 12345" }}</div>
+
+      <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">WhatsApp Contact</div>
+      <div style="color: #34d399; font-weight: bold; margin-bottom: 0.75rem;">💬 {{ seller.whatsapp_number if seller else "+91 98230 12345" }}</div>
+
+      <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Registered Email</div>
+      <div style="color: #ffffff; font-size: 0.85rem;">{{ seller_user.email if seller_user else "seller@example.org" }}</div>
+    </div>
+  </div>
+
+  <!-- Right Details & GI Registry Credentials -->
+  <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+    <div class="glass-card">
+      <h3 style="color: #ffffff; font-size: 1.3rem; margin-bottom: 1.25rem;">Geographical Indication (GI) Credentials</h3>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+        <div>
+          <span style="color: var(--text-muted); font-size: 0.85rem; display: block;">GI Certification Tag</span>
+          <span style="color: var(--amber-gold); font-weight: bold; font-size: 1.1rem;">{{ seller.craft_certification if seller else "GI Tag Certified" }}</span>
+        </div>
+        <div>
+          <span style="color: var(--text-muted); font-size: 0.85rem; display: block;">Craft Category</span>
+          <span style="color: #ffffff; font-weight: bold; font-size: 1.1rem;">{{ seller.craft_category if seller else "Textiles & Apparel" }}</span>
+        </div>
+        <div>
+          <span style="color: var(--text-muted); font-size: 0.85rem; display: block;">Origin Location</span>
+          <span style="color: #ffffff; font-weight: bold; font-size: 1.1rem;">{{ seller.city if seller else "District" }}, {{ seller.state if seller else "State" }}</span>
+        </div>
+        <div>
+          <span style="color: var(--text-muted); font-size: 0.85rem; display: block;">Associated Artisans</span>
+          <span style="color: #34d399; font-weight: bold; font-size: 1.1rem;">{{ seller.artisan_count if seller else 25 }} Master Artisans</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass-card">
+      <h3 style="color: #ffffff; font-size: 1.3rem; margin-bottom: 1rem;">Quality Assurance & Authenticity Standards</h3>
+      <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem;">
+        Products published by <strong style="color: #ffffff;">{{ seller.business_name if seller else "your business" }}</strong> are cross-verified against official Indian GI Registry standards. Buyers on BharatLink Nexus AI receive full traceability records and digital certificates of authenticity.
+      </p>
+      <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid var(--border-amber); padding: 1rem; border-radius: 0.5rem; color: var(--amber-gold); font-size: 0.9rem;">
+        🛡️ Certificate Status: Active & Verified by Government GI Inspection Board
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

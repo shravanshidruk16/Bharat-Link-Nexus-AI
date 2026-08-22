@@ -1,0 +1,90 @@
+{% extends "seller/base_seller.html" %}
+
+{% block title %}Seller Admin Dashboard — BharatLink Seller Central{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2.5rem; display: flex; justify-content: space-between; align-items: center;">
+  <div>
+    <h1 style="font-size: 2.5rem; color: #ffffff; margin-bottom: 0.5rem;">Seller Network Moderation Admin</h1>
+    <p style="color: var(--amber-gold); font-size: 1.1rem; font-weight: bold;">Review Seller Applications, Verify Contact Info, & Moderate Catalog Quality</p>
+  </div>
+  <a href="/logout" style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5; padding: 0.5rem 1.25rem; border-radius: 0.5rem; font-weight: bold;">Sign Out Admin</a>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+  <div class="glass-card">
+    <span style="color: var(--text-muted); font-size: 0.9rem;">Total Registered Sellers</span>
+    <h2 style="font-size: 2.5rem; color: #ffffff; margin-top: 0.5rem;">{{ sellers|length }}</h2>
+  </div>
+  <div class="glass-card">
+    <span style="color: var(--text-muted); font-size: 0.9rem;">Active Catalog Products</span>
+    <h2 style="font-size: 2.5rem; color: var(--amber-gold); margin-top: 0.5rem;">{{ products|length }}</h2>
+  </div>
+</div>
+
+<div class="glass-card">
+  <h3 style="color: #ffffff; font-size: 1.4rem; margin-bottom: 1.5rem;">Seller Verification Applications & Moderation Actions</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Seller / Guild Name</th>
+        <th>Representative & Contact</th>
+        <th>Location & Category</th>
+        <th>GI Tag Certification</th>
+        <th>Status</th>
+        <th>Verification Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in sellers %}
+      <tr>
+        <td style="font-weight: bold; color: #ffffff;">{{ s.business_name }}</td>
+        <td>
+          <div style="color: #ffffff; font-weight: bold;">{{ s.contact_person }}</div>
+          <div style="font-size: 0.85rem; color: var(--amber-gold);">📞 Phone: {{ s.phone or "N/A" }}</div>
+          <div style="font-size: 0.85rem; color: #34d399;">💬 WhatsApp: {{ s.whatsapp_number or s.phone or "N/A" }}</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">{{ s.email }}</div>
+        </td>
+        <td>
+          <div>{{ s.city }}, {{ s.state }}</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">{{ s.craft_category }}</div>
+        </td>
+        <td style="color: var(--amber-gold);">{{ s.craft_certification or "GI Tag Certified" }}</td>
+        <td>
+          {% if s.active %}
+          <span style="background: rgba(16, 185, 129, 0.2); color: #34d399; padding: 0.25rem 0.6rem; border-radius: 0.4rem; font-size: 0.8rem; font-weight: bold;">
+            ✓ Active Verified
+          </span>
+          {% else %}
+          <span style="background: rgba(245, 158, 11, 0.2); color: #fef08a; padding: 0.25rem 0.6rem; border-radius: 0.4rem; font-size: 0.8rem; font-weight: bold;">
+            ⏳ Pending Admin Approval
+          </span>
+          {% endif %}
+        </td>
+        <td>
+          {% if not s.active %}
+          <form action="/seller-central/admin/approve" method="POST" style="display: inline-block; margin-bottom: 0.3rem;">
+            <input type="hidden" name="seller_id" value="{{ s.id }}">
+            <button type="submit" style="background: rgba(16, 185, 129, 0.3); border: 1px solid #10b981; color: #34d399; padding: 0.4rem 0.85rem; border-radius: 0.5rem; cursor: pointer; font-size: 0.85rem; font-weight: bold;">
+              ✓ Approve & Admit Seller
+            </button>
+          </form>
+          {% else %}
+          <form action="/seller-central/admin/deactivate" method="POST" style="display: inline-block;">
+            <input type="hidden" name="seller_id" value="{{ s.id }}">
+            <button type="submit" onclick="return confirm('Deactivate this seller and remove their catalog from buyer discovery?')" style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5; padding: 0.35rem 0.75rem; border-radius: 0.5rem; cursor: pointer; font-size: 0.85rem;">
+              Remove / Ban Seller
+            </button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">No artisan seller applications registered yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

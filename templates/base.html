@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>{% block title %}BharatLink Nexus AI — AI-Powered Artisan Procurement Platform{% endblock %}</title>
+  
+  <!-- Favicon & PWA Manifest -->
+  <link rel="icon" type="image/png" href="/static/images/logo.png">
+  <link rel="apple-touch-icon" href="/static/images/logo.png">
+  <link rel="manifest" href="/static/manifest.json">
+  <meta name="theme-color" content="#090f21">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="BharatLink AI">
+  
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <style>
+    .agent-step-item { padding: 0.75rem 1rem; border-radius: 0.75rem; background: rgba(15, 23, 42, 0.7); margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center; }
+    .agent-step-item.pending { opacity: 0.4; }
+    .agent-step-item.running { border: 1px solid var(--amber-gold); background: rgba(245, 158, 11, 0.1); }
+    .agent-step-item.completed { border: 1px solid #10b981; background: rgba(16, 185, 129, 0.1); }
+  </style>
+</head>
+<body>
+
+  <!-- Stripe/Amazon-Level Premium Header Nav -->
+  <header>
+    <div class="header-container">
+      
+      <!-- Left Top Corner Logo with Actual Brand Logo -->
+      <a href="/" class="logo-link">
+        <img src="/static/images/logo.png" alt="BharatLink Nexus AI Logo" style="height: 2.2rem; width: auto; max-width: 2.5rem; object-fit: contain; flex-shrink: 0; vertical-align: middle; border-radius: 0.3rem;" />
+        <span style="color: #ffffff; font-size: 1.25rem; font-weight: bold; white-space: nowrap;">BharatLink Nexus AI</span>
+      </a>
+
+      <!-- Right Nav Links (Desktop & Compact Mobile) -->
+      <nav class="nav-links">
+        <a href="/" class="nav-item desktop-nav-link {% if active_page == 'home' %}active{% endif %}">Home</a>
+        <a href="/procure" class="nav-item desktop-nav-link {% if active_page == 'procure' %}active{% endif %}">AI Procurement</a>
+        <a href="/dashboard" class="nav-item desktop-nav-link {% if active_page == 'dashboard' %}active{% endif %}">Dashboard</a>
+        <a href="/history" class="nav-item desktop-nav-link {% if active_page == 'history' %}active{% endif %}">History</a>
+        <a href="/saved" class="nav-item desktop-nav-link {% if active_page == 'saved' %}active{% endif %}">Saved</a>
+        <a href="/profile" class="nav-item desktop-nav-link {% if active_page == 'profile' %}active{% endif %}">Profile</a>
+
+        {% if user %}
+          <span style="color: var(--amber-gold); font-size: 0.82rem; font-weight: bold; padding: 0.35rem 0.65rem; background: rgba(245, 158, 11, 0.12); border: 1px solid var(--border-amber); border-radius: 0.4rem; white-space: nowrap; flex-shrink: 0;">
+            👤 {{ user.full_name if user.full_name else user.email }}
+          </span>
+          <a href="/logout" style="color: #fca5a5; font-size: 0.82rem; white-space: nowrap; padding: 0.35rem 0.5rem; flex-shrink: 0;" class="desktop-nav-link">Logout</a>
+        {% else %}
+          <a href="/login" class="nav-item desktop-nav-link">Sign In</a>
+          <a href="/signup" class="btn-amber desktop-nav-link">Sign Up</a>
+        {% endif %}
+
+        <a href="/seller-central" class="btn-outline" style="margin-left: 0.3rem;">
+          Seller Central →
+        </a>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Mobile Bottom Navigation Bar (Hidden on Desktop) -->
+  <nav class="mobile-bottom-nav">
+    <a href="/" class="mobile-nav-item {% if active_page == 'home' %}active{% endif %}">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="/procure" class="mobile-nav-item {% if active_page == 'procure' %}active{% endif %}">
+      <span class="nav-icon">🤖</span>
+      <span>AI Procure</span>
+    </a>
+    <a href="/dashboard" class="mobile-nav-item {% if active_page == 'dashboard' %}active{% endif %}">
+      <span class="nav-icon">📊</span>
+      <span>Dashboard</span>
+    </a>
+    <a href="/history" class="mobile-nav-item {% if active_page == 'history' %}active{% endif %}">
+      <span class="nav-icon">📜</span>
+      <span>History</span>
+    </a>
+    <a href="/profile" class="mobile-nav-item {% if active_page == 'profile' %}active{% endif %}">
+      <span class="nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <img src="/static/images/logo.png" alt="Logo" style="height: 2rem; width: auto; object-fit: contain;" />
+        <div>
+          <h3 style="color: #ffffff; margin-bottom: 0.15rem;">BharatLink Nexus AI</h3>
+          <p style="font-size: 0.85rem;">AI-Powered Artisan Procurement & Intelligent Multi-Modal Logistics Platform</p>
+        </div>
+      </div>
+      <div>
+        <p>© 2026 BharatLink Nexus AI. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

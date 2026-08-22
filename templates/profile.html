@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Buyer Profile — BharatLink Nexus AI{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2.5rem;">
+  <h1 style="font-size: 2.5rem; color: #ffffff; margin-bottom: 0.5rem;">Buyer Profile & Sourcing Account</h1>
+  <p style="color: var(--text-muted); font-size: 1.1rem;">Manage your institutional procurement credentials, company details, and preferences.</p>
+</div>
+
+<div class="glass-card-amber" style="max-width: 42rem;">
+  <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-amber);">
+    <div style="width: 4.5rem; height: 4.5rem; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #d97706); display: flex; align-items: center; justify-content: center; color: #090f21; font-weight: bold; font-size: 2rem; flex-shrink: 0;">
+      {{ (user.full_name[0] if user and user.full_name else (user.email[0] if user and user.email else "B")) | upper }}
+    </div>
+    <div>
+      <h2 style="color: #ffffff; font-size: 1.6rem; margin-bottom: 0.25rem;">{{ user.full_name if user and user.full_name else "Procurement Buyer" }}</h2>
+      <p style="color: var(--amber-gold); font-weight: bold; font-size: 1rem;">
+        ✓ {{ user.company_name if user and user.company_name else "Verified Institutional Buyer" }}
+      </p>
+    </div>
+  </div>
+
+  <div style="display: grid; gap: 1.25rem;">
+    <div style="background: rgba(9, 15, 33, 0.6); padding: 1rem; border-radius: 0.5rem; border: 1px solid var(--border-amber);">
+      <span style="color: var(--text-muted); font-size: 0.85rem; display: block;">Full Name</span>
+      <div style="color: #ffffff; font-size: 1.1rem; font-weight: bold; margin-top: 0.2rem;">{{ user.full_name if user and user.full_name else "Buyer Representative" }}</div>
+    </div>
+
+    <div style="background: rgba(9, 15, 33, 0.6); padding: 1rem; border-radius: 0.5rem; border: 1px solid var(--border-amber);">
+      <span style="color: var(--text-muted); font-size: 0.85rem; display: block;">Registered Email Address</span>
+      <div style="color: var(--amber-gold); font-size: 1.1rem; font-weight: bold; margin-top: 0.2rem;">{{ user.email if user else "buyer@example.com" }}</div>
+    </div>
+
+    <div style="background: rgba(9, 15, 33, 0.6); padding: 1rem; border-radius: 0.5rem; border: 1px solid var(--border-amber);">
+      <span style="color: var(--text-muted); font-size: 0.85rem; display: block;">Company / Organization</span>
+      <div style="color: #ffffff; font-size: 1.1rem; font-weight: bold; margin-top: 0.2rem;">{{ user.company_name if user and user.company_name else "Independent Sourcing Enterprise" }}</div>
+    </div>
+
+    <div style="background: rgba(9, 15, 33, 0.6); padding: 1rem; border-radius: 0.5rem; border: 1px solid var(--border-amber);">
+      <span style="color: var(--text-muted); font-size: 0.85rem; display: block;">Country / Sourcing Region</span>
+      <div style="color: #ffffff; font-size: 1.1rem; font-weight: bold; margin-top: 0.2rem;">{{ user.country if user and user.country else "India" }}</div>
+    </div>
+
+    <div style="background: rgba(9, 15, 33, 0.6); padding: 1rem; border-radius: 0.5rem; border: 1px solid var(--border-amber);">
+      <span style="color: var(--text-muted); font-size: 0.85rem; display: block;">Account Compliance & Verification</span>
+      <div style="color: #34d399; font-weight: bold; font-size: 1.1rem; margin-top: 0.2rem;">✓ Verified B2B Procurement License</div>
+    </div>
+  </div>
+</div>
+{% endblock %}

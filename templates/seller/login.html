@@ -1,0 +1,36 @@
+{% extends "seller/base_seller.html" %}
+
+{% block title %}Seller Sign In — BharatLink Seller Central{% endblock %}
+
+{% block content %}
+<div style="max-width: 28rem; margin: 3rem auto;">
+  <div class="glass-card-amber">
+    <h2 style="font-size: 2rem; color: #ffffff; margin-bottom: 0.5rem; text-align: center;">Seller & Admin Sign In</h2>
+    <p style="color: var(--amber-gold); text-align: center; margin-bottom: 2rem;">Sign in to your Seller Central or Admin Account</p>
+
+    {% if error %}
+    <div style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 1.5rem; font-size: 0.9rem;">
+      {{ error }}
+    </div>
+    {% endif %}
+
+    <form action="/seller-central/login" method="POST">
+      <div style="margin-bottom: 1.25rem;">
+        <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">Email Address</label>
+        <input type="email" name="email" required placeholder="seller@example.org" style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
+      </div>
+
+      <div style="margin-bottom: 2rem;">
+        <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">Password</label>
+        <input type="password" name="password" required placeholder="••••••••" style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
+      </div>
+
+      <button type="submit" class="btn-amber" style="width: 100%; padding: 0.85rem; font-size: 1.1rem;">Sign In to Seller Central →</button>
+    </form>
+
+    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.95rem; color: var(--text-muted);">
+      New Artisan Guild / Seller? <a href="/seller-central/signup" style="color: var(--amber-gold); font-weight: bold;">Register Seller Account</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

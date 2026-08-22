@@ -1,0 +1,24 @@
+{% extends "seller/base_seller.html" %}
+
+{% block title %}Portal Home — BharatLink Seller Central{% endblock %}
+
+{% block content %}
+<div style="text-align: center; padding: 4rem 1rem;">
+  <span style="background: rgba(245, 158, 11, 0.15); border: 1px solid var(--border-amber); color: var(--amber-gold); padding: 0.5rem 1.25rem; border-radius: 9999px; font-size: 0.9rem; text-transform: uppercase; font-weight: bold;">
+    Official Artisan Seller Gateway
+  </span>
+
+  <h1 style="font-size: 3.5rem; color: #ffffff; margin: 1.5rem 0 1rem; line-height: 1.2;">
+    Empowering Indian Artisans with<br>AI-Driven Global Sourcing
+  </h1>
+
+  <p style="font-size: 1.25rem; color: var(--text-muted); max-width: 45rem; margin: 0 auto 2.5rem;">
+    List GI-tagged handicraft products, publish real-time inventory levels, and calculate multi-modal freight quotes for global institutional buyers.
+  </p>
+
+  <div style="display: flex; justify-content: center; gap: 1.5rem;">
+    <a href="/seller-central/dashboard" class="btn-amber" style="font-size: 1.1rem; padding: 1rem 2.5rem;">Enter Seller Dashboard →</a>
+    <a href="/seller-central/products/new" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); color: #ffffff; padding: 1rem 2rem; border-radius: 0.75rem; font-weight: bold;">Add New Product</a>
+  </div>
+</div>
+{% endblock %}

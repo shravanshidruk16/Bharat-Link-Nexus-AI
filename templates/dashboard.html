@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard — BharatLink Nexus AI{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2.5rem;">
+  <h1 style="font-size: 2.5rem; color: #ffffff; margin-bottom: 0.5rem;">Buyer Procurement Dashboard</h1>
+  <p style="color: var(--text-muted); font-size: 1.1rem;">Overview of active sourcing requests, verified suppliers, and logistics metrics.</p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+  <div class="glass-card">
+    <span style="color: var(--text-muted); font-size: 0.9rem;">Total Procurement Runs</span>
+    <h2 style="font-size: 2.5rem; color: #ffffff; margin-top: 0.5rem;">{{ history|length }}</h2>
+  </div>
+  <div class="glass-card">
+    <span style="color: var(--text-muted); font-size: 0.9rem;">Active Sellers Connected</span>
+    <h2 style="font-size: 2.5rem; color: var(--amber-gold); margin-top: 0.5rem;">{{ sellers|length }}</h2>
+  </div>
+  <div class="glass-card">
+    <span style="color: var(--text-muted); font-size: 0.9rem;">GI-Certified Products</span>
+    <h2 style="font-size: 2.5rem; color: #34d399; margin-top: 0.5rem;">{{ products|length }}</h2>
+  </div>
+</div>
+
+<div class="glass-card">
+  <h3 style="color: #ffffff; font-size: 1.4rem; margin-bottom: 1.5rem;">Recent Sourcing Recommendations</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Product & Supplier</th>
+        <th>Quantity</th>
+        <th>Total Cost</th>
+        <th>Delivery ETA</th>
+        <th>Risk Level</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in history %}
+      <tr>
+        <td>
+          <div style="font-weight: bold; color: #ffffff;">{{ item.productName }}</div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">Supplier: {{ item.supplierName }}</div>
+        </td>
+        <td style="color: var(--amber-gold); font-weight: bold;">{{ item.quantity }} units</td>
+        <td>₹{{ "{:,.2f}".format(item.totalCost) }}</td>
+        <td>{{ item.deliveryDays }} Days</td>
+        <td>
+          <span style="background: rgba(16, 185, 129, 0.2); color: #34d399; padding: 0.25rem 0.6rem; border-radius: 0.4rem; font-size: 0.8rem; font-weight: bold;">
+            {{ item.riskLevel }}
+          </span>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">No procurement runs logged yet. Start a new run in the AI Procurement Studio!</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

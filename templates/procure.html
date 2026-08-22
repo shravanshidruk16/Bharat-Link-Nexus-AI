@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}AI Procurement Studio — BharatLink Nexus AI{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2.5rem;">
+  <h1 style="font-size: 2.5rem; color: #ffffff; margin-bottom: 0.5rem;">AI Procurement Studio</h1>
+  <p style="color: var(--text-muted); font-size: 1.1rem;">Describe your artisan sourcing requirement in plain English. The 6-Agent LangGraph system will search verified inventories, compare multiple candidate sellers, optimize freight corridors, and synthesize an executive recommendation plan.</p>
+</div>
+
+<div class="glass-card-amber" style="margin-bottom: 3rem;">
+  <form id="procurement-form">
+    <label style="display: block; color: var(--amber-gold); font-size: 1.1rem; font-weight: bold; margin-bottom: 0.75rem;">
+      Natural Language Procurement Request
+    </label>
+    <textarea id="prompt-input" rows="3" style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); border-radius: 0.75rem; color: #ffffff; padding: 1rem; font-size: 1.1rem; resize: vertical;" placeholder="e.g., I need 50 kurta for wedding in Pune within 10 days"></textarea>
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; flex-wrap: wrap; gap: 1rem;">
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <button type="button" onclick="document.getElementById('prompt-input').value='I need 50 kurta for wedding in Pune within 10 days'" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #cbd5e1; padding: 0.4rem 0.8rem; border-radius: 0.5rem; font-size: 0.85rem; cursor: pointer;">
+          50 Kurta → Pune
+        </button>
+        <button type="button" onclick="document.getElementById('prompt-input').value='Procure 20 authentic Paithani silk stoles for London export in 14 days'" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #cbd5e1; padding: 0.4rem 0.8rem; border-radius: 0.5rem; font-size: 0.85rem; cursor: pointer;">
+          20 Paithani → London
+        </button>
+        <button type="button" onclick="document.getElementById('prompt-input').value='Need 10 Kashmiri Pashmina shawls for boutique store in New York'" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #cbd5e1; padding: 0.4rem 0.8rem; border-radius: 0.5rem; font-size: 0.85rem; cursor: pointer;">
+          10 Pashmina → NY
+        </button>
+      </div>
+
+      <button type="submit" class="btn-amber" style="font-size: 1.1rem; padding: 0.85rem 2rem;">
+        Run 6-Agent Sourcing Workflow →
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- Real-Time Agent Stepper -->
+<div id="agent-stepper" class="glass-card" style="display: none; margin-bottom: 3rem;">
+  <h3 style="color: var(--amber-gold); margin-bottom: 1rem; font-size: 1.25rem;">Live 6-Agent LangGraph Workflow Execution</h3>
+  <div id="agent-step-0" class="agent-step-item pending">
+    <div><strong>1. Buyer Intent Agent</strong> — Structuring product, quantity, destination & deadline</div>
+    <div class="step-status">Waiting...</div>
+  </div>
+  <div id="agent-step-1" class="agent-step-item pending">
+    <div><strong>2. Discovery Agent</strong> — Querying Supabase GI-certified product catalog</div>
+    <div class="step-status">Waiting...</div>
+  </div>
+  <div id="agent-step-2" class="agent-step-item pending">
+    <div><strong>3. Procurement Evaluation Agent</strong> — Comparing multiple candidate sellers & ratings</div>
+    <div class="step-status">Waiting...</div>
+  </div>
+  <div id="agent-step-3" class="agent-step-item pending">
+    <div><strong>4. Logistics Optimization Agent</strong> — Calculating distance (km), fuel & transport container cost</div>
+    <div class="step-status">Waiting...</div>
+  </div>
+  <div id="agent-step-4" class="agent-step-item pending">
+    <div><strong>5. Risk & Disruption Agent</strong> — Checking live weather at origin & destination</div>
+    <div class="step-status">Waiting...</div>
+  </div>
+  <div id="agent-step-5" class="agent-step-item pending">
+    <div><strong>6. Decision & Explanation Agent</strong> — Synthesizing multi-seller visual recommendation report</div>
+    <div class="step-status">Waiting...</div>
+  </div>
+</div>
+
+<!-- Final Procurement Plan Result -->
+<div id="procurement-result" style="display: none;">
+  <div class="glass-card-amber" style="margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+      <span style="background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #34d399; padding: 0.35rem 0.9rem; border-radius: 9999px; font-size: 0.85rem; font-weight: bold; text-transform: uppercase;">
+        ✓ Executive Recommendation Plan Approved
+      </span>
+    </div>
+
+    <h2 style="font-size: 2rem; color: #ffffff; margin-bottom: 1.5rem;">Sourcing Recommendation Plan</h2>
+
+    <div id="res-summary" style="color: #e2e8f0; font-size: 1.05rem; line-height: 1.7; margin-bottom: 2rem; background: rgba(15, 23, 42, 0.6); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid var(--amber-gold);"></div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1.25rem; margin-bottom: 2rem;">
+      <div style="background: rgba(15, 23, 42, 0.7); padding: 1.25rem; border-radius: 0.75rem;">
+        <span style="color: var(--text-muted); font-size: 0.85rem;">Selected Supplier</span>
+        <div id="res-supplier" style="color: #ffffff; font-size: 1.15rem; font-weight: bold; margin-top: 0.25rem;">-</div>
+      </div>
+      <div style="background: rgba(15, 23, 42, 0.7); padding: 1.25rem; border-radius: 0.75rem;">
+        <span style="color: var(--text-muted); font-size: 0.85rem;">Product Sourced</span>
+        <div id="res-product" style="color: #ffffff; font-size: 1.15rem; font-weight: bold; margin-top: 0.25rem;">-</div>
+      </div>
+      <div style="background: rgba(15, 23, 42, 0.7); padding: 1.25rem; border-radius: 0.75rem;">
+        <span style="color: var(--text-muted); font-size: 0.85rem;">Quantity</span>
+        <div id="res-qty" style="color: var(--amber-gold); font-size: 1.15rem; font-weight: bold; margin-top: 0.25rem;">-</div>
+      </div>
+      <div style="background: rgba(15, 23, 42, 0.7); padding: 1.25rem; border-radius: 0.75rem;">
+        <span style="color: var(--text-muted); font-size: 0.85rem;">Total Estimated Cost</span>
+        <div id="res-total" style="color: var(--amber-gold); font-size: 1.15rem; font-weight: bold; margin-top: 0.25rem;">-</div>
+      </div>
+      <div style="background: rgba(15, 23, 42, 0.7); padding: 1.25rem; border-radius: 0.75rem;">
+        <span style="color: var(--text-muted); font-size: 0.85rem;">Estimated Delivery</span>
+        <div id="res-eta" style="color: #34d399; font-size: 1.15rem; font-weight: bold; margin-top: 0.25rem;">-</div>
+      </div>
+    </div>
+
+    <!-- Multiple Candidate Sellers Section -->
+    <div id="res-alternatives-section" style="margin-top: 2rem; margin-bottom: 2rem;">
+      <h3 style="color: #ffffff; font-size: 1.35rem; margin-bottom: 1rem;">🏬 Multiple Candidate Artisan Sellers Comparison</h3>
+      <div id="res-alternatives-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 1.25rem;"></div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
+      <button type="button" onclick="openWhatsAppPurchaseModal()" class="btn-amber" style="padding: 0.85rem 1.75rem; font-size: 1.1rem; font-weight: bold; background: linear-gradient(135deg, #10b981, #059669); color: #ffffff;">
+        💬 Proceed to Purchase / Contact Seller →
+      </button>
+      <button type="button" onclick="downloadProcurementPdf()" style="background: rgba(245, 158, 11, 0.2); border: 1px solid var(--amber-gold); color: var(--amber-gold); padding: 0.85rem 1.5rem; border-radius: 0.5rem; font-weight: bold; cursor: pointer;">
+        📄 Download Procurement Plan (PDF)
+      </button>
+    </div>
+  </div>
+</div>
+{% endblock %}

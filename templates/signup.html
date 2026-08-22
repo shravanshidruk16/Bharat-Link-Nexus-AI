@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Buyer Signup — BharatLink Nexus AI{% endblock %}
+
+{% block content %}
+<div style="max-width: 28rem; margin: 3rem auto;">
+  <div class="glass-card-amber">
+    <h2 style="font-size: 2rem; color: #ffffff; margin-bottom: 0.5rem; text-align: center;">Create Buyer Account</h2>
+    <p style="color: var(--text-muted); text-align: center; margin-bottom: 2rem;">Register for institutional artisan procurement access</p>
+
+    {% if error %}
+    <div style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 1.5rem; font-size: 0.9rem;">
+      {{ error }}
+    </div>
+    {% endif %}
+
+    <form action="/signup" method="POST">
+      <div style="margin-bottom: 1.25rem;">
+        <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">Full Name</label>
+        <input type="text" name="full_name" required placeholder="John Doe" style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
+      </div>
+
+      <div style="margin-bottom: 1.25rem;">
+        <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">Company / Organization</label>
+        <input type="text" name="company_name" placeholder="Bharat Import Corp" style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
+      </div>
+
+      <div style="margin-bottom: 1.25rem;">
+        <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">Email Address</label>
+        <input type="email" name="email" required placeholder="buyer@company.com" style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
+      </div>
+
+      <div style="margin-bottom: 2rem;">
+        <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">Password</label>
+        <input type="password" name="password" required placeholder="••••••••" style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
+      </div>
+
+      <button type="submit" class="btn-amber" style="width: 100%; padding: 0.85rem; font-size: 1.1rem;">Create Buyer Account →</button>
+    </form>
+
+    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.95rem; color: var(--text-muted);">
+      Already have an account? <a href="/login" style="color: var(--amber-gold); font-weight: bold;">Sign In</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

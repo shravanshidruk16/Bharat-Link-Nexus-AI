@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard — BharatLink Nexus AI{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2.5rem; display: flex; justify-content: space-between; align-items: center;">
+  <div>
+    <h1 style="font-size: 2.5rem; color: #ffffff; margin-bottom: 0.5rem;">Buyer Platform Admin Monitor</h1>
+    <p style="color: var(--amber-gold); font-size: 1.1rem; font-weight: bold;">System Usage Analytics & Buyer Activity Overview</p>
+  </div>
+  <a href="/logout" style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5; padding: 0.5rem 1.25rem; border-radius: 0.5rem; font-weight: bold;">Sign Out Admin</a>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+  <div class="glass-card">
+    <span style="color: var(--text-muted); font-size: 0.9rem;">Registered Buyer Accounts</span>
+    <h2 style="font-size: 2.5rem; color: #ffffff; margin-top: 0.5rem;">{{ buyers|length }}</h2>
+  </div>
+  <div class="glass-card">
+    <span style="color: var(--text-muted); font-size: 0.9rem;">Total Procurement Runs Executed</span>
+    <h2 style="font-size: 2.5rem; color: var(--amber-gold); margin-top: 0.5rem;">{{ history|length }}</h2>
+  </div>
+  <div class="glass-card">
+    <span style="color: var(--text-muted); font-size: 0.9rem;">Total Value Sourced</span>
+    <h2 style="font-size: 2.5rem; color: #34d399; margin-top: 0.5rem;">₹{{ "{:,.2f}".format(total_spending) }}</h2>
+  </div>
+</div>
+
+<div class="glass-card" style="margin-bottom: 2.5rem;">
+  <h3 style="color: #ffffff; font-size: 1.4rem; margin-bottom: 1.5rem;">Registered Buyer Users</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Company</th>
+        <th>Role</th>
+        <th>Joined Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for b in buyers %}
+      <tr>
+        <td style="font-weight: bold; color: #ffffff;">{{ b.full_name }}</td>
+        <td style="color: var(--amber-gold);">{{ b.email }}</td>
+        <td>{{ b.company_name or "Independent Buyer" }}</td>
+        <td>
+          <span style="background: rgba(245, 158, 11, 0.2); color: var(--amber-gold); padding: 0.25rem 0.6rem; border-radius: 0.4rem; font-size: 0.8rem; font-weight: bold;">
+            {{ b.role }}
+          </span>
+        </td>
+        <td>{{ b.created_at }}</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">No buyer accounts registered yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="glass-card">
+  <h3 style="color: #ffffff; font-size: 1.4rem; margin-bottom: 1.5rem;">Recent Sourcing Runs & Goods Purchased</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Buyer Prompt</th>
+        <th>Product Purchased</th>
+        <th>Supplier</th>
+        <th>Qty & Cost</th>
+        <th>Delivery ETA</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in history %}
+      <tr>
+        <td style="color: #ffffff;">"{{ item.rawPrompt }}"</td>
+        <td style="font-weight: bold; color: var(--amber-gold);">{{ item.productName }}</td>
+        <td>{{ item.supplierName }}</td>
+        <td>{{ item.quantity }} units (₹{{ "{:,.2f}".format(item.totalCost) }})</td>
+        <td style="color: #34d399; font-weight: bold;">{{ item.deliveryDays }} Days</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">No procurement runs logged yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>{% block title %}BharatLink Seller Central — Artisan Sourcing Portal{% endblock %}</title>
+
+  <!-- Favicon & PWA Manifest -->
+  <link rel="icon" type="image/png" href="/static/images/logo.png">
+  <link rel="apple-touch-icon" href="/static/images/logo.png">
+  <link rel="manifest" href="/static/manifest.json">
+  <meta name="theme-color" content="#090f21">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Seller Central">
+
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+
+  <!-- Stripe/Amazon-Level Premium Seller Central Header Nav -->
+  <header class="seller-header">
+    <div class="header-container">
+      
+      <!-- Left Top Corner Logo with Actual Brand Logo -->
+      <a href="/seller-central" class="logo-link">
+        <img src="/static/images/logo.png" alt="BharatLink Seller Central Logo" style="height: 2.2rem; width: auto; max-width: 2.5rem; object-fit: contain; flex-shrink: 0; vertical-align: middle; border-radius: 0.3rem;" />
+        <span style="color: var(--amber-gold); font-size: 1.25rem; font-weight: bold; white-space: nowrap;">Seller Central</span>
+      </a>
+
+      <!-- Right Nav Links (Desktop & Compact Mobile) -->
+      <nav class="nav-links">
+        <a href="/seller-central/dashboard" class="nav-item desktop-nav-link {% if active_page == 'dashboard' %}active{% endif %}">Dashboard</a>
+        <a href="/seller-central/products" class="nav-item desktop-nav-link {% if active_page == 'products' %}active{% endif %}">Products</a>
+        <a href="/seller-central/inventory" class="nav-item desktop-nav-link {% if active_page == 'inventory' %}active{% endif %}">Inventory</a>
+        <a href="/seller-central/gallery" class="nav-item desktop-nav-link {% if active_page == 'gallery' %}active{% endif %}">Gallery</a>
+        <a href="/seller-central/reviews" class="nav-item desktop-nav-link {% if active_page == 'reviews' %}active{% endif %}">Ratings</a>
+        <a href="/seller-central/analytics" class="nav-item desktop-nav-link {% if active_page == 'analytics' %}active{% endif %}">Analytics</a>
+        <a href="/seller-central/tips" class="nav-item desktop-nav-link {% if active_page == 'tips' %}active{% endif %}">Growth Tips</a>
+        <a href="/seller-central/profile" class="nav-item desktop-nav-link {% if active_page == 'profile' %}active{% endif %}">GI Profile</a>
+
+        {% if seller_user %}
+          <span style="color: var(--amber-gold); font-size: 0.82rem; font-weight: bold; padding: 0.35rem 0.65rem; background: rgba(245, 158, 11, 0.12); border: 1px solid var(--border-amber); border-radius: 0.4rem; white-space: nowrap; flex-shrink: 0;">
+            👤 {{ seller_user.seller.contact_person if seller_user and seller_user.seller and seller_user.seller.contact_person else (seller_user.user.full_name if seller_user and seller_user.user and seller_user.user.full_name else seller_user.email) }}
+          </span>
+          <a href="/logout" style="color: #fca5a5; font-size: 0.82rem; white-space: nowrap; padding: 0.35rem 0.5rem; flex-shrink: 0;" class="desktop-nav-link">Logout</a>
+        {% else %}
+          <a href="/seller-central/login" class="nav-item desktop-nav-link">Sign In</a>
+          <a href="/seller-central/signup" class="btn-amber desktop-nav-link">Register Seller</a>
+        {% endif %}
+
+        <a href="/" class="btn-outline" style="margin-left: 0.3rem;">
+          ← Buyer App
+        </a>
+      </nav>
+
+    </div>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Mobile Bottom Navigation Bar (Hidden on Desktop) -->
+  <nav class="mobile-bottom-nav">
+    <a href="/seller-central/dashboard" class="mobile-nav-item {% if active_page == 'dashboard' %}active{% endif %}">
+      <span class="nav-icon">🏠</span>
+      <span>Dashboard</span>
+    </a>
+    <a href="/seller-central/products" class="mobile-nav-item {% if active_page == 'products' %}active{% endif %}">
+      <span class="nav-icon">📦</span>
+      <span>Products</span>
+    </a>
+    <a href="/seller-central/inventory" class="mobile-nav-item {% if active_page == 'inventory' %}active{% endif %}">
+      <span class="nav-icon">⚡</span>
+      <span>Inventory</span>
+    </a>
+    <a href="/seller-central/analytics" class="mobile-nav-item {% if active_page == 'analytics' %}active{% endif %}">
+      <span class="nav-icon">📊</span>
+      <span>Analytics</span>
+    </a>
+    <a href="/seller-central/profile" class="mobile-nav-item {% if active_page == 'profile' %}active{% endif %}">
+      <span class="nav-icon">👤</span>
+      <span>GI Profile</span>
+    </a>
+  </nav>
+
+  <footer>
+    <div class="footer-container">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <img src="/static/images/logo.png" alt="Logo" style="height: 2rem; width: auto; object-fit: contain;" />
+        <div>
+          <h3 style="color: var(--amber-gold); margin-bottom: 0.15rem;">BharatLink Seller Central</h3>
+          <p style="font-size: 0.85rem;">Artisan Sourcing & Inventory Gateway for Global Buyers</p>
+        </div>
+      </div>
+      <div>
+        <p>© 2026 BharatLink Nexus AI Seller Network. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
