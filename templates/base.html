@@ -106,6 +106,9 @@
     </div>
   </footer>
 
+  <script>
+    window.currentUser = {% if user %}{{ user|tojson }}{% else %}null{% endif %};
+  </script>
   <script src="/static/js/app.js"></script>
 </body>
 </html>
