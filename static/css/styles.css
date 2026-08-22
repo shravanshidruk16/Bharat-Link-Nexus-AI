@@ -352,3 +352,57 @@ th {
 tr:hover {
   background: rgba(255, 255, 255, 0.02);
 }
+
+/* AI Executive Summary & Markdown Table Formatting (Zero Gap Fix) */
+#res-summary {
+  color: #e2e8f0 !important;
+  font-size: 1.02rem !important;
+  line-height: 1.6 !important;
+  background: rgba(15, 23, 42, 0.6) !important;
+  padding: 1.5rem !important;
+  border-radius: 0.75rem !important;
+  border-left: 4px solid var(--amber-gold) !important;
+  margin-bottom: 2rem !important;
+}
+
+#res-summary p {
+  margin-top: 0 !important;
+  margin-bottom: 0.85rem !important;
+}
+
+#res-summary h3 {
+  color: var(--amber-gold) !important;
+  font-size: 1.25rem !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 0.75rem !important;
+  border-bottom: 1px solid var(--border-amber) !important;
+  padding-bottom: 0.35rem !important;
+}
+
+#res-summary table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin-top: 0.75rem !important;
+  margin-bottom: 1.25rem !important;
+  background: rgba(9, 15, 33, 0.7) !important;
+  border-radius: 0.5rem !important;
+  overflow: hidden !important;
+  border: 1px solid var(--border-amber) !important;
+}
+
+#res-summary th, 
+#res-summary td {
+  padding: 0.75rem 1rem !important;
+  border: 1px solid var(--border-amber) !important;
+  text-align: left !important;
+}
+
+#res-summary th {
+  background: rgba(245, 158, 11, 0.15) !important;
+  color: var(--amber-gold) !important;
+  font-weight: bold !important;
+}
+
+#res-summary br {
+  display: none !important; /* Hides stray <br> line breaks inside summary container */
+}

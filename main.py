@@ -574,7 +574,7 @@ def run_procurement(request: Request, req: ProcurementRequest):
         final_plan = final_state.get("final_plan")
         if final_plan and "executiveSummary" in final_plan:
             raw_summary = final_plan["executiveSummary"]
-            final_plan["executiveSummaryHtml"] = markdown.markdown(raw_summary, extensions=['extra', 'nl2br'])
+            final_plan["executiveSummaryHtml"] = markdown.markdown(raw_summary, extensions=['extra', 'tables', 'sane_lists'])
 
         response_data = {
             "success": True,
