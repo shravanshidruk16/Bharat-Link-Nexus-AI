@@ -13,6 +13,15 @@ def verify_password(password: str, hashed: str) -> bool:
 ADMIN_EMAIL = "admin@bharatlink.com"
 ADMIN_HASH = hash_password("Admin@123")
 
+def format_user_friendly_error(err: Any, email: str = "") -> str:
+    err_str = str(err)
+    if "duplicate key value violates unique constraint" in err_str or "23505" in err_str or "already exists" in err_str:
+        clean_e = f" '{email}'" if email else ""
+        return f"An account with email{clean_e} is already registered on BharatLink. Please sign in to your existing account or use a different email."
+    if "PGRST204" in err_str:
+        return "Registration processing. Please try submitting again."
+    return err_str
+
 class AuthService:
     @staticmethod
     def ensure_admin_exists():
@@ -49,7 +58,7 @@ class AuthService:
                 user.pop("password_hash", None)
                 return {"success": True, "user": user}
         except Exception as e:
-            return {"success": False, "error": str(e)}
+            return {"success": False, "error": format_user_friendly_error(e, clean_email)}
         return {"success": False, "error": "Signup failed"}
 
     @staticmethod
@@ -87,7 +96,7 @@ class AuthService:
         except Exception as e:
             if clean_email == ADMIN_EMAIL and password == "Admin@123":
                 return {"success": True, "user": {"id": "admin-001", "email": ADMIN_EMAIL, "full_name": "BharatLink Global Admin", "role": "admin"}}
-            return {"success": False, "error": str(e)}
+            return {"success": False, "error": format_user_friendly_error(e, clean_email)}
 
     @staticmethod
     def signup_seller(
@@ -108,10 +117,27 @@ class AuthService:
         if not buyer_res["success"]:
             user_res = AuthService.login_user(clean_email, password)
             if not user_res["success"]:
+                # If account exists but password was wrong or user profile existed, give clean message
+                if "already registered" in buyer_res.get("error", ""):
+                    return {"success": False, "error": f"An account with email '{clean_email}' is already registered. Please sign in with your password to access Seller Central."}
                 return buyer_res
             user = user_res["user"]
         else:
             user = buyer_res["user"]
+
+        # Check if seller profile already exists for this user
+        existing_seller = AuthService.get_seller_by_user_id(user["id"])
+        if existing_seller:
+            if not existing_seller.get("active", False):
+                return {
+                    "success": False,
+                    "error": f"An artisan seller account ('{existing_seller.get('business_name')}') with email '{clean_email}' is already registered and is currently pending admin verification."
+                }
+            else:
+                return {
+                    "success": False,
+                    "error": f"An artisan seller account with email '{clean_email}' is already registered and active. Please sign in to access your Seller Central dashboard."
+                }
 
         # 100% Fail-Safe Payload handling for Supabase Schema Column variations
         try:
@@ -150,7 +176,7 @@ class AuthService:
                 }
                 seller_res = client.table("seller_profiles").insert(payload_fallback).execute()
             except Exception as e2:
-                return {"success": False, "error": str(e2)}
+                return {"success": False, "error": format_user_friendly_error(e2, clean_email)}
 
         seller = seller_res.data[0] if seller_res.data else None
         return {

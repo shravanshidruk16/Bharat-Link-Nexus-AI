@@ -9,8 +9,14 @@
     <p style="color: var(--amber-gold); text-align: center; margin-bottom: 2rem;">Publish your artisan products to institutional global buyers</p>
 
     {% if error %}
-    <div style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 1.5rem; font-size: 0.9rem;">
+    <div style="background: rgba(239, 68, 68, 0.18); border: 1px solid #ef4444; color: #fca5a5; padding: 0.9rem 1.1rem; border-radius: 0.6rem; margin-bottom: 1.5rem; font-size: 0.92rem; line-height: 1.5;">
+      <strong style="color: #f87171; display: block; margin-bottom: 0.25rem;">⚠️ Registration Error</strong>
       {{ error }}
+      {% if 'already registered' in error or 'already exists' in error %}
+      <div style="margin-top: 0.6rem;">
+        <a href="/seller-central/login" style="color: var(--amber-gold); font-weight: bold; text-decoration: underline;">Click here to Sign In →</a>
+      </div>
+      {% endif %}
     </div>
     {% endif %}
 
