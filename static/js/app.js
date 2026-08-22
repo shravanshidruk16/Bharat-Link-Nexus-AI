@@ -442,16 +442,17 @@ function renderProcurementResult(plan) {
 
   const summaryEl = document.getElementById('res-summary');
   if (summaryEl) {
-    summaryEl.innerHTML = parseMarkdownToHtml(plan.executiveSummaryHtml || plan.executiveSummary);
+    summaryEl.innerHTML = plan.executiveSummaryHtml || parseMarkdownToHtml(plan.executiveSummary);
   }
 
   const supplierEl = document.getElementById('res-supplier');
   if (supplierEl) supplierEl.textContent = `${supplier.name || 'Artisan Guild'} (${supplier.location || 'India'})`;
 
-  // Render main product with image if available
+  // Render main product with image if available and valid URL
   const productEl = document.getElementById('res-product');
   if (productEl) {
-    let imgTag = product.imageUrl ? `<img src="${product.imageUrl}" alt="${product.name}" style="width: 2.5rem; height: 2.5rem; border-radius: 0.4rem; object-fit: cover; border: 1px solid var(--border-amber); vertical-align: middle; margin-right: 0.5rem;" />` : '';
+    const isValImg = product.imageUrl && (product.imageUrl.startsWith("http") || product.imageUrl.startsWith("/static"));
+    let imgTag = isValImg ? `<img src="${product.imageUrl}" alt="${product.name}" style="width: 2.5rem; height: 2.5rem; border-radius: 0.4rem; object-fit: cover; border: 1px solid var(--border-amber); vertical-align: middle; margin-right: 0.5rem;" />` : '';
     productEl.innerHTML = `${imgTag} <span>${product.name || 'Handicraft Item'}</span>`;
   }
 
@@ -470,7 +471,8 @@ function renderProcurementResult(plan) {
     if (alternatives && alternatives.length > 0) {
       let altHtml = '';
       alternatives.forEach((alt, idx) => {
-        const img = alt.imageUrl ? `<img src="${alt.imageUrl}" alt="${alt.productName}" style="width: 100%; height: 9rem; object-fit: cover; border-radius: 0.5rem; margin-bottom: 0.75rem; border: 1px solid var(--border-amber);" />` : `<div style="width: 100%; height: 9rem; background: rgba(15, 23, 42, 0.8); border-radius: 0.5rem; margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: center; color: var(--amber-gold); font-size: 2rem; border: 1px solid var(--border-amber);">🖼️</div>`;
+        const isValAltImg = alt.imageUrl && (alt.imageUrl.startsWith("http") || alt.imageUrl.startsWith("/static"));
+        const img = isValAltImg ? `<img src="${alt.imageUrl}" alt="${alt.productName}" style="width: 100%; height: 9rem; object-fit: cover; border-radius: 0.5rem; margin-bottom: 0.75rem; border: 1px solid var(--border-amber);" />` : `<div style="width: 100%; height: 9rem; background: rgba(15, 23, 42, 0.8); border-radius: 0.5rem; margin-bottom: 0.75rem; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--amber-gold); font-size: 1.5rem; border: 1px solid var(--border-amber);"><span style="font-size: 2rem;">🖼️</span><span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Artisan Catalog Photo</span></div>`;
 
         altHtml += `
           <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-amber); padding: 1.25rem; border-radius: 0.75rem; display: flex; flex-direction: column; justify-content: space-between;">
