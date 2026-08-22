@@ -2,6 +2,7 @@ import os
 import uvicorn
 import socket
 import json
+import gc
 import markdown
 from fastapi import FastAPI, Request, Form, HTTPException, Cookie, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -514,15 +515,23 @@ def run_procurement(request: Request, req: ProcurementRequest):
             raw_summary = final_plan["executiveSummary"]
             final_plan["executiveSummaryHtml"] = markdown.markdown(raw_summary, extensions=['extra', 'nl2br'])
 
-        return {
+        response_data = {
             "success": True,
             "finalPlan": final_plan,
             "logs": final_state.get("logs", []),
             "replanCount": final_state.get("replan_count", 0),
             "errors": final_state.get("errors", [])
         }
+
+        # Clear large state objects and trigger RAM memory trim
+        del final_state
+        del initial_input
+        gc.collect()
+
+        return response_data
     except Exception as e:
         print("Error executing Python LangGraph workflow:", e)
+        gc.collect()
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/history")
