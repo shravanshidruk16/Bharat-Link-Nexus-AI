@@ -1,5 +1,6 @@
 import json
 import re
+import time
 import urllib.request
 import urllib.parse
 from typing import TypedDict, List, Dict, Any, Optional
@@ -56,7 +57,7 @@ def fetch_live_weather(city_name: str) -> str:
             temp = cw.get("temperature", 26.0)
             wcode = cw.get("weathercode", 0)
 
-            w_desc = "Clear & Sunny"
+            w_desc = "Clear & Favorable"
             if wcode in [1, 2, 3]:
                 w_desc = "Partly Cloudy"
             elif wcode in [45, 48]:
@@ -64,7 +65,7 @@ def fetch_live_weather(city_name: str) -> str:
             elif wcode in [51, 53, 55, 61, 63, 65, 80, 81]:
                 w_desc = "Light to Moderate Rain"
             elif wcode in [66, 67, 71, 73, 75, 82, 95, 96]:
-                w_desc = "Stormy / Heavy Rain"
+                w_desc = "Heavy Rain / Monsoon Corridor"
 
             return f"{location_name}: {temp}°C, {w_desc}"
     except Exception as e:
@@ -104,7 +105,7 @@ def create_log(agent: str, status: str, message: str) -> Dict[str, Any]:
 def buyer_intent_node(state: GraphState) -> Dict[str, Any]:
     agent_name = "Buyer Intent Agent"
     logs = list(state.get("logs", []))
-    logs.append(create_log(agent_name, "running", f"Parsing request: '{state['raw_user_request']}'"))
+    logs.append(create_log(agent_name, "running", f"Analyzing buyer prompt & extracting specifications..."))
 
     req_text = state["raw_user_request"]
     llm = get_groq_llm(0.1)
@@ -136,8 +137,8 @@ def buyer_intent_node(state: GraphState) -> Dict[str, Any]:
         elif "london" in req_lower: dest = "London"
         elif "new york" in req_lower: dest = "New York"
 
-        # Discriminative check for procurement vs general vs out of scope
-        is_proc = any(kw in req_lower for kw in ["buy", "source", "procure", "need", "want", "find", "order", "price", "cost", "units", "saree", "shawl", "pottery", "artisan", "handicraft", "chappal", "spices", "item", "product"])
+        # Check procurement vs general vs out of scope
+        is_proc = any(kw in req_lower for kw in ["buy", "source", "procure", "need", "want", "find", "order", "price", "cost", "units", "saree", "shawl", "pottery", "artisan", "handicraft", "chappal", "spices", "item", "product", "ring", "bangles", "mango", "kurta"])
         is_out = any(kw in req_lower for kw in ["iphone", "car", "tesla", "macbook", "laptop", "software", "flat", "apartment", "bitcoin"])
 
         parsed_intent = {
@@ -152,7 +153,7 @@ def buyer_intent_node(state: GraphState) -> Dict[str, Any]:
             "destinationCity": dest
         }
 
-    logs.append(create_log(agent_name, "completed", f"Parsed Requirements — Product: {parsed_intent.get('productType')}, Quantity: {parsed_intent.get('quantity')}, Destination: {parsed_intent.get('destination')}"))
+    logs.append(create_log(agent_name, "completed", f"Extracted Sourcing Intent — Item: '{parsed_intent.get('productType')}', Qty: {parsed_intent.get('quantity')}, Dest: '{parsed_intent.get('destination')}'"))
 
     return {
         "buyer_requirements": parsed_intent,
@@ -160,7 +161,7 @@ def buyer_intent_node(state: GraphState) -> Dict[str, Any]:
     }
 
 # ============================================================
-# 2. DISCOVERY AGENT NODE (Strict Grounding & Zero Substitution)
+# 2. DISCOVERY AGENT NODE (400+ Product Inventory Catalog Search)
 # ============================================================
 def discovery_node(state: GraphState) -> Dict[str, Any]:
     agent_name = "Discovery Agent"
@@ -168,7 +169,7 @@ def discovery_node(state: GraphState) -> Dict[str, Any]:
     reqs = state.get("buyer_requirements") or {}
     prod_type = reqs.get("productType", "")
 
-    # If out of scope (e.g. iPhone) or non-procurement query, return empty list
+    # If out of scope (e.g. iPhone) or non-procurement query, return empty list immediately
     if reqs.get("is_out_of_scope", False) or not reqs.get("is_procurement_query", True):
         logs.append(create_log(agent_name, "completed", f"Query out of artisan catalog scope: '{prod_type}'."))
         return {
@@ -177,23 +178,23 @@ def discovery_node(state: GraphState) -> Dict[str, Any]:
             "logs": logs
         }
 
-    logs.append(create_log(agent_name, "running", f"Querying database catalog for '{prod_type}'..."))
+    logs.append(create_log(agent_name, "running", f"Querying Supabase database across 400+ artisan products for '{prod_type}'..."))
 
-    # Strict database product search
+    # Search Supabase product inventory
     products = DatabaseService.get_products(query=prod_type)
     sellers = DatabaseService.get_sellers(active_only=True)
 
-    # STRICT GROUNDING RULE: If no matching artisan product exists for the query,
-    # DO NOT fallback to returning all products! Return empty list so "Product Not Found" is rendered!
+    # STRICT GROUNDING: If 0 products match the query in the database,
+    # DO NOT fallback to returning Gold Necklaces or random items! Return empty list []!
     if not products:
-        logs.append(create_log(agent_name, "completed", f"No matching artisan products found in database for query '{prod_type}'."))
+        logs.append(create_log(agent_name, "completed", f"No matching artisan products found in 400+ item database for query '{prod_type}'."))
         return {
             "candidate_products": [],
             "candidate_suppliers": sellers,
             "logs": logs
         }
 
-    logs.append(create_log(agent_name, "completed", f"Found {len(products)} matching catalog products across sellers."))
+    logs.append(create_log(agent_name, "completed", f"Discovered {len(products)} matching catalog products across verified artisan sellers."))
 
     return {
         "candidate_products": products,
@@ -202,12 +203,12 @@ def discovery_node(state: GraphState) -> Dict[str, Any]:
     }
 
 # ============================================================
-# 3. PROCUREMENT EVALUATION AGENT NODE (Multiple Sellers)
+# 3. PROCUREMENT EVALUATION AGENT NODE (Deep Multi-Seller Evaluation)
 # ============================================================
 def evaluation_node(state: GraphState) -> Dict[str, Any]:
     agent_name = "Procurement Evaluation Agent"
     logs = list(state.get("logs", []))
-    logs.append(create_log(agent_name, "running", "Evaluating multiple artisan sellers, stock counts & GI Tag ratings..."))
+    logs.append(create_log(agent_name, "running", "Evaluating candidate seller pricing, stock inventory & GI Tag authenticity..."))
 
     products = state.get("candidate_products") or []
     reqs = state.get("buyer_requirements") or {}
@@ -228,6 +229,8 @@ def evaluation_node(state: GraphState) -> Dict[str, Any]:
     evaluations = []
     seller_map = {s.get("id"): s for s in sellers}
 
+    qty = reqs.get("quantity", 50)
+
     for p in products:
         s_id = p.get("seller_id")
         s_info = seller_map.get(s_id) or {}
@@ -235,18 +238,23 @@ def evaluation_node(state: GraphState) -> Dict[str, Any]:
         s_phone = s_info.get("whatsapp_number") or s_info.get("phone") or "+919823012345"
         img_url = p.get("image_url") or (p.get("image_urls")[0] if p.get("image_urls") else "")
 
+        u_price = float(p.get("price", 0))
+        t_price = u_price * qty
+
         evaluations.append({
             "sellerId": s_id,
             "sellerName": s_name,
             "productName": p.get("name"),
-            "price": float(p.get("price", 0)),
-            "totalCost": float(p.get("price", 0)) * reqs.get("quantity", 50),
+            "price": u_price,
+            "totalCost": t_price,
             "availableStock": p.get("available_stock", 0),
             "rating": float(p.get("quality_rating", 4.9)),
             "location": f"{s_info.get('city', p.get('region', 'India'))}, {s_info.get('state', p.get('region', 'India'))}",
             "imageUrl": img_url,
             "whatsappNumber": s_phone,
-            "phone": s_phone
+            "phone": s_phone,
+            "product": p,
+            "supplier": s_info
         })
 
     if sellers and selected_product.get("seller_id"):
@@ -259,7 +267,7 @@ def evaluation_node(state: GraphState) -> Dict[str, Any]:
         selected_seller = sellers[0]
 
     seller_name = selected_seller.get("business_name") if selected_seller else selected_product.get("seller_name", "Artisan Guild")
-    logs.append(create_log(agent_name, "completed", f"Ranked {len(evaluations)} candidate seller options. Recommended primary seller: '{seller_name}'"))
+    logs.append(create_log(agent_name, "completed", f"Ranked {len(evaluations)} candidate artisan sellers. Recommended primary supplier: '{seller_name}'"))
 
     return {
         "selected_product": selected_product,
@@ -269,42 +277,37 @@ def evaluation_node(state: GraphState) -> Dict[str, Any]:
     }
 
 # ============================================================
-# 4. LOGISTICS OPTIMIZATION AGENT NODE (Dynamic Distance Math)
+# 4. LOGISTICS OPTIMIZATION AGENT NODE (Visual ASCII Route Map)
 # ============================================================
 def logistics_node(state: GraphState) -> Dict[str, Any]:
     agent_name = "Logistics Optimization Agent"
     logs = list(state.get("logs", []))
-    logs.append(create_log(agent_name, "running", "Calculating dynamic transport distance (km), fuel expenses & container mode..."))
+    logs.append(create_log(agent_name, "running", "Mapping visual transit corridor & hub route map from origin to destination..."))
 
     product = state.get("selected_product")
     reqs = state.get("buyer_requirements") or {}
 
     if not product:
-        logs.append(create_log(agent_name, "completed", "No selected product for logistics calculation."))
+        logs.append(create_log(agent_name, "completed", "No selected product for corridor mapping."))
         return {
             "candidate_routes": [],
             "selected_route": None,
             "logs": logs
         }
 
-    # Extract dynamic origin and destination cities
     origin_city = product.get("region") or product.get("city") or "Pune"
     dest_city = reqs.get("destinationCity") or reqs.get("destination") or origin_city
-    qty = reqs.get("quantity", 50)
-    weight_per_unit = float(product.get("weight_kg", 0.5))
-    total_weight = weight_per_unit * qty
 
     candidate_routes = RouteOptimizerService.calculate_routes(
         origin_city=origin_city,
         destination_city=dest_city,
-        weight_kg=total_weight,
         deadline_days=reqs.get("deadlineDays", 10)
     )
 
     selected_route = candidate_routes[0] if candidate_routes else None
 
     if selected_route:
-        logs.append(create_log(agent_name, "completed", f"Calculated Dynamic Route ({origin_city} → {dest_city}): {selected_route['mode']}, Est. Distance: {selected_route.get('estimatedDistanceKm')} km, Shipping Cost: ₹{selected_route['estimatedShippingCost']:,}"))
+        logs.append(create_log(agent_name, "completed", f"Mapped Logistics Corridor ({origin_city} → {dest_city}): {selected_route['textMap']}"))
 
     return {
         "candidate_routes": candidate_routes,
@@ -318,7 +321,7 @@ def logistics_node(state: GraphState) -> Dict[str, Any]:
 def risk_disruption_node(state: GraphState) -> Dict[str, Any]:
     agent_name = "Risk & Disruption Agent"
     logs = list(state.get("logs", []))
-    logs.append(create_log(agent_name, "running", "Fetching live weather & checking corridor transit risk factors..."))
+    logs.append(create_log(agent_name, "running", "Fetching real-time weather analytics & checking transit corridor safety..."))
 
     route = state.get("selected_route")
     reqs = state.get("buyer_requirements") or {}
@@ -326,7 +329,7 @@ def risk_disruption_node(state: GraphState) -> Dict[str, Any]:
     supplier = state.get("selected_supplier") or {}
 
     if not route:
-        logs.append(create_log(agent_name, "completed", "No active transport route to assess for disruptions."))
+        logs.append(create_log(agent_name, "completed", "No active transport route to assess."))
         return {
             "risk_analysis": {"overallRisk": "LOW", "isAcceptable": True, "riskFactors": ["Standard Transit"]},
             "replan_count": state.get("replan_count", 0),
@@ -362,16 +365,15 @@ def risk_disruption_node(state: GraphState) -> Dict[str, Any]:
     }
 
 # ============================================================
-# 6. DECISION & EXPLANATION AGENT NODE (Gapless & Image Fixed)
+# 6. DECISION & EXPLANATION AGENT NODE (Executive Synthesis & Gapless Report)
 # ============================================================
 def decision_node(state: GraphState) -> Dict[str, Any]:
     agent_name = "Decision & Explanation Agent"
     logs = list(state.get("logs", []))
-    logs.append(create_log(agent_name, "running", "Synthesizing dynamic executive procurement report..."))
+    logs.append(create_log(agent_name, "running", "Synthesizing executive recommendation report..."))
 
     product = state.get("selected_product")
     supplier = state.get("selected_supplier")
-    routes = state.get("candidate_routes") or []
     route = state.get("selected_route") or {}
     reqs = state.get("buyer_requirements") or {}
     evaluations = state.get("supplier_evaluations") or []
@@ -379,14 +381,14 @@ def decision_node(state: GraphState) -> Dict[str, Any]:
 
     raw_request = state.get("raw_user_request", "")
 
-    # CASE A: Non-procurement or Out of Scope or Product Not Found in Inventory
+    # CASE A: Out of Scope / Product Not Found / General Query
     if not product or not reqs.get("is_procurement_query", True) or reqs.get("is_out_of_scope", False) or len(state.get("candidate_products", [])) == 0:
         if reqs.get("is_out_of_scope", False):
-            summary_md = f"### ❌ Requested Product Out of Scope\n\nWe searched our catalog for **\"{raw_request}\"**.\n\nBharatLink Nexus AI is strictly an **authentic Indian artisan handicraft, GI textile, pottery, metalwork, and organic craft platform**. Commercial mass-manufactured items like electronics, vehicles, or software are not listed.\n\n**Status**: 0 Matching Artisan Products Found.\n*(Please try searching for authentic Indian artisan categories such as Paithani Sarees, Kolhapuri Chappals, Blue Pottery, Brassware, Spices, or Bamboo Crafts.)*"
+            summary_md = f"### ❌ Requested Product Out of Scope\n\nWe searched our catalog for **\"{raw_request}\"**.\n\nBharatLink Nexus AI is strictly an **authentic Indian artisan handicraft, GI textile, pottery, metalwork, organic produce, and craft platform**. Commercial mass-manufactured items like electronics, vehicles, or software are not listed.\n\n**Status**: 0 Matching Artisan Products Found.\n*(Please try searching for authentic Indian artisan categories such as Paithani Sarees, Kolhapuri Chappals, Blue Pottery, Brassware, Spices, or Bamboo Crafts.)*"
         elif not reqs.get("is_procurement_query", True):
-            summary_md = f"### 🤖 BharatLink Nexus AI Procurement Assistant\n\nHello! I am your **Autonomous B2B Artisan Procurement & Freight Logistics Assistant**.\n\nI can help you source verified GI-certified Indian artisan products, compare candidate seller guilds, calculate dynamic transit distance (km) & fuel costs, and assess live weather risks.\n\n**How to use me**:\nSimply ask a procurement query like:\n- *\"Source 50 units of Nauvari Paithani Sarees for delivery to Pune\"*\n- *\"Find 100 units of Brass Diya lamps for delivery to Mumbai in 5 days\"*\n- *\"Procure 30 units of Kolhapuri Chappals for export to London\"*"
+            summary_md = f"### 🤖 BharatLink Nexus AI Procurement Assistant\n\nHello! I am your **Autonomous B2B Artisan Procurement & Freight Logistics Assistant**.\n\nI can help you search our 400+ verified GI-certified Indian artisan products, compare candidate seller guilds, map visual transit corridors, and assess live weather risks.\n\n**How to use me**:\nSimply ask a procurement query like:\n- *\"Source 50 units of Nauvari Paithani Sarees for delivery to Pune\"*\n- *\"Find 100 units of Brass Diya lamps for delivery to Mumbai in 5 days\"*\n- *\"Procure 30 units of Kolhapuri Chappals for export to London\"*"
         else:
-            summary_md = f"### ❌ Product Not Found in Artisan Inventory\n\nWe searched our verified Indian artisan network database for **\"{raw_request}\"**.\n\nCurrently, no registered artisan sellers on BharatLink offer this specific item in their active inventory.\n\n**Status**: 0 Matching Catalog Products Found.\n*(Note: BharatLink Nexus AI only lists verified GI-certified Indian handicraft, textile, pottery, metalwork, and organic artisan products. Please try searching for available artisan categories like Paithani Sarees, Kolhapuri Chappals, Blue Pottery, or Spices.)*"
+            summary_md = f"### ❌ Product Not Found in Artisan Inventory\n\nWe searched our 400+ verified Indian artisan catalog database for **\"{raw_request}\"**.\n\nCurrently, no registered artisan sellers on BharatLink offer this specific item in their active catalog inventory.\n\n**Status**: 0 Matching Catalog Products Found across 400+ listed items.\n*(Note: BharatLink Nexus AI only lists verified GI-certified Indian handicraft, textile, pottery, metalwork, and organic produce products. Please try searching for available artisan categories like Paithani Sarees, Kolhapuri Chappals, Blue Pottery, Brassware, or Spices.)*"
 
         final_plan = {
             "executiveSummary": summary_md,
@@ -402,7 +404,7 @@ def decision_node(state: GraphState) -> Dict[str, Any]:
         logs.append(create_log(agent_name, "completed", "Generated Product Not Found / Out of Scope response."))
         return {"final_plan": final_plan, "logs": logs}
 
-    # CASE B: Product Found — Build Clean Gapless Procurement Plan
+    # CASE B: Product Found — Build Clean Gapless Procurement Plan (No Transportation Costs!)
     origin_w = risk_analysis.get("originWeather") or "Origin Hub: Fair Weather"
     dest_w = risk_analysis.get("destinationWeather") or "Destination Hub: Clear Weather"
 
@@ -413,14 +415,11 @@ def decision_node(state: GraphState) -> Dict[str, Any]:
     qty = reqs.get("quantity", 50)
     unit_price = float(product.get("price", 3200))
     product_cost = unit_price * qty
-    shipping_cost = float(route.get("estimatedShippingCost", 1000))
-    total_cost = product_cost + shipping_cost
+    total_cost = product_cost  # TOTAL PRODUCT COST ONLY! No transportation charges!
     delivery_days = route.get("totalDeliveryDays", 1)
-    dist_km = route.get("estimatedDistanceKm", 25.0)
-    transport_mode = route.get("mode", "Local Waterproof Container Mini Truck")
-    fuel_calc = route.get("fuelCalculationDetails", "Fuel & Base Handling Fee")
+    text_map = route.get("textMap") or f"[ 📍 Origin: {product.get('region', 'India')} ] ──────► [ 🏁 Destination: {reqs.get('destination', 'India')} ]"
 
-    # Clean Image URL Handling — FIX BROKEN ALT IMAGES!
+    # Clean Image URL Handling
     raw_img = product.get("image_url") or (product.get("image_urls")[0] if product.get("image_urls") else "")
     if raw_img and (raw_img.startswith("http") or raw_img.startswith("/static")):
         primary_image_tag = f'<img src="{raw_img}" alt="{product.get("name")}" style="max-width: 160px; border-radius: 8px; border: 1px solid var(--border-amber); margin-top: 0.5rem; display: block;">'
@@ -434,8 +433,8 @@ def decision_node(state: GraphState) -> Dict[str, Any]:
             p_obj = ev.get("product", {})
             s_obj = ev.get("supplier", {})
             s_name = ev.get("sellerName") or s_obj.get("business_name") or "Artisan Seller"
-            u_price = float(ev.get("price", unit_price))
-            t_price = u_price * qty
+            u_p = float(ev.get("price", unit_price))
+            t_p = u_p * qty
             loc = ev.get("location") or "India"
             img_val = ev.get("imageUrl") or ""
             
@@ -444,11 +443,11 @@ def decision_node(state: GraphState) -> Dict[str, Any]:
             else:
                 img_cell = '<span style="color: var(--amber-gold); font-size: 0.82rem;">🖼️ Catalog Item</span>'
 
-            alt_sellers_rows.append(f"| **{s_name}** | ₹{u_price:,.2f} | ₹{t_price:,.2f} | 4.9 ⭐ | {loc} | {img_cell} |")
+            alt_sellers_rows.append(f"| **{s_name}** | ₹{u_p:,.2f} | ₹{t_p:,.2f} | 4.9 ⭐ | {loc} | {img_cell} |")
 
     alt_sellers_table = "\n".join(alt_sellers_rows) if alt_sellers_rows else f"| **{supplier_name}** | ₹{unit_price:,.2f} | ₹{product_cost:,.2f} | 4.9 ⭐ | {product.get('region', 'India')} | 🖼️ Catalog Item |"
 
-    summary_md = f"### 📋 Executive Sourcing Narrative\nWe have successfully structured the procurement workflow for **{qty} units of {product.get('name')}**. Sourced directly from verified artisan collective **'{supplier_name}'** located in {product.get('region', 'India')}, this order meets all GI-tag authenticity standards and delivery timelines.\n\nThe primary supplier maintains an active stock inventory of {product.get('available_stock', qty)} units. Transit route optimization selected **{transport_mode}**, covering an estimated transit distance of **{dist_km} km** with a total lead time of **{delivery_days} days**.\n\n### 🌤️ Live Weather & Corridor Condition Assessment\n- **Origin Hub ({product.get('region', 'Origin')} Hub)**: {origin_w}\n- **Destination Hub ({reqs.get('destination', 'Destination')} Hub)**: {dest_w}\n- **Corridor Safety Status**: Live weather analytics confirm operational transit conditions. Weather-adaptive container transport ensures zero rain/moisture risk to the craft cargo.\n\n### 🏬 Multiple Candidate Artisan Sellers Comparison\n| Seller | Unit Price (₹) | Total Price (₹) | Rating (⭐) | Location | Image Link |\n| :--- | :--- | :--- | :--- | :--- | :--- |\n{alt_sellers_table}\n\n### 🚚 Transportation & Distance Cost Breakdown\n- **Selected Transport Vehicle**: {transport_mode}\n- **Estimated Transit Distance**: {dist_km} km\n- **Fuel & Logistics Freight Calculation**: {fuel_calc}\n- **Total Estimated Transportation Cost**: ₹{shipping_cost:,.2f}\n\n### 📦 Artisan Product Cost Breakdown\n- **Unit Price**: ₹{unit_price:,.2f} per unit\n- **Quantity Sourced**: {qty} units\n- **Total Product Cost**: ₹{product_cost:,.2f}\n{primary_image_tag}\n\n### 💰 Final Total All-Inclusive Sourcing Cost\n- **Total Product Cost**: ₹{product_cost:,.2f}\n- **Total Transportation Cost**: ₹{shipping_cost:,.2f}\n- **FINAL TOTAL ESTIMATED COST**: ₹{total_cost:,.2f}"
+    summary_md = f"### 📋 Executive Sourcing Narrative\nWe have successfully structured the procurement workflow for **{qty} units of {product.get('name')}**. Sourced directly from verified artisan collective **'{supplier_name}'** located in {product.get('region', 'India')}, this order meets all GI-tag authenticity standards and target delivery timelines.\n\nThe primary supplier maintains an active stock inventory of {product.get('available_stock', qty)} units with verified GI-certification credentials.\n\n### 🌤️ Live Weather & Corridor Condition Assessment\n- **Origin Hub ({product.get('region', 'Origin')} Hub)**: {origin_w}\n- **Destination Hub ({reqs.get('destination', 'Destination')} Hub)**: {dest_w}\n- **Corridor Safety Status**: Operational transit conditions confirmed. Climate-protected packaging ensures zero weather degradation to cargo.\n\n### 🏬 Multiple Candidate Artisan Sellers Comparison\n| Seller | Unit Price (₹) | Total Price (₹) | Rating (⭐) | Location | Image Link |\n| :--- | :--- | :--- | :--- | :--- | :--- |\n{alt_sellers_table}\n\n### 🗺️ Visual Transit Corridor & Route Map\n`{text_map}`\n- **Estimated Lead Time**: {delivery_days} Days\n- **Corridor Status**: Verified & Active\n\n### 📦 Artisan Product Cost Breakdown\n- **Unit Price**: ₹{unit_price:,.2f} per unit\n- **Quantity Sourced**: {qty} units\n- **Total Product Inventory Cost**: ₹{product_cost:,.2f}\n{primary_image_tag}\n\n### 💰 Product Sourcing Cost & Financial Summary\n- **Unit Price**: ₹{unit_price:,.2f} per unit\n- **Quantity Sourced**: {qty} units\n- **TOTAL PRODUCT COST**: ₹{total_cost:,.2f}"
 
     final_plan = {
         "executiveSummary": summary_md,
@@ -456,7 +455,7 @@ def decision_node(state: GraphState) -> Dict[str, Any]:
         "supplier_name": supplier_name,
         "quantity": qty,
         "product_cost": product_cost,
-        "shipping_cost": shipping_cost,
+        "shipping_cost": 0,
         "total_cost": total_cost,
         "delivery_days": delivery_days,
         "risk_level": route.get("riskLevel", "LOW"),
@@ -485,7 +484,7 @@ def decision_node(state: GraphState) -> Dict[str, Any]:
     # Save to Supabase Database
     DatabaseService.save_procurement_run(raw_request, final_plan, user_id=state.get("user_id"))
 
-    logs.append(create_log(agent_name, "completed", f"Synthesized executive plan. Final Cost: ₹{total_cost:,.2f}"))
+    logs.append(create_log(agent_name, "completed", f"Synthesized executive plan. Total Product Cost: ₹{total_cost:,.2f}"))
     return {"final_plan": final_plan, "logs": logs}
 
 # ============================================================

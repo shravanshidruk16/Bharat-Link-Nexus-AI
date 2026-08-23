@@ -1,3 +1,4 @@
+import re
 from supabase import create_client, Client
 from config import SUPABASE_URL, SUPABASE_SERVICE_KEY
 
@@ -36,17 +37,33 @@ class DatabaseService:
             products = [p for p in products if str(p.get("seller_id")) == str(seller_id)]
 
         if query and products:
-            q = query.lower()
-            filtered = [
-                p for p in products 
-                if q in p.get("name", "").lower() 
-                or q in p.get("description", "").lower() 
-                or q in p.get("category", "").lower() 
-                or q in p.get("region", "").lower()
-                or any(q in str(t).lower() for t in p.get("tags", []))
-            ]
-            if len(filtered) > 0:
-                return filtered
+            q = str(query).lower().strip()
+            # Stop words to ignore during product search
+            stop_words = {"need", "procure", "want", "buy", "source", "units", "pcs", "pieces", "days", "delivery", "within", "for", "with", "from", "and", "the"}
+            words = [w for w in re.findall(r'\w+', q) if len(w) > 2 and w not in stop_words]
+            if not words:
+                words = [q]
+
+            filtered = []
+            for p in products:
+                name = str(p.get("name", "")).lower()
+                desc = str(p.get("description", "")).lower()
+                cat = str(p.get("category", "")).lower()
+                reg = str(p.get("region", "")).lower()
+                tags = [str(t).lower() for t in p.get("tags", [])]
+                s_name = str(p.get("seller_name", "")).lower()
+
+                # Check if any search keyword matches product attributes
+                matches = any(
+                    w in name or w in desc or w in cat or w in reg or w in s_name or any(w in t for t in tags)
+                    for w in words
+                )
+                if matches:
+                    filtered.append(p)
+
+            # STRICT GROUNDING: Return filtered products list ONLY.
+            # If 0 products match the query (e.g. 'mango'), return empty list []!
+            return filtered
 
         return products
 

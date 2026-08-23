@@ -197,9 +197,8 @@ function openWhatsAppPurchaseModal(customPlan) {
     const qty = p.quantity || 50;
     const dest = route.destination || p.destination || "India";
     const etaDays = recRoute.totalDeliveryDays || p.estimatedDeliveryDays || 4;
-    const recCost = Number(recRoute.estimatedShippingCost || p.estimatedShippingCost || 3500);
     const prodCost = Number(p.productCost || (qty * (product.price || 3000)));
-    const totalCost = Number(p.totalEstimatedCost || (prodCost + recCost));
+    const totalCost = prodCost;
 
     const u = window.currentUser || {};
     const buyerName = u.full_name || u.name || "Shravan Shidruk";
@@ -210,10 +209,7 @@ function openWhatsAppPurchaseModal(customPlan) {
     const prodCategory = product.category || "Handloom & Craft";
     const originRegion = product.region || supplier.location || "Maharashtra";
     const unitPrice = Number(product.price || (prodCost / qty));
-    const distKm = recRoute.estimatedDistanceKm || 25.0;
-    const carrier = recRoute.carrier || "National Logistics Network";
-    const transportMode = recRoute.mode || "Local Waterproof Container Mini Truck";
-    const fuelDetails = recRoute.fuelCalculationDetails || "Fuel & Base Driver/Handling Fee";
+    const textMap = recRoute.textMap || `[ 📍 Origin Hub: ${originRegion} ] ──────► [ 🏁 Destination: ${dest} ]`;
 
     let msg = `🙏 Namaste ${sellerName},\n\n`;
     msg += `I am contacting you through the BharatLink Nexus AI B2B Artisan Procurement Platform to place an authentic sourcing order.\n\n`;
@@ -231,16 +227,14 @@ function openWhatsAppPurchaseModal(customPlan) {
     msg += `• Quantity Requested: ${qty} Units\n`;
     msg += `• Unit Price Quoted: ₹${unitPrice.toLocaleString('en-IN')} per unit\n`;
     msg += `• Quality Standard: Verified GI-Tag Certification Required\n\n`;
-    msg += `3️⃣ PLATFORM LOGISTICS & MULTI-MODAL FREIGHT:\n`;
-    msg += `• Selected Transport Mode: ${transportMode}\n`;
-    msg += `• Estimated Transit Distance: ${distKm} km\n`;
-    msg += `• Target Delivery Deadline: ${etaDays} Days\n`;
-    msg += `• Transport Carrier Fleet: ${carrier}\n`;
-    msg += `• Fuel & Freight Calculation: ${fuelDetails}\n\n`;
+    msg += `3️⃣ PLATFORM LOGISTICS & TRANSIT ROUTE MAP:\n`;
+    msg += `• Transit Route Corridor: ${originRegion} ──────► ${dest}\n`;
+    msg += `• Route Map Visual: ${textMap}\n`;
+    msg += `• Target Delivery Deadline: ${etaDays} Days\n\n`;
     msg += `4️⃣ PLATFORM FINANCIAL COST BREAKDOWN:\n`;
-    msg += `• Product Inventory Cost: ₹${prodCost.toLocaleString('en-IN')}\n`;
-    msg += `• Estimated Freight Charges: ₹${recCost.toLocaleString('en-IN')}\n`;
-    msg += `• TOTAL ALL-INCLUSIVE ESTIMATED VALUE: ₹${totalCost.toLocaleString('en-IN')}\n\n`;
+    msg += `• Unit Price: ₹${unitPrice.toLocaleString('en-IN')} per unit\n`;
+    msg += `• Quantity Sourced: ${qty} Units\n`;
+    msg += `• TOTAL PRODUCT INVENTORY COST: ₹${prodCost.toLocaleString('en-IN')}\n\n`;
     msg += `==================================\n`;
     msg += `📋 ACTION REQUIRED BY SELLER:\n`;
     msg += `Please confirm the following to finalize order dispatch:\n`;
