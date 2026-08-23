@@ -29,6 +29,17 @@ body {
   flex-direction: column;
 }
 
+@keyframes pulseAiOrb {
+  0% {
+    transform: scale(0.92);
+    box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
+  }
+  100% {
+    transform: scale(1.15);
+    box-shadow: 0 0 35px rgba(251, 191, 36, 0.95);
+  }
+}
+
 a {
   color: var(--amber-gold);
   text-decoration: none;

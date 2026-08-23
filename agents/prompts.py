@@ -4,15 +4,16 @@ Analyze the user's natural language procurement request and extract parameters i
 
 CRITICAL DISCRIMINATION RULES:
 1. "is_procurement_query": Set to true IF AND ONLY IF the user is explicitly asking to buy, source, procure, find, or inquire about products. Set to false if it is a general chat, greeting ("hello", "hi"), question about the system, or non-shopping query.
-2. "is_out_of_scope": Set to true IF the user asks for non-artisan commercial/mass products (e.g., iPhones, cars, computers, software, industrial machinery, real estate). BharatLink is strictly an authentic Indian artisan handicraft, GI textile, pottery, metalwork, organic produce, and craft platform.
+2. "is_out_of_scope": Set to true ONLY IF the user asks for commercial electronics, vehicles, software, or real estate (e.g. iPhones, laptops, cars, software, cryptocurrency).
+   - Authentic Indian artisan handicrafts, GI textiles, pottery, metalwork, organic produce, wooden crafts, drinkware, mugs, beer mugs, tumblers, brassware, and decor items ARE ALWAYS 100% IN SCOPE (is_out_of_scope: false).
 
 Output MUST be a JSON object with these exact keys:
 - "is_procurement_query": boolean
 - "is_out_of_scope": boolean
-- "productType": Extracted product name or search query (string, e.g. "Paithani Saree", "Brass Diya", "Pashmina Shawl", "Alphonso Mango")
-- "productCategory": Sourcing category (string, e.g. "Textiles & Apparel", "Handicrafts & Handloom", "Pottery & Ceramics", "Organic Produce")
+- "productType": Extracted product name or search query (string, e.g. "Beer Mug", "Paithani Saree", "Brass Diya", "Pashmina Shawl", "Alphonso Mango")
+- "productCategory": Sourcing category (string, e.g. "Wood & Bamboo Crafts", "Textiles & Apparel", "Handicrafts & Handloom", "Pottery & Ceramics", "Organic Produce")
 - "quantity": Number of units requested (integer, default 50 if unspecified)
-- "destination": Delivery destination city (string, e.g. "Pune", "Mumbai", "Delhi", "London")
+- "destination": Delivery destination city (string, e.g. "Nashik", "Pune", "Mumbai", "Delhi", "London")
 - "deadlineDays": Delivery deadline in days (integer, default 10 if unspecified)
 - "budgetInr": Total budget in INR (integer)
 - "originCity": Origin city if mentioned in request (string)

@@ -1,6 +1,8 @@
 import re
+import json
 from supabase import create_client, Client
-from config import SUPABASE_URL, SUPABASE_SERVICE_KEY
+from langchain_groq import ChatGroq
+from config import SUPABASE_URL, SUPABASE_SERVICE_KEY, GROQ_API_KEY_2
 
 def get_supabase_client() -> Client:
     return create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
@@ -30,7 +32,8 @@ NOUN_CATEGORY_MAP = {
     "earring": "jewelry", "pendant": "jewelry", "ornament": "jewelry", "jewel": "jewelry",
     "bracelet": "jewelry", "chain": "jewelry", "nacklace": "jewelry",
     
-    # Home Decor & Furnishing
+    # Home Decor & Drinkware
+    "mug": "drinkware", "tumbler": "drinkware", "cup": "drinkware", "beer": "drinkware", "tankard": "drinkware",
     "curtain": "homedecor", "rug": "homedecor", "carpet": "homedecor", "vase": "homedecor", 
     "plate": "homedecor", "diya": "homedecor", "lamp": "homedecor", "coaster": "homedecor",
     "pot": "homedecor", "craft": "homedecor", "statue": "homedecor", "bedsheet": "homedecor",
@@ -43,6 +46,60 @@ NOUN_CATEGORY_MAP = {
 
 FOOD_FRUIT_KEYWORDS = {"mango", "alphonso", "kesar", "fruit", "spice", "saffron", "rice", "tea", "food"}
 FOOD_FRUIT_CATEGORIES = {"agricultural products", "food & beverages", "organic produce"}
+
+def llm_product_search(query: str, products: list) -> list:
+    """Dedicated LLM Product Search Tool using GROQ_API_KEY_2 and openai/gpt-oss-20b model."""
+    if not GROQ_API_KEY_2 or not query or not products:
+        return []
+    try:
+        q_lower = query.lower()
+        # Find relevant candidate products for the LLM context
+        keywords = [stem_word(w) for w in re.findall(r'\w+', q_lower) if len(w) > 2]
+        candidates = [
+            p for p in products 
+            if any(k in str(p.get("name")).lower() or k in str(p.get("category")).lower() or k in str(p.get("description")).lower() for k in keywords)
+        ]
+        if not candidates:
+            candidates = products[:150]
+
+        catalog_index = [
+            {"id": str(p.get("id")), "name": str(p.get("name")), "category": str(p.get("category"))} 
+            for p in candidates[:120]
+        ]
+
+        system_prompt = (
+            "You are an AI Product Search Agent. Given a user query and catalog products (JSON), "
+            "return a JSON array containing ONLY matching product IDs. "
+            "Match exact names, synonyms, craft variations, and drinkware items (e.g. 'beer mug' matches 'Coffee Tumbler Beer Mug (400ML)'; 'cotton hoodie' matches 'Lightweight Organic Cotton Hoodie'; 'mangoes' matches 'Alphonso Mango'). "
+            "If no relevant products match the query, return []. "
+            "Respond ONLY with valid JSON array of IDs e.g. [\"id1\", \"id2\"]."
+        )
+
+        user_content = f"User Search Query: {query}\nCatalog:\n{json.dumps(catalog_index)}"
+
+        llm = ChatGroq(
+            groq_api_key=GROQ_API_KEY_2,
+            model_name="openai/gpt-oss-20b",
+            temperature=0.0
+        )
+
+        res = llm.invoke([
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_content}
+        ])
+
+        match = re.search(r'\[.*\]', str(res.content), re.DOTALL)
+        if match:
+            matched_ids = json.loads(match.group(0))
+            if isinstance(matched_ids, list) and len(matched_ids) > 0:
+                id_set = set(str(i) for i in matched_ids)
+                matched = [p for p in products if str(p.get("id")) in id_set]
+                if matched:
+                    return matched
+    except Exception as e:
+        print("Groq LLM Catalog Search notice:", e)
+
+    return []
 
 class DatabaseService:
     @staticmethod
@@ -76,6 +133,11 @@ class DatabaseService:
             products = [p for p in products if str(p.get("seller_id")) == str(seller_id)]
 
         if query and products:
+            # 1. Try Dedicated Groq LLM Search (using GROQ_API_KEY_2 & openai/gpt-oss-20b model)
+            llm_matches = llm_product_search(query, products)
+            if llm_matches:
+                return llm_matches
+
             q_clean = str(query).lower().strip()
             stop_words = {"need", "procure", "want", "buy", "source", "units", "pcs", "pieces", "days", "delivery", "within", "for", "with", "from", "and", "the", "just", "find", "live", "pune", "maharashtra", "next", "in"}
             raw_tokens = [w for w in re.findall(r'\w+', q_clean) if len(w) > 2 and w not in stop_words]

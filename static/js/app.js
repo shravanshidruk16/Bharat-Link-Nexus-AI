@@ -412,15 +412,39 @@ document.addEventListener('DOMContentLoaded', () => {
     if (stepperContainer) stepperContainer.style.display = 'block';
     if (resultContainer) resultContainer.style.display = 'none';
 
-    // Animate Stepper Items
+    const subtextEl = document.getElementById('ai-loading-subtext');
+    const progressBarEl = document.getElementById('ai-progress-bar');
+    const timerEl = document.getElementById('ai-timer');
+
+    let startTime = Date.now();
+    let timerInterval = setInterval(() => {
+      if (timerEl) {
+        let elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+        timerEl.textContent = elapsed + 's';
+      }
+    }, 100);
+
+    const stages = [
+      { pct: '18%', text: '⚡ Agent 1: Buyer Intent Agent structuring prompt specifications...' },
+      { pct: '38%', text: '🔍 Agent 2: Invoking Groq GPT-OSS-20B Model & Searching 444 Supabase Products...' },
+      { pct: '58%', text: '🏬 Agent 3: Procurement Evaluation Agent comparing candidate seller pricing...' },
+      { pct: '76%', text: '🗺️ Agent 4: Logistics Agent mapping visual ASCII transit corridor...' },
+      { pct: '88%', text: '🌤️ Agent 5: Risk Agent fetching live weather at origin & destination...' },
+      { pct: '98%', text: '📊 Agent 6: Decision Agent finalizing executive recommendation report...' }
+    ];
+
+    // Animate Stepper Items & Progress Bar
     for (let i = 0; i < 6; i++) {
+      if (subtextEl) subtextEl.textContent = stages[i].text;
+      if (progressBarEl) progressBarEl.style.width = stages[i].pct;
+
       const stepEl = document.getElementById(`agent-step-${i}`);
       if (stepEl) {
         stepEl.className = 'agent-step-item running';
         const statusEl = stepEl.querySelector('.step-status');
         if (statusEl) statusEl.textContent = 'Processing...';
       }
-      await new Promise(r => setTimeout(r, 350));
+      await new Promise(r => setTimeout(r, 450));
       if (stepEl) {
         stepEl.className = 'agent-step-item completed';
         const statusEl = stepEl.querySelector('.step-status');
@@ -446,6 +470,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error(err);
       alert("Network error executing procurement engine.");
     } finally {
+      clearInterval(timerInterval);
       if (stepperContainer) stepperContainer.style.display = 'none';
     }
   });
