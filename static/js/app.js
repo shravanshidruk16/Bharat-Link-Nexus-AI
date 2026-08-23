@@ -97,15 +97,16 @@ function downloadProcurementPdf() {
       return;
     }
 
-    const prodName = p.product?.name || "Artisan Product";
-    const supplierName = p.supplier?.name || "Verified Artisan Guild";
+    const prodName = p.product?.name || p.product_name || "Artisan Product";
+    const supplierName = p.supplier?.name || p.supplier_name || "Verified Artisan Guild";
     const certification = p.supplier?.craftCertification || "GI Tag Certified";
     const qty = p.quantity || 50;
-    const totalCost = Number(p.totalEstimatedCost || 0).toLocaleString();
-    const etaDays = p.estimatedDeliveryDays || 4;
-    const risk = p.riskLevel || "LOW";
+    const totalVal = Number(p.total_cost || p.totalEstimatedCost || p.product_cost || (qty * (p.product?.price || 0)));
+    const totalCostStr = totalVal.toLocaleString('en-IN');
+    const etaDays = p.delivery_days || p.estimatedDeliveryDays || 4;
+    const risk = p.risk_level || p.riskLevel || "LOW";
     const summaryHtml = p.executiveSummaryHtml || parseMarkdownToHtml(p.executiveSummary);
-    const route = p.selectedRoute || {};
+    const route = p.selectedRoute || p.selected_route || {};
 
     const printWindow = window.open('', '_blank');
     if (!printWindow) {
@@ -133,22 +134,20 @@ function downloadProcurementPdf() {
         <div class="meta">
           <p><strong>Product Sourced:</strong> ${prodName}</p>
           <p><strong>Artisan Guild:</strong> ${supplierName} (${certification})</p>
-          <p><strong>Quantity:</strong> ${qty} units | <strong>Total Estimated Cost:</strong> ₹${totalCost}</p>
+          <p><strong>Quantity:</strong> ${qty} units | <strong>Total Product Cost:</strong> ₹${totalCostStr}</p>
           <p><strong>Delivery ETA:</strong> ${etaDays} Days | <strong>Risk Score:</strong> <span class="badge">${risk}</span></p>
         </div>
 
         <h2>Executive Recommendation Narrative</h2>
         <div>${summaryHtml}</div>
 
-        <h2>Transportation & Freight Route Breakdown</h2>
+        <h2>Verified Logistics Corridor & Dispatch Information</h2>
         <table class="table">
-          <tr><th>Mode</th><th>Carrier</th><th>Origin → Destination</th><th>ETA</th><th>Freight Cost</th></tr>
+          <tr><th>Logistics Corridor</th><th>Target ETA</th><th>Transportation Charges & Dispatch</th></tr>
           <tr>
-            <td>${route.mode || "Air Freight Express"}</td>
-            <td>${route.carrier || "Express Courier"}</td>
-            <td>${route.originRegion || "India"} → ${route.destination || "Destination"}</td>
+            <td>${route.textMap || route.mode || "Direct Artisan Logistics Corridor"}</td>
             <td>${etaDays} Days</td>
-            <td>₹${Number(p.estimatedShippingCost || 0).toLocaleString()}</td>
+            <td>🚚 Talk to seller for preferred delivery mode / depends on seller's dispatch method</td>
           </tr>
         </table>
 
@@ -497,8 +496,9 @@ function renderProcurementResult(plan) {
   const qtyEl = document.getElementById('res-qty');
   if (qtyEl) qtyEl.textContent = `${plan.quantity || 50} Units`;
 
+  const totalVal = Number(plan.total_cost || plan.totalEstimatedCost || plan.product_cost || ((plan.quantity || 50) * (product.price || 0)));
   const totalEl = document.getElementById('res-total');
-  if (totalEl) totalEl.textContent = `₹${Number(plan.totalEstimatedCost || 0).toLocaleString()}`;
+  if (totalEl) totalEl.textContent = `₹${totalVal.toLocaleString('en-IN')}`;
 
   const etaEl = document.getElementById('res-eta');
   if (etaEl) etaEl.textContent = `${plan.estimatedDeliveryDays || 4} Days`;

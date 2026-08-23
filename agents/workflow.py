@@ -447,7 +447,7 @@ def decision_node(state: GraphState) -> Dict[str, Any]:
 
     alt_sellers_table = "\n".join(alt_sellers_rows) if alt_sellers_rows else f"| **{supplier_name}** | ₹{unit_price:,.2f} | ₹{product_cost:,.2f} | 4.9 ⭐ | {product.get('region', 'India')} | 🖼️ Catalog Item |"
 
-    summary_md = f"### 📋 Executive Sourcing Narrative\nWe have successfully structured the procurement workflow for **{qty} units of {product.get('name')}**. Sourced directly from verified artisan collective **'{supplier_name}'** located in {product.get('region', 'India')}, this order meets all GI-tag authenticity standards and target delivery timelines.\n\nThe primary supplier maintains an active stock inventory of {product.get('available_stock', qty)} units with verified GI-certification credentials.\n\n### 🌤️ Live Weather & Corridor Condition Assessment\n- **Origin Hub ({product.get('region', 'Origin')} Hub)**: {origin_w}\n- **Destination Hub ({reqs.get('destination', 'Destination')} Hub)**: {dest_w}\n- **Corridor Safety Status**: Operational transit conditions confirmed. Climate-protected packaging ensures zero weather degradation to cargo.\n\n### 🏬 Multiple Candidate Artisan Sellers Comparison\n| Seller | Unit Price (₹) | Total Price (₹) | Rating (⭐) | Location | Image Link |\n| :--- | :--- | :--- | :--- | :--- | :--- |\n{alt_sellers_table}\n\n### 🗺️ Visual Transit Corridor & Route Map\n`{text_map}`\n- **Estimated Lead Time**: {delivery_days} Days\n- **Corridor Status**: Verified & Active\n\n### 📦 Artisan Product Cost Breakdown\n- **Unit Price**: ₹{unit_price:,.2f} per unit\n- **Quantity Sourced**: {qty} units\n- **Total Product Inventory Cost**: ₹{product_cost:,.2f}\n{primary_image_tag}\n\n### 💰 Product Sourcing Cost & Financial Summary\n- **Unit Price**: ₹{unit_price:,.2f} per unit\n- **Quantity Sourced**: {qty} units\n- **TOTAL PRODUCT COST**: ₹{total_cost:,.2f}"
+    summary_md = f"### 📋 Executive Sourcing Narrative\nWe have successfully structured the procurement workflow for **{qty} units of {product.get('name')}**. Sourced directly from verified artisan collective **'{supplier_name}'** located in {product.get('region', 'India')}, this order meets all GI-tag authenticity standards and target delivery timelines.\n\nThe primary supplier maintains an active stock inventory of {product.get('available_stock', qty)} units with verified GI-certification credentials.\n\n### 🌤️ Live Weather & Corridor Condition Assessment\n- **Origin Hub ({product.get('region', 'Origin')} Hub)**: {origin_w}\n- **Destination Hub ({reqs.get('destination', 'Destination')} Hub)**: {dest_w}\n- **Corridor Safety Status**: Operational transit conditions confirmed. Climate-protected packaging ensures zero weather degradation to cargo.\n\n### 🏬 Multiple Candidate Artisan Sellers Comparison\n| Seller | Unit Price (₹) | Total Price (₹) | Rating (⭐) | Location | Image Link |\n| :--- | :--- | :--- | :--- | :--- | :--- |\n{alt_sellers_table}\n\n### 🗺️ Visual Transit Corridor & Route Map\n`{text_map}`\n- **Estimated Lead Time**: {delivery_days} Days\n- **Corridor Status**: Verified & Active\n\n### 📦 Artisan Product Cost Breakdown\n- **Unit Price**: ₹{unit_price:,.2f} per unit\n- **Quantity Sourced**: {qty} units\n- **Total Product Cost**: ₹{product_cost:,.2f}\n{primary_image_tag}\n\n### 💰 Product Sourcing Cost & Financial Summary\n- **Unit Price**: ₹{unit_price:,.2f} per unit\n- **Quantity Sourced**: {qty} units\n- **TOTAL PRODUCT COST**: ₹{total_cost:,.2f}\n- **Transportation Charges**: *Talk to seller for preferred delivery mode & dispatch options*"
 
     final_plan = {
         "executiveSummary": summary_md,
@@ -455,9 +455,12 @@ def decision_node(state: GraphState) -> Dict[str, Any]:
         "supplier_name": supplier_name,
         "quantity": qty,
         "product_cost": product_cost,
-        "shipping_cost": 0,
+        "shipping_cost": 0.0,
+        "shipping_note": "Talk to seller for preferred delivery mode & dispatch options",
         "total_cost": total_cost,
+        "totalEstimatedCost": total_cost,
         "delivery_days": delivery_days,
+        "estimatedDeliveryDays": delivery_days,
         "risk_level": route.get("riskLevel", "LOW"),
         "supplier": {
             "id": supplier.get("id") if supplier else product.get("seller_id"),
