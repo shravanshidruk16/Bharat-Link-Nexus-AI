@@ -267,30 +267,20 @@ function openWhatsAppPurchaseModal(customPlan) {
             <div style="color: #34d399; font-size: 0.9rem;">💬 WhatsApp: +${whatsappNum}</div>
           </div>
 
-          <h3 style="color: #ffffff; font-size: 1rem; margin-bottom: 0.75rem;">Multi-Modal Freight Options</h3>
+          <h3 style="color: #ffffff; font-size: 1rem; margin-bottom: 0.75rem;">🗺️ Verified Transit Route Corridor</h3>
           
-          <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
-            <span style="background: #10b981; color: #090f21; padding: 0.2rem 0.5rem; border-radius: 0.3rem; font-size: 0.75rem; font-weight: bold;">⭐ RECOMMENDED ROUTE</span>
-            <h4 style="color: #ffffff; margin-top: 0.4rem; font-size: 1rem;">${recRoute.mode || 'Air Freight Express'}</h4>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.5rem;">Carrier: ${recRoute.carrier || 'Express Courier'} | ETA: ${etaDays} Days</p>
-            <div style="display: flex; justify-content: space-between; font-size: 0.88rem; font-weight: bold;">
-              <span style="color: var(--amber-gold);">Freight: ₹${recCost.toLocaleString()}</span>
-              <span style="color: #34d399;">Total: ₹${totalCost.toLocaleString()}</span>
+          <div style="background: rgba(16, 185, 129, 0.12); border: 1px solid #10b981; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.25rem;">
+            <span style="background: #10b981; color: #090f21; padding: 0.2rem 0.5rem; border-radius: 0.3rem; font-size: 0.75rem; font-weight: bold;">⭐ ACTIVE TRANSIT CORRIDOR</span>
+            <div style="color: #ffffff; margin-top: 0.5rem; font-size: 0.95rem; font-family: monospace; overflow-x: auto; background: rgba(9, 15, 33, 0.8); padding: 0.6rem; border-radius: 0.4rem; border: 1px solid var(--border-amber);">
+              ${textMap}
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: bold; margin-top: 0.6rem;">
+              <span style="color: var(--amber-gold);">Target Delivery: ${etaDays} Days</span>
+              <span style="color: #34d399;">Total Product Cost: ₹${totalCost.toLocaleString('en-IN')}</span>
             </div>
           </div>
 
-          ${altRoute ? `
-          <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-amber); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.25rem;">
-            <span style="color: var(--text-muted); font-size: 0.75rem; font-weight: bold;">ALTERNATIVE OPTION</span>
-            <h4 style="color: #ffffff; margin-top: 0.4rem; font-size: 1rem;">${altRoute.mode || 'Rail Express'}</h4>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.5rem;">Carrier: ${altRoute.carrier || 'Freight Carrier'} | ETA: ${altRoute.totalDeliveryDays || etaDays + 2} Days</p>
-            <div style="display: flex; justify-content: space-between; font-size: 0.88rem;">
-              <span style="color: var(--amber-gold);">Freight: ₹${Number(altRoute.estimatedShippingCost || 4500).toLocaleString()}</span>
-            </div>
-          </div>
-          ` : ''}
-
-          <h3 style="color: #ffffff; font-size: 1rem; margin-bottom: 0.5rem;">Generated WhatsApp Inquiry Message</h3>
+          <h3 style="color: #ffffff; font-size: 1rem; margin-bottom: 0.5rem;">Generated WhatsApp B2B Sourcing Message</h3>
           <pre style="background: rgba(9, 15, 33, 0.9); border: 1px solid var(--border-amber); padding: 0.85rem; border-radius: 0.5rem; color: #cbd5e1; font-family: monospace; font-size: 0.8rem; white-space: pre-wrap; margin-bottom: 1.25rem;">${msg}</pre>
 
           <div style="text-align: center;">
@@ -320,12 +310,16 @@ function selectAlternativeSeller(sellerName, productName, price, whatsappNum) {
   const p = window.currentPlan;
   
   const updatedPlan = JSON.parse(JSON.stringify(p));
+  if (!updatedPlan.supplier) updatedPlan.supplier = {};
+  if (!updatedPlan.product) updatedPlan.product = {};
+
   updatedPlan.supplier.name = sellerName;
   updatedPlan.supplier.whatsappNumber = whatsappNum || "919823012345";
   updatedPlan.product.name = productName;
   updatedPlan.product.price = price;
   updatedPlan.productCost = price * (p.quantity || 50);
-  updatedPlan.totalEstimatedCost = updatedPlan.productCost + (p.estimatedShippingCost || 1000);
+  updatedPlan.totalEstimatedCost = updatedPlan.productCost;
+  updatedPlan.shippingCost = 0;
 
   openWhatsAppPurchaseModal(updatedPlan);
 }
