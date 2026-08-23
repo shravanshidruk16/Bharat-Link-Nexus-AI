@@ -5,6 +5,45 @@ from config import SUPABASE_URL, SUPABASE_SERVICE_KEY
 def get_supabase_client() -> Client:
     return create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
+def stem_word(w: str) -> str:
+    """Normalize plurals and suffixes (e.g. mangoes -> mango, hoodies -> hoodie, sarees -> saree, rings -> ring)."""
+    w = w.lower().strip()
+    if w.endswith('ies') and len(w) > 4:
+        return w[:-3] + 'y' if not w.endswith('hoodies') else 'hoodie'
+    if w.endswith('es') and len(w) > 4:
+        if w.endswith('mangoes'): return 'mango'
+        if w.endswith('sarees'): return 'saree'
+        return w[:-2]
+    if w.endswith('s') and not w.endswith('ss') and len(w) > 3:
+        return w[:-1]
+    return w
+
+NOUN_CATEGORY_MAP = {
+    # Apparel & Wearables
+    "hoodie": "apparel", "kurta": "apparel", "saree": "apparel", "shawl": "apparel", 
+    "stole": "apparel", "dupatta": "apparel", "dress": "apparel", "jacket": "apparel",
+    "shirt": "apparel", "pant": "apparel", "chappal": "footwear", "sandal": "footwear",
+    "shoe": "footwear", "footwear": "footwear", "clothing": "apparel", "garment": "apparel",
+    
+    # Jewelry & Ornaments
+    "ring": "jewelry", "bangle": "jewelry", "necklace": "jewelry", "anklet": "jewelry", 
+    "earring": "jewelry", "pendant": "jewelry", "ornament": "jewelry", "jewel": "jewelry",
+    "bracelet": "jewelry", "chain": "jewelry", "nacklace": "jewelry",
+    
+    # Home Decor & Furnishing
+    "curtain": "homedecor", "rug": "homedecor", "carpet": "homedecor", "vase": "homedecor", 
+    "plate": "homedecor", "diya": "homedecor", "lamp": "homedecor", "coaster": "homedecor",
+    "pot": "homedecor", "craft": "homedecor", "statue": "homedecor", "bedsheet": "homedecor",
+    "cushion": "homedecor", "pillow": "homedecor", "cover": "homedecor", "showpiece": "homedecor",
+    
+    # Food & Agriculture
+    "mango": "produce", "alphonso": "produce", "spice": "produce", "saffron": "produce", 
+    "tea": "produce", "fruit": "produce", "food": "produce", "grain": "produce", "rice": "produce"
+}
+
+FOOD_FRUIT_KEYWORDS = {"mango", "alphonso", "kesar", "fruit", "spice", "saffron", "rice", "tea", "food"}
+FOOD_FRUIT_CATEGORIES = {"agricultural products", "food & beverages", "organic produce"}
+
 class DatabaseService:
     @staticmethod
     def get_supabase_client() -> Client:
@@ -37,14 +76,18 @@ class DatabaseService:
             products = [p for p in products if str(p.get("seller_id")) == str(seller_id)]
 
         if query and products:
-            q = str(query).lower().strip()
-            # Stop words to ignore during product search
-            stop_words = {"need", "procure", "want", "buy", "source", "units", "pcs", "pieces", "days", "delivery", "within", "for", "with", "from", "and", "the"}
-            words = [w for w in re.findall(r'\w+', q) if len(w) > 2 and w not in stop_words]
-            if not words:
-                words = [q]
+            q_clean = str(query).lower().strip()
+            stop_words = {"need", "procure", "want", "buy", "source", "units", "pcs", "pieces", "days", "delivery", "within", "for", "with", "from", "and", "the", "just", "find", "live", "pune", "maharashtra", "next", "in"}
+            raw_tokens = [w for w in re.findall(r'\w+', q_clean) if len(w) > 2 and w not in stop_words]
+            if not raw_tokens:
+                raw_tokens = [q_clean]
 
-            filtered = []
+            stemmed_tokens = [stem_word(w) for w in raw_tokens]
+
+            # Identify target core product nouns in user query
+            core_nouns = [t for t in stemmed_tokens if t in NOUN_CATEGORY_MAP or any(t.startswith(k) or k in t for k in NOUN_CATEGORY_MAP)]
+
+            scored = []
             for p in products:
                 name = str(p.get("name", "")).lower()
                 desc = str(p.get("description", "")).lower()
@@ -53,17 +96,49 @@ class DatabaseService:
                 tags = [str(t).lower() for t in p.get("tags", [])]
                 s_name = str(p.get("seller_name", "")).lower()
 
-                # Check if any search keyword matches product attributes
-                matches = any(
-                    w in name or w in desc or w in cat or w in reg or w in s_name or any(w in t for t in tags)
-                    for w in words
-                )
-                if matches:
-                    filtered.append(p)
+                name_stemmed_words = [stem_word(w) for w in re.findall(r'\w+', name)]
 
-            # STRICT GROUNDING: Return filtered products list ONLY.
-            # If 0 products match the query (e.g. 'mango'), return empty list []!
-            return filtered
+                score = 0
+                matched_noun = False
+
+                for t, t_stem in zip(raw_tokens, stemmed_tokens):
+                    # Check exact or stemmed word match in product name
+                    if t_stem in name_stemmed_words or t in name or t_stem in name:
+                        score += 50
+                        if any(t_stem in cn or cn in t_stem for cn in core_nouns):
+                            matched_noun = True
+                            score += 50
+                    elif any(t_stem in str(tg) for tg in tags):
+                        score += 25
+                        if any(t_stem in cn or cn in t_stem for cn in core_nouns):
+                            matched_noun = True
+                            score += 25
+                    elif t_stem in desc or t in desc:
+                        score += 10
+                    elif t_stem in cat or t in cat:
+                        score += 15
+
+                # Food & Agricultural Category Boost
+                if any(fk in q_clean for fk in FOOD_FRUIT_KEYWORDS) and cat in FOOD_FRUIT_CATEGORIES:
+                    score += 100
+                    matched_noun = True
+
+                # CRITICAL STRICT GROUNDING: If user query contains explicit core nouns (like hoodie, saree, mango, ring),
+                # product MUST match at least one core noun!
+                if core_nouns and not matched_noun:
+                    score = -999
+
+                if score > 0:
+                    scored.append((score, p))
+
+            # Sort candidate products by semantic match score (highest score first)
+            scored.sort(key=lambda x: x[0], reverse=True)
+            if scored:
+                top_score = scored[0][0]
+                filtered = [item[1] for item in scored if item[0] >= (top_score * 0.70)]
+                return filtered
+
+            return []
 
         return products
 
@@ -315,8 +390,8 @@ class DatabaseService:
                 "product_name": result_data.get("product_name", "Handicraft Item"),
                 "quantity": result_data.get("quantity", 50),
                 "product_cost": result_data.get("product_cost", 100000),
-                "shipping_cost": result_data.get("shipping_cost", 5000),
-                "total_cost": result_data.get("total_cost", 105000),
+                "shipping_cost": result_data.get("shipping_cost", 0),
+                "total_cost": result_data.get("total_cost", 100000),
                 "delivery_days": result_data.get("delivery_days", 8),
                 "risk_level": result_data.get("risk_level", "LOW"),
                 "carbon_kg": result_data.get("carbon_kg", 10.0),
