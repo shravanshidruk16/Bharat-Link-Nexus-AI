@@ -1,5 +1,5 @@
 // BharatLink Nexus AI Service Worker
-const CACHE_NAME = 'bharatlink-pwa-v1';
+const CACHE_NAME = 'bharatlink-pwa-v2';
 const ASSETS_TO_CACHE = [
   '/',
   '/static/css/styles.css',
