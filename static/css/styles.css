@@ -20,6 +20,13 @@
   font-family: var(--font-family);
 }
 
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   background-color: var(--bg-dark);
   color: var(--text-main);
@@ -47,6 +54,37 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+/* Main Container */
+main {
+  max-width: 85rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  html, body {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden !important;
+    touch-action: pan-y;
+  }
+
+  main {
+    padding: 1.25rem 0.85rem 5rem 0.85rem !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+
+  img, video, iframe, input, select, textarea, button, table, pre, code, .glass-card, .glass-card-amber {
+    max-width: 100% !important;
+    box-sizing: border-box;
+  }
 }
 
 /* Responsive Pill Badges */

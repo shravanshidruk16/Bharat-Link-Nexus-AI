@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>{% block title %}BharatLink Nexus AI — AI-Powered Artisan Procurement Platform{% endblock %}</title>
   
   <!-- Favicon & PWA Manifest -->
@@ -47,7 +47,7 @@
           <span style="color: var(--amber-gold); font-size: 0.82rem; font-weight: bold; padding: 0.35rem 0.65rem; background: rgba(245, 158, 11, 0.12); border: 1px solid var(--border-amber); border-radius: 0.4rem; white-space: nowrap; flex-shrink: 0;">
             👤 {{ user.full_name if user.full_name else user.email }}
           </span>
-          <a href="/logout" style="color: #fca5a5; font-size: 0.82rem; white-space: nowrap; padding: 0.35rem 0.5rem; flex-shrink: 0;" class="desktop-nav-link">Logout</a>
+          <a href="/logout" style="color: #fca5a5; font-size: 0.82rem; font-weight: bold; white-space: nowrap; padding: 0.35rem 0.65rem; background: rgba(252, 165, 165, 0.15); border: 1px solid rgba(252, 165, 165, 0.3); border-radius: 0.4rem; flex-shrink: 0;">Logout</a>
         {% else %}
           <a href="/login" class="nav-item desktop-nav-link">Sign In</a>
           <a href="/signup" class="btn-amber desktop-nav-link">Sign Up</a>
@@ -100,8 +100,9 @@
           <p style="font-size: 0.85rem;">AI-Powered Artisan Procurement & Intelligent Multi-Modal Logistics Platform</p>
         </div>
       </div>
-      <div>
+      <div style="text-align: right;">
         <p>© 2026 BharatLink Nexus AI. All Rights Reserved.</p>
+        <p style="font-size: 0.85rem; color: var(--amber-gold); margin-top: 0.25rem; font-weight: bold;">Developed by Shravan Shidruk</p>
       </div>
     </div>
   </footer>
