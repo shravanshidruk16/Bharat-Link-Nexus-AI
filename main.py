@@ -17,6 +17,7 @@ from services.route_optimizer import RouteOptimizerService
 from services.auth_service import AuthService
 from services.seo_service import SEOService
 from services.articles_data import ARTICLES_CATALOG
+from services.email_service import EmailService
 
 app = FastAPI(title="BharatLink Nexus AI — Pure Python Platform", version="3.0.0")
 
@@ -44,6 +45,11 @@ class WhatsAppStatusRequest(BaseModel):
     sellerName: str
     productName: str
     status: str = "Seller Contacted"
+
+class ContactInquiryRequest(BaseModel):
+    fullName: str
+    email: str
+    query: str
 
 # Session Helper Functions using Cookies
 def get_current_user(request: Request) -> Optional[Dict[str, Any]]:
@@ -309,6 +315,36 @@ def page_contact(request: Request):
         breadcrumbs=[{"name": "Home", "url": "/"}, {"name": "Contact", "url": "/contact"}]
     )
     return templates.TemplateResponse(request=request, name="contact.html", context={"user": user, "active_page": "contact", "meta_context": meta_context})
+
+@app.post("/contact", response_class=HTMLResponse)
+def submit_contact_query(request: Request, full_name: str = Form(...), email: str = Form(...), query: str = Form(...)):
+    user = get_current_user(request)
+    meta_context = SEOService.generate_meta_context(
+        path="/contact",
+        title="Contact BharatLink Nexus AI | Buyer & Seller Inquiries",
+        description="Contact our team for B2B artisan procurement assistance.",
+        breadcrumbs=[{"name": "Home", "url": "/"}, {"name": "Contact", "url": "/contact"}]
+    )
+    
+    EmailService.send_contact_inquiry(full_name=full_name, sender_email=email, query_text=query)
+    
+    success_msg = f"Thank you, {full_name}! Your inquiry has been sent directly to Shravan Shidruk (shravanshidruk1605@gmail.com). We will contact you at {email} within 24 hours."
+    
+    return templates.TemplateResponse(request=request, name="contact.html", context={
+        "user": user,
+        "active_page": "contact",
+        "meta_context": meta_context,
+        "success_msg": success_msg
+    })
+
+@app.post("/api/contact")
+def api_contact_submit(req: ContactInquiryRequest):
+    EmailService.send_contact_inquiry(full_name=req.fullName, sender_email=req.email, query_text=req.query)
+    return {
+        "success": True,
+        "message": f"Inquiry submitted successfully to Shravan Shidruk (shravanshidruk1605@gmail.com).",
+        "recipient": "shravanshidruk1605@gmail.com"
+    }
 
 @app.get("/privacy", response_class=HTMLResponse)
 def page_privacy(request: Request):

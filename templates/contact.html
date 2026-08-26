@@ -4,25 +4,37 @@
 <div style="margin-bottom: 3rem;">
   <h1 style="font-size: 2.75rem; color: #ffffff; margin-bottom: 0.75rem;">Contact BharatLink Nexus AI</h1>
   <p style="color: var(--text-muted); font-size: 1.15rem; max-width: 50rem;">
-    Have questions regarding institutional artisan procurement, bulk export orders, or Seller Central registration? Reach out to our B2B support team.
+    Have questions regarding institutional artisan procurement, bulk export orders, or Seller Central registration? Reach out to our team.
   </p>
 </div>
+
+{% if success_msg %}
+<div style="background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #34d399; padding: 1.25rem; border-radius: 0.75rem; margin-bottom: 2rem; font-weight: bold; line-height: 1.6;">
+  ✓ {{ success_msg }}
+</div>
+{% endif %}
+
+{% if error_msg %}
+<div style="background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #fca5a5; padding: 1.25rem; border-radius: 0.75rem; margin-bottom: 2rem; font-weight: bold;">
+  ⚠️ {{ error_msg }}
+</div>
+{% endif %}
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); gap: 2rem; margin-bottom: 3rem;">
   <div class="glass-card-amber" style="padding: 2rem;">
     <h2 style="color: #ffffff; font-size: 1.35rem; margin-bottom: 1rem;">Institutional Buyer Inquiry</h2>
-    <form onsubmit="event.preventDefault(); alert('Thank you for your inquiry. A BharatLink procurement specialist will contact you within 24 hours.');">
+    <form action="/contact" method="POST">
       <div style="margin-bottom: 1rem;">
         <label style="color: var(--text-muted); font-size: 0.85rem; display: block; margin-bottom: 0.35rem;">Full Name</label>
-        <input type="text" required placeholder="e.g. Rahul Sharma" style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); color: #fff; box-sizing: border-box;">
+        <input type="text" name="full_name" required placeholder="e.g. Rahul Sharma" style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); color: #fff; box-sizing: border-box;">
       </div>
       <div style="margin-bottom: 1rem;">
         <label style="color: var(--text-muted); font-size: 0.85rem; display: block; margin-bottom: 0.35rem;">Work Email</label>
-        <input type="email" required placeholder="name@company.com" style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); color: #fff; box-sizing: border-box;">
+        <input type="email" name="email" required placeholder="name@company.com" style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); color: #fff; box-sizing: border-box;">
       </div>
       <div style="margin-bottom: 1rem;">
         <label style="color: var(--text-muted); font-size: 0.85rem; display: block; margin-bottom: 0.35rem;">Procurement Query</label>
-        <textarea rows="4" required placeholder="Describe target artisan product, quantity, destination city, and timeline..." style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); color: #fff; box-sizing: border-box;"></textarea>
+        <textarea name="query" rows="4" required placeholder="Describe target artisan product, quantity, destination city, and timeline..." style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); color: #fff; box-sizing: border-box;"></textarea>
       </div>
       <button type="submit" class="btn-amber" style="width: 100%; padding: 0.75rem; font-weight: bold;">Send Inquiry →</button>
     </form>
@@ -32,8 +44,10 @@
     <h2 style="color: #ffffff; font-size: 1.35rem; margin-bottom: 1.25rem;">Direct Contacts</h2>
     
     <div style="margin-bottom: 1.5rem;">
-      <h3 style="color: var(--amber-gold); font-size: 1rem; margin-bottom: 0.25rem;">📧 Platform Support Email</h3>
-      <p style="color: #cbd5e1; font-size: 0.95rem;">support@bharatlinknexus.ai</p>
+      <h3 style="color: var(--amber-gold); font-size: 1rem; margin-bottom: 0.25rem;">📧 Platform Developer & Support Email</h3>
+      <p style="color: #cbd5e1; font-size: 0.98rem; font-weight: bold;">
+        <a href="mailto:shravanshidruk1605@gmail.com" style="color: var(--amber-gold);">shravanshidruk1605@gmail.com</a>
+      </p>
     </div>
 
     <div style="margin-bottom: 1.5rem;">
@@ -43,7 +57,9 @@
 
     <div style="margin-bottom: 1.5rem;">
       <h3 style="color: var(--amber-gold); font-size: 1rem; margin-bottom: 0.25rem;">🏬 Seller Onboarding Support</h3>
-      <p style="color: #cbd5e1; font-size: 0.95rem;">For Indian artisan guilds & MSMEs registering on Seller Central, email seller@bharatlinknexus.ai</p>
+      <p style="color: #cbd5e1; font-size: 0.95rem;">
+        For Indian artisan guilds & MSMEs registering on Seller Central, email <a href="mailto:shravanshidruk1605@gmail.com" style="color: var(--amber-gold);">shravanshidruk1605@gmail.com</a>
+      </p>
     </div>
   </div>
 </div>
