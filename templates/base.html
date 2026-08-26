@@ -3,7 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>{% block title %}BharatLink Nexus AI — AI-Powered Artisan Procurement Platform{% endblock %}</title>
+  
+  <title>{% if meta_context and meta_context.title %}{{ meta_context.title }}{% else %}{% block title %}BharatLink Nexus AI | AI-Powered Indian Artisan Procurement & Logistics{% endblock %}{% endif %}</title>
+
+  <!-- SEO Metadata -->
+  {% if meta_context and meta_context.description %}
+  <meta name="description" content="{{ meta_context.description }}">
+  {% else %}
+  <meta name="description" content="Discover authentic Indian artisan products with AI-powered supplier sourcing, inventory-aware procurement and intelligent logistics planning for domestic and international buyers.">
+  {% endif %}
+
+  {% if meta_context and meta_context.keywords %}
+  <meta name="keywords" content="{{ meta_context.keywords }}">
+  {% endif %}
+
+  {% if meta_context and meta_context.canonical_url %}
+  <link rel="canonical" href="{{ meta_context.canonical_url }}">
+  {% endif %}
+
+  {% if meta_context and meta_context.noindex %}
+  <meta name="robots" content="noindex, nofollow">
+  {% else %}
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  {% endif %}
+
+  <!-- Open Graph / Social Media -->
+  <meta property="og:site_name" content="BharatLink Nexus AI">
+  <meta property="og:title" content="{% if meta_context and meta_context.og_title %}{{ meta_context.og_title }}{% else %}BharatLink Nexus AI | AI-Powered Artisan Procurement{% endblock %}{% endif %}">
+  <meta property="og:description" content="{% if meta_context and meta_context.og_description %}{{ meta_context.og_description }}{% else %}AI-Powered B2B Artisan Sourcing, Inventory Verification & Multi-Modal Freight Logistics{% endif %}">
+  <meta property="og:url" content="{% if meta_context and meta_context.og_url %}{{ meta_context.og_url }}{% else %}https://bharat-link-nexus-ai.onrender.com{% endif %}">
+  <meta property="og:image" content="{% if meta_context and meta_context.og_image %}{{ meta_context.og_image }}{% else %}/static/images/logo.png{% endif %}">
+  <meta property="og:type" content="{% if meta_context and meta_context.og_type %}{{ meta_context.og_type }}{% else %}website{% endif %}">
+
+  <!-- Twitter / X Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{% if meta_context and meta_context.twitter_title %}{{ meta_context.twitter_title }}{% else %}BharatLink Nexus AI{% endif %}">
+  <meta name="twitter:description" content="{% if meta_context and meta_context.twitter_description %}{{ meta_context.twitter_description }}{% else %}AI-Powered B2B Artisan Procurement Platform{% endif %}">
+  <meta name="twitter:image" content="{% if meta_context and meta_context.twitter_image %}{{ meta_context.twitter_image }}{% else %}/static/images/logo.png{% endif %}">
   
   <!-- Favicon & PWA Manifest -->
   <link rel="icon" type="image/png" href="/static/images/logo.png">
@@ -15,6 +51,16 @@
   <meta name="apple-mobile-web-app-title" content="BharatLink AI">
   
   <link rel="stylesheet" href="/static/css/styles.css">
+
+  <!-- Structured Data JSON-LD Schemas -->
+  {% if meta_context and meta_context.json_ld_scripts %}
+    {% for script in meta_context.json_ld_scripts %}
+    <script type="application/ld+json">
+    {{ script | safe }}
+    </script>
+    {% endfor %}
+  {% endif %}
+
   <style>
     .agent-step-item { padding: 0.75rem 1rem; border-radius: 0.75rem; background: rgba(15, 23, 42, 0.7); margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center; }
     .agent-step-item.pending { opacity: 0.4; }
@@ -38,6 +84,7 @@
       <nav class="nav-links">
         <a href="/" class="nav-item desktop-nav-link {% if active_page == 'home' %}active{% endif %}">Home</a>
         <a href="/procure" class="nav-item desktop-nav-link {% if active_page == 'procure' %}active{% endif %}">AI Procurement</a>
+        <a href="/crafts" class="nav-item desktop-nav-link {% if active_page == 'crafts' %}active{% endif %}">Crafts</a>
         <a href="/dashboard" class="nav-item desktop-nav-link {% if active_page == 'dashboard' %}active{% endif %}">Dashboard</a>
         <a href="/history" class="nav-item desktop-nav-link {% if active_page == 'history' %}active{% endif %}">History</a>
         <a href="/saved" class="nav-item desktop-nav-link {% if active_page == 'saved' %}active{% endif %}">Saved</a>
@@ -63,6 +110,20 @@
 
   <!-- Main Content -->
   <main>
+    {% if meta_context and meta_context.breadcrumbs and meta_context.breadcrumbs|length > 1 %}
+    <nav aria-label="Breadcrumb" style="margin-bottom: 1.25rem; font-size: 0.88rem; color: var(--text-muted);">
+      <ol style="list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+        {% for b in meta_context.breadcrumbs %}
+          {% if loop.last %}
+            <li style="color: var(--amber-gold); font-weight: bold;">{{ b.name }}</li>
+          {% else %}
+            <li><a href="{{ b.url }}" style="color: var(--text-muted);">{{ b.name }}</a> <span style="margin-left: 0.35rem;">/</span></li>
+          {% endif %}
+        {% endfor %}
+      </ol>
+    </nav>
+    {% endif %}
+
     {% block content %}{% endblock %}
   </main>
 
@@ -90,19 +151,59 @@
     </a>
   </nav>
 
-  <!-- Footer -->
+  <!-- Expanded SEO Footer -->
   <footer>
-    <div class="footer-container">
-      <div style="display: flex; align-items: center; gap: 0.75rem;">
-        <img src="/static/images/logo.png" alt="Logo" style="height: 2rem; width: auto; object-fit: contain;" />
-        <div>
-          <h3 style="color: #ffffff; margin-bottom: 0.15rem;">BharatLink Nexus AI</h3>
-          <p style="font-size: 0.85rem;">AI-Powered Artisan Procurement & Intelligent Multi-Modal Logistics Platform</p>
+    <div style="max-width: 85rem; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 2rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 1.5rem;">
+      
+      <div>
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+          <img src="/static/images/logo.png" alt="BharatLink Nexus AI Logo" style="height: 2rem; width: auto; object-fit: contain;" />
+          <h3 style="color: #ffffff; font-size: 1.1rem; margin: 0;">BharatLink Nexus AI</h3>
         </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+          AI-Powered Artisan Procurement & Intelligent Multi-Modal Logistics Platform for authentic Indian handicraft discovery.
+        </p>
+      </div>
+
+      <div>
+        <h4 style="color: var(--amber-gold); font-size: 0.95rem; margin-bottom: 0.75rem; text-transform: uppercase;">Procurement & Buyers</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.88rem; line-height: 1.8;">
+          <li><a href="/procure" style="color: #cbd5e1;">AI Procurement Engine</a></li>
+          <li><a href="/how-it-works" style="color: #cbd5e1;">How It Works</a></li>
+          <li><a href="/crafts" style="color: #cbd5e1;">Indian Craft Taxonomy</a></li>
+          <li><a href="/regions" style="color: #cbd5e1;">Artisan Region Clusters</a></li>
+          <li><a href="/resources" style="color: #cbd5e1;">Procurement Knowledge Hub</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 style="color: var(--amber-gold); font-size: 0.95rem; margin-bottom: 0.75rem; text-transform: uppercase;">Seller Central</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.88rem; line-height: 1.8;">
+          <li><a href="/seller-central" style="color: #cbd5e1;">Seller Central Portal</a></li>
+          <li><a href="/seller-central/login" style="color: #cbd5e1;">Seller Sign In</a></li>
+          <li><a href="/seller-central/signup" style="color: #cbd5e1;">Artisan Guild Onboarding</a></li>
+          <li><a href="/seller-central/tips" style="color: #cbd5e1;">Inventory Growth Tips</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 style="color: var(--amber-gold); font-size: 0.95rem; margin-bottom: 0.75rem; text-transform: uppercase;">Company & Legal</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.88rem; line-height: 1.8;">
+          <li><a href="/about" style="color: #cbd5e1;">About Platform</a></li>
+          <li><a href="/contact" style="color: #cbd5e1;">Contact Us</a></li>
+          <li><a href="/privacy" style="color: #cbd5e1;">Privacy Policy</a></li>
+          <li><a href="/terms" style="color: #cbd5e1;">Terms of Service</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="footer-container">
+      <div>
+        <p style="margin: 0;">© 2026 BharatLink Nexus AI. All Rights Reserved.</p>
       </div>
       <div style="text-align: right;">
-        <p>© 2026 BharatLink Nexus AI. All Rights Reserved.</p>
-        <p style="font-size: 0.85rem; color: var(--amber-gold); margin-top: 0.25rem; font-weight: bold;">Developed by Shravan Shidruk</p>
+        <p style="font-size: 0.85rem; color: var(--amber-gold); margin: 0; font-weight: bold;">Developed by Shravan Shidruk</p>
       </div>
     </div>
   </footer>

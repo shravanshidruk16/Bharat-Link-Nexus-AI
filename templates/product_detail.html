@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="margin-bottom: 1.5rem;">
+  <div style="color: var(--amber-gold); font-size: 0.9rem; font-weight: bold; margin-bottom: 0.5rem;">
+    <a href="/crafts" style="color: var(--amber-gold);">Crafts</a> → {{ product.category }}
+  </div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); gap: 2.5rem; margin-bottom: 4rem;">
+  <!-- Left Column: Product Image -->
+  <div>
+    {% if product.image_url and (product.image_url.startswith('http') or product.image_url.startswith('/static')) %}
+    <img src="{{ product.image_url }}" alt="{{ product.name }} by {{ product.seller_name }} ({{ product.region }})" style="width: 100%; max-height: 28rem; object-fit: cover; border-radius: 0.85rem; border: 1px solid var(--border-amber); box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+    {% else %}
+    <div style="width: 100%; height: 22rem; border-radius: 0.85rem; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-amber); display: flex; align-items: center; justify-content: center; color: var(--amber-gold); font-size: 1.2rem; font-weight: bold;">
+      🖼️ Verified Artisan Catalog Item
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Right Column: Product Details & Procurement Call to Action -->
+  <div class="glass-card-amber" style="padding: 2rem;">
+    <span style="color: #34d399; font-size: 0.85rem; font-weight: bold; padding: 0.25rem 0.6rem; background: rgba(52, 211, 153, 0.12); border: 1px solid rgba(52, 211, 153, 0.3); border-radius: 0.35rem; display: inline-block; margin-bottom: 0.75rem;">
+      ✓ {{ product.authenticity_status if product.authenticity_status else "GI Certified Authentic" }}
+    </span>
+
+    <h1 style="font-size: 2.25rem; color: #ffffff; margin-bottom: 0.75rem; line-height: 1.2;">{{ product.name }}</h1>
+    
+    <div style="font-size: 1.85rem; color: var(--amber-gold); font-weight: bold; margin-bottom: 1.25rem;">
+      ₹{{ "{:,.2f}".format(product.price|float) }} <span style="font-size: 0.9rem; color: var(--text-muted); font-weight: normal;">/ unit</span>
+    </div>
+
+    <div style="background: rgba(9, 15, 33, 0.6); padding: 1.25rem; border-radius: 0.6rem; border: 1px solid var(--border-amber); margin-bottom: 1.5rem;">
+      <p style="color: #cbd5e1; font-size: 0.98rem; line-height: 1.6; margin-bottom: 1rem;">
+        {{ product.description if product.description else "Authentic handcrafted artisan product sourced directly from verified Indian artisan collectives." }}
+      </p>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.9rem; color: #cbd5e1;">
+        <div><strong>Artisan Guild:</strong> {{ product.seller_name }}</div>
+        <div><strong>Craft Region:</strong> {{ product.region }}</div>
+        <div><strong>Category:</strong> {{ product.category }}</div>
+        <div><strong>Stock Available:</strong> {{ product.available_stock }} units</div>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+      <a href="/procure?q=Procure%2050%20units%20of%20{{ product.name|urlencode }}" class="btn-amber" style="flex: 1; text-align: center; padding: 0.85rem; font-size: 1rem; font-weight: bold;">
+        ⚡ Procure This Item with AI →
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

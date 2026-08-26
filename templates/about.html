@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="margin-bottom: 3rem;">
+  <h1 style="font-size: 2.75rem; color: #ffffff; margin-bottom: 0.75rem;">About BharatLink Nexus AI</h1>
+  <p style="color: var(--text-muted); font-size: 1.15rem; max-width: 50rem;">
+    Empowering Indian artisans, MSMEs, and global B2B procurement buyers through AI-driven supplier discovery, GI-tag verification, and intelligent multi-modal freight logistics.
+  </p>
+</div>
+
+<div class="glass-card-amber" style="padding: 2rem; margin-bottom: 2rem;">
+  <h2 style="color: var(--amber-gold); font-size: 1.5rem; margin-bottom: 1rem;">Our Mission</h2>
+  <p style="color: #cbd5e1; font-size: 1.05rem; line-height: 1.7; margin-bottom: 1.25rem;">
+    BharatLink Nexus AI bridges the gap between traditional Indian handicraft artisans and institutional international buyers. By replacing fragmented supply chains with real-time AI procurement intelligence, we enable transparent pricing, verified GI-certificate provenance, and direct artisan commerce.
+  </p>
+  <p style="color: #cbd5e1; font-size: 1.05rem; line-height: 1.7;">
+    Whether sourcing authentic Paithani silk textiles from Maharashtra, Jaipur Blue Pottery from Rajasthan, or Kashmiri Pashmina shawls from the Himalayas, our platform provides full visibility into active inventory, candidate seller metrics, and weather-aware transit corridors.
+  </p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+  <div class="glass-card" style="padding: 1.5rem;">
+    <h3 style="color: #ffffff; font-size: 1.25rem; margin-bottom: 0.5rem;">🔍 AI-Powered Procurement</h3>
+    <p style="color: var(--text-muted); font-size: 0.95rem;">
+      Utilizes Groq GPT-OSS-20B and specialized LangGraph multi-agent orchestration for 100% catalog-grounded candidate matching.
+    </p>
+  </div>
+  
+  <div class="glass-card" style="padding: 1.5rem;">
+    <h3 style="color: #ffffff; font-size: 1.25rem; margin-bottom: 0.5rem;">📜 Verified GI Certification</h3>
+    <p style="color: var(--text-muted); font-size: 0.95rem;">
+      Protects traditional crafts by verifying Geographical Indication (GI) tag authenticity and artisan guild memberships.
+    </p>
+  </div>
+
+  <div class="glass-card" style="padding: 1.5rem;">
+    <h3 style="color: #ffffff; font-size: 1.25rem; margin-bottom: 0.5rem;">🌐 Seller Central Platform</h3>
+    <p style="color: var(--text-muted); font-size: 0.95rem;">
+      Dedicated portal for Indian artisans and MSMEs to list catalog inventory, track buyer inquiries, and access logistics analytics.
+    </p>
+  </div>
+</div>
+
+<div class="glass-card" style="padding: 2rem;">
+  <h2 style="color: #ffffff; font-size: 1.5rem; margin-bottom: 1rem;">Platform Transparency & Trust Statement</h2>
+  <ul style="color: #cbd5e1; font-size: 0.98rem; line-height: 1.8; padding-left: 1.25rem;">
+    <li><strong>Verified Artisan Data:</strong> All registered artisan suppliers undergo seller verification and craft category authentication.</li>
+    <li><strong>Real-Time Weather Metrics:</strong> Live transit corridor weather metrics are provided via the Open-Meteo API.</li>
+    <li><strong>Direct Buyer-Seller Communication:</strong> Buyers connect directly with verified artisan collectives via integrated WhatsApp and phone dispatch controls.</li>
+    <li><strong>Final Procurement Confirmation:</strong> Estimated unit pricing and transit lead-times represent live platform calculations; final dispatch terms are confirmed directly with the primary seller.</li>
+  </ul>
+</div>
+{% endblock %}

@@ -72,6 +72,32 @@ Application will run at `http://localhost:8000`.
 
 ---
 
+## 🔍 Technical SEO Architecture & Search Console Verification
+
+BharatLink Nexus AI includes a complete production-grade technical SEO implementation:
+
+1. **Dynamic XML Sitemap**: `https://DOMAIN/sitemap.xml` automatically maps all canonical public routes, craft categories, regional clusters, educational guides, and active database product pages.
+2. **Robots.txt Control**: `https://DOMAIN/robots.txt` allows search engine crawlers while securing private buyer dashboards, histories, and seller portals with `noindex, nofollow`.
+3. **Structured Data (Schema.org)**: Renders valid `Organization`, `WebSite`, `WebPage`, `BreadcrumbList`, and `Product` JSON-LD schemas.
+4. **AI Search Discovery**: Serves `https://DOMAIN/llms.txt` for LLM search agents.
+5. **SEO Audit Command**:
+   ```bash
+   python scripts/seo_check.py
+   # or
+   npm run seo:check
+   ```
+
+### Search Console & Bing Webmaster Verification Guide:
+1. **Google Search Console**:
+   - Add Domain property or URL prefix: `https://bharat-link-nexus-ai.onrender.com`.
+   - Submit Sitemap URL: `https://bharat-link-nexus-ai.onrender.com/sitemap.xml`.
+   - Inspect main public pages (`/`, `/procure`, `/how-it-works`, `/crafts`, `/seller-central`).
+2. **Bing Webmaster Tools**:
+   - Import verified Google Search Console site or verify domain.
+   - Submit Sitemap URL: `https://bharat-link-nexus-ai.onrender.com/sitemap.xml`.
+
+---
+
 ## 📜 License
 
-© 2026 BharatLink Nexus AI. All Rights Reserved.
+© 2026 BharatLink Nexus AI. Developed by Shravan Shidruk. All Rights Reserved.

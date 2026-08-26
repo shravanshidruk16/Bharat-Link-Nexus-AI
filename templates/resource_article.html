@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="margin-bottom: 2.5rem; max-width: 55rem;">
+  <div style="color: var(--amber-gold); font-size: 0.9rem; font-weight: bold; margin-bottom: 0.5rem; text-transform: uppercase;">
+    <a href="/resources" style="color: var(--amber-gold);">Resources</a> → {{ article.category }}
+  </div>
+  <h1 style="font-size: 2.5rem; color: #ffffff; margin-bottom: 1rem; line-height: 1.2;">{{ article.title }}</h1>
+  <div style="display: flex; gap: 1.5rem; color: var(--text-muted); font-size: 0.88rem; border-bottom: 1px solid var(--border-amber); padding-bottom: 1rem; margin-bottom: 2rem;">
+    <span>Published: {{ article.date_published }}</span>
+    <span>•</span>
+    <span>Author: {{ article.author }}</span>
+  </div>
+</div>
+
+<article class="glass-card" style="padding: 2.5rem; max-width: 55rem; color: #cbd5e1; font-size: 1.05rem; line-height: 1.8;">
+  {{ article.content_html | safe }}
+
+  <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-amber); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <div>
+      <h3 style="color: #fff; font-size: 1.1rem; margin-bottom: 0.25rem;">Start AI Sourcing Now</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Find authentic Indian artisan suppliers matching your exact requirements.</p>
+    </div>
+    <a href="/procure" class="btn-amber" style="padding: 0.65rem 1.5rem;">Launch AI Procurement →</a>
+  </div>
+</article>
+{% endblock %}

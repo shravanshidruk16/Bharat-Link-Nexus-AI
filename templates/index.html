@@ -1,19 +1,17 @@
 {% extends "base.html" %}
 
-{% block title %}Home — BharatLink Nexus AI{% endblock %}
-
 {% block content %}
-<div style="text-align: center; padding: 2.5rem 0.5rem;">
+<div style="text-align: center; padding: 2.5rem 0.5rem 2rem;">
   <span class="hero-badge">
-    AI-POWERED ARTISAN PROCUREMENT PLATFORM
+    ⚡ AI-POWERED ARTISAN PROCUREMENT & LOGISTICS PLATFORM
   </span>
 
-  <h1 style="font-size: clamp(1.75rem, 4.5vw, 3.5rem); color: #ffffff; margin: 1.25rem 0 0.85rem; line-height: 1.25;">
-    Autonomous B2B Sourcing &<br class="desktop-only"> Intelligent Craft Logistics
+  <h1 style="font-size: clamp(1.85rem, 4.5vw, 3.5rem); color: #ffffff; margin: 1.25rem 0 0.85rem; line-height: 1.25;">
+    Discover & Procure Authentic Indian Handicrafts<br class="desktop-only"> with Multi-Agent AI Intelligence
   </h1>
 
-  <p style="font-size: clamp(0.95rem, 2vw, 1.25rem); color: var(--text-muted); max-width: 45rem; margin: 0 auto 2rem; line-height: 1.6;">
-    Streamline artisan product procurement with 6 specialized LangGraph AI Agents. Authenticate GI tags, verify stock, and calculate optimal multi-modal shipping routes instantly.
+  <p style="font-size: clamp(0.98rem, 2vw, 1.25rem); color: var(--text-muted); max-width: 48rem; margin: 0 auto 2rem; line-height: 1.6;">
+    BharatLink Nexus AI empowers institutional buyers and international businesses to source verified GI-tagged Indian artisan products, compare candidate suppliers, verify active inventory, and plan intelligent transit routes.
   </p>
 
   <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
@@ -22,18 +20,83 @@
   </div>
 </div>
 
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+<!-- Key Platform Pillar Cards -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1.5rem; margin-top: 1rem; margin-bottom: 4rem;">
   <div class="glass-card">
-    <h3 style="color: var(--amber-gold); font-size: 1.2rem; margin-bottom: 0.5rem;">6-Agent LangGraph Workflow</h3>
-    <p style="color: var(--text-muted); font-size: 0.95rem;">Buyer Intent, Discovery, Evaluation, Logistics, Risk, and Decision Agents work in sequence to synthesize verified procurement recommendations.</p>
+    <h3 style="color: var(--amber-gold); font-size: 1.2rem; margin-bottom: 0.5rem;">🤖 6-Agent LangGraph Workflow</h3>
+    <p style="color: var(--text-muted); font-size: 0.95rem;">Intent Parsing, Catalog Search, Supplier Evaluation, Route Optimization, Live Weather Risk, and Executive Synthesis agents collaborate in real-time.</p>
   </div>
   <div class="glass-card">
-    <h3 style="color: var(--amber-gold); font-size: 1.2rem; margin-bottom: 0.5rem;">GI Tag Authentication</h3>
-    <p style="color: var(--text-muted); font-size: 0.95rem;">Direct integration with verified artisan weaver collectives in Maharashtra, Kashmir, Karnataka, and Rajasthan.</p>
+    <h3 style="color: var(--amber-gold); font-size: 1.2rem; margin-bottom: 0.5rem;">📜 Verified GI Tag Provenance</h3>
+    <p style="color: var(--text-muted); font-size: 0.95rem;">Direct integration with verified artisan collectives across Maharashtra, Kashmir, Rajasthan, Gujarat, and Karnataka.</p>
   </div>
   <div class="glass-card">
-    <h3 style="color: var(--amber-gold); font-size: 1.2rem; margin-bottom: 0.5rem;">Multi-Modal Logistics Engine</h3>
-    <p style="color: var(--text-muted); font-size: 0.95rem;">Optimizes freight routing across Air, Rail, and Road with real-time risk assessment and carbon estimation.</p>
+    <h3 style="color: var(--amber-gold); font-size: 1.2rem; margin-bottom: 0.5rem;">🚚 Visual Corridor Logistics</h3>
+    <p style="color: var(--text-muted); font-size: 0.95rem;">Maps visual ASCII transit corridors from origin craft hubs to destination cities with live weather safety metrics.</p>
+  </div>
+</div>
+
+<!-- Detailed Platform Feature Sections -->
+<div style="display: grid; gap: 2.5rem; margin-bottom: 4rem;">
+  
+  <!-- Section: Discover Authentic Indian Products -->
+  <div class="glass-card-amber" style="padding: 2.25rem;">
+    <h2 style="color: #ffffff; font-size: 1.75rem; margin-bottom: 1rem;">Discover Authentic Indian Heritage Crafts</h2>
+    <p style="color: #cbd5e1; font-size: 1.05rem; line-height: 1.7; margin-bottom: 1.5rem;">
+      India possesses over 95% of the world's handwoven textiles and centuries of traditional handicraft heritage. BharatLink Nexus AI indexes verified craft categories including <strong>Paithani Silk Sarees</strong>, <strong>Kashmiri Pashmina Shawls</strong>, <strong>Jaipur Blue Pottery</strong>, <strong>Warli Tribal Art</strong>, <strong>Kolhapuri Leatherwork</strong>, and <strong>Bidriware Inlaid Metalwork</strong>.
+    </p>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+      <a href="/crafts" class="btn-outline" style="font-size: 0.9rem; padding: 0.5rem 1.25rem;">Browse All Craft Categories →</a>
+      <a href="/regions" class="btn-outline" style="font-size: 0.9rem; padding: 0.5rem 1.25rem;">Explore Regional Clusters →</a>
+    </div>
+  </div>
+
+  <!-- Section: How AI Procurement Works -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 1.5rem;">
+    <div class="glass-card" style="padding: 1.75rem;">
+      <h3 style="color: var(--amber-gold); font-size: 1.3rem; margin-bottom: 0.75rem;">For Global & B2B Buyers</h3>
+      <p style="color: #cbd5e1; font-size: 0.98rem; line-height: 1.6; margin-bottom: 1rem;">
+        Input your sourcing prompt specifying product, quantity, target city, and deadline. Our AI parses intent, queries verified database inventory, ranks suppliers, and generates an executive PDF sourcing recommendation report.
+      </p>
+      <a href="/how-it-works" style="color: var(--amber-gold); font-size: 0.9rem; font-weight: bold;">Learn How AI Procurement Works →</a>
+    </div>
+
+    <div class="glass-card" style="padding: 1.75rem;">
+      <h3 style="color: var(--amber-gold); font-size: 1.3rem; margin-bottom: 0.75rem;">For Indian Artisans & MSMEs</h3>
+      <p style="color: #cbd5e1; font-size: 0.98rem; line-height: 1.6; margin-bottom: 1rem;">
+        List your handicraft inventory on BharatLink Seller Central to connect with international procurement requests. Manage stock levels, view real-time buyer analytics, and expand your global export reach.
+      </p>
+      <a href="/seller-central" style="color: var(--amber-gold); font-size: 0.9rem; font-weight: bold;">Join Seller Central Network →</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- Frequently Asked Buyer Questions (FAQ) Section -->
+<div class="glass-card" style="padding: 2.25rem; margin-bottom: 4rem;">
+  <h2 style="color: #ffffff; font-size: 1.75rem; margin-bottom: 1.5rem; text-align: center;">Frequently Asked Buyer Questions</h2>
+  
+  <div style="display: grid; gap: 1.25rem;">
+    <div style="background: rgba(9, 15, 33, 0.6); padding: 1.25rem; border-radius: 0.6rem; border: 1px solid var(--border-amber);">
+      <h3 style="color: var(--amber-gold); font-size: 1.1rem; margin-bottom: 0.4rem;">What is BharatLink Nexus AI?</h3>
+      <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6;">
+        BharatLink Nexus AI is an intelligent B2B artisan procurement and freight logistics platform. It uses 6 specialized LangGraph AI agents and Groq's <code>openai/gpt-oss-20b</code> model to discover authentic Indian handicraft suppliers, verify stock inventory, and map route lead times for institutional buyers.
+      </p>
+    </div>
+
+    <div style="background: rgba(9, 15, 33, 0.6); padding: 1.25rem; border-radius: 0.6rem; border: 1px solid var(--border-amber);">
+      <h3 style="color: var(--amber-gold); font-size: 1.1rem; margin-bottom: 0.4rem;">How does Geographical Indication (GI) verification work?</h3>
+      <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6;">
+        GI tags certify products possessing unique qualities originating from specific geographical locations in India. BharatLink verifies artisan seller credentials and craft registry certifications for items like Paithani Sarees, Kashmiri Pashmina, and Jaipur Blue Pottery.
+      </p>
+    </div>
+
+    <div style="background: rgba(9, 15, 33, 0.6); padding: 1.25rem; border-radius: 0.6rem; border: 1px solid var(--border-amber);">
+      <h3 style="color: var(--amber-gold); font-size: 1.1rem; margin-bottom: 0.4rem;">How are freight shipping charges calculated?</h3>
+      <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6;">
+        BharatLink displays a visual ASCII transit route corridor mapping origin artisan hubs to destination cities. Final dispatch terms and delivery modes are confirmed directly with the primary seller.
+      </p>
+    </div>
   </div>
 </div>
 {% endblock %}

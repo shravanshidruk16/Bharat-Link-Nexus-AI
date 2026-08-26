@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="margin-bottom: 3rem;">
+  <div style="display: inline-block; background: rgba(245, 158, 11, 0.15); border: 1px solid var(--border-amber); padding: 0.35rem 0.85rem; border-radius: 9999px; color: var(--amber-gold); font-size: 0.85rem; font-weight: bold; margin-bottom: 1rem;">
+    ⚡ Autonomous Multi-Agent Procurement & Freight Logistics Architecture
+  </div>
+  <h1 style="font-size: 2.75rem; color: #ffffff; margin-bottom: 0.75rem; line-height: 1.2;">How BharatLink AI Procurement Works</h1>
+  <p style="color: var(--text-muted); font-size: 1.15rem; max-width: 50rem;">
+    Learn how our 6-agent LangGraph workflow evaluates 444+ GI-certified Indian artisan products, verifies stock inventory, maps ASCII transit corridors, and assesses real-time weather risks for institutional buyers.
+  </p>
+</div>
+
+<!-- Architecture Steps Section -->
+<div style="display: grid; gap: 2rem; margin-bottom: 4rem;">
+  
+  <div class="glass-card-amber" style="padding: 1.75rem;">
+    <div style="display: flex; align-items: flex-start; gap: 1.25rem;">
+      <div style="width: 3rem; height: 3rem; border-radius: 50%; background: var(--amber-gold); color: #090f21; font-weight: bold; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">1</div>
+      <div>
+        <h2 style="color: #ffffff; font-size: 1.35rem; margin-bottom: 0.5rem;">Agent 1: Buyer Intent Parser</h2>
+        <p style="color: #cbd5e1; font-size: 1rem; line-height: 1.6;">
+          Analyzes natural language buyer prompts (e.g. <em>"Source 50 Nauvari Paithani Sarees for London export in 10 days"</em>). Extracts structured sourcing parameters including target product noun, quantity requested, delivery city, budget ceiling, and target lead-time.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass-card-amber" style="padding: 1.75rem;">
+    <div style="display: flex; align-items: flex-start; gap: 1.25rem;">
+      <div style="width: 3rem; height: 3rem; border-radius: 50%; background: var(--amber-gold); color: #090f21; font-weight: bold; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">2</div>
+      <div>
+        <h2 style="color: #ffffff; font-size: 1.35rem; margin-bottom: 0.5rem;">Agent 2: Discovery Agent & Groq GPT-OSS-20B Search</h2>
+        <p style="color: #cbd5e1; font-size: 1rem; line-height: 1.6;">
+          Invokes Groq's dedicated <code>openai/gpt-oss-20b</code> LLM model and Semantic Core Noun Scoring engine across our 444+ verified Supabase artisan products catalog. Enforces strict zero-hallucination grounding—if a product does not exist in inventory, it outputs an explicit catalog status rather than suggesting unrelated items.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass-card-amber" style="padding: 1.75rem;">
+    <div style="display: flex; align-items: flex-start; gap: 1.25rem;">
+      <div style="width: 3rem; height: 3rem; border-radius: 50%; background: var(--amber-gold); color: #090f21; font-weight: bold; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">3</div>
+      <div>
+        <h2 style="color: #ffffff; font-size: 1.35rem; margin-bottom: 0.5rem;">Agent 3: Procurement Evaluation & Multi-Seller Comparison</h2>
+        <p style="color: #cbd5e1; font-size: 1rem; line-height: 1.6;">
+          Evaluates candidate artisan guilds for active stock inventory, minimum order quantities (MOQ), GI-tag certification authenticity, seller ratings, and location proximity. Ranks all candidate sellers offering the target product in an itemized comparison matrix.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass-card-amber" style="padding: 1.75rem;">
+    <div style="display: flex; align-items: flex-start; gap: 1.25rem;">
+      <div style="width: 3rem; height: 3rem; border-radius: 50%; background: var(--amber-gold); color: #090f21; font-weight: bold; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">4</div>
+      <div>
+        <h2 style="color: #ffffff; font-size: 1.35rem; margin-bottom: 0.5rem;">Agent 4: Visual Transit Corridor & Route Optimizer</h2>
+        <p style="color: #cbd5e1; font-size: 1rem; line-height: 1.6;">
+          Maps the logistics corridor from the artisan origin hub to the destination city using clear visual ASCII transit route diagrams (e.g. <code>[ 📍 Origin ] ──────► [ 🔄 Hub ] ──────► [ 🏁 Destination ]</code>).
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass-card-amber" style="padding: 1.75rem;">
+    <div style="display: flex; align-items: flex-start; gap: 1.25rem;">
+      <div style="width: 3rem; height: 3rem; border-radius: 50%; background: var(--amber-gold); color: #090f21; font-weight: bold; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">5</div>
+      <div>
+        <h2 style="color: #ffffff; font-size: 1.35rem; margin-bottom: 0.5rem;">Agent 5: Risk & Live Weather Assessment</h2>
+        <p style="color: #cbd5e1; font-size: 1rem; line-height: 1.6;">
+          Fetches real-time Open-Meteo weather metrics for origin and destination cities to assess climate safety, precipitation risks, and transit feasibility.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass-card-amber" style="padding: 1.75rem;">
+    <div style="display: flex; align-items: flex-start; gap: 1.25rem;">
+      <div style="width: 3rem; height: 3rem; border-radius: 50%; background: var(--amber-gold); color: #090f21; font-weight: bold; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">6</div>
+      <div>
+        <h2 style="color: #ffffff; font-size: 1.35rem; margin-bottom: 0.5rem;">Agent 6: Executive Synthesis & Sourcing Plan</h2>
+        <p style="color: #cbd5e1; font-size: 1rem; line-height: 1.6;">
+          Synthesizes the complete multi-agent workflow into an executive sourcing plan with product inventory breakdown, seller contact integration, and PDF recommendation export.
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Call to action -->
+<div class="glass-card" style="text-align: center; padding: 2.5rem; margin-bottom: 2rem;">
+  <h2 style="color: #ffffff; font-size: 1.75rem; margin-bottom: 0.75rem;">Ready to Source Authentic Indian Artisan Products?</h2>
+  <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Start your AI procurement query now or list your products as a verified artisan seller.</p>
+  <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+    <a href="/procure" class="btn-amber" style="padding: 0.75rem 1.75rem; font-size: 1rem;">Run AI Sourcing Query →</a>
+    <a href="/seller-central" class="btn-outline" style="padding: 0.75rem 1.75rem; font-size: 1rem;">Explore Seller Central →</a>
+  </div>
+</div>
+{% endblock %}

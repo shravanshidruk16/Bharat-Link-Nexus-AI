@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if is_index %}
+<div style="margin-bottom: 3rem;">
+  <h1 style="font-size: 2.75rem; color: #ffffff; margin-bottom: 0.75rem;">Indian Artisan Regions & Craft Clusters</h1>
+  <p style="color: var(--text-muted); font-size: 1.15rem; max-width: 50rem;">
+    Explore verified regional artisan hubs across Maharashtra, Rajasthan, Gujarat, and Kashmir.
+  </p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); gap: 2rem; margin-bottom: 4rem;">
+  {% for slug, region in regions.items() %}
+  <div class="glass-card-amber" style="padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between;">
+    <div>
+      <span style="color: var(--amber-gold); font-size: 0.8rem; font-weight: bold;">📍 {{ region.state }}</span>
+      <h2 style="color: #ffffff; font-size: 1.35rem; margin-top: 0.35rem; margin-bottom: 0.75rem;">
+        <a href="/regions/{{ region.slug }}" style="color: #fff;">{{ region.name }}</a>
+      </h2>
+      <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
+        {{ region.description }}
+      </p>
+    </div>
+    <div>
+      <a href="/regions/{{ region.slug }}" class="btn-outline" style="font-size: 0.9rem; padding: 0.5rem 1rem;">View Regional Cluster →</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% else %}
+
+<div style="margin-bottom: 2.5rem;">
+  <div style="color: var(--amber-gold); font-size: 0.9rem; font-weight: bold; margin-bottom: 0.5rem;">
+    <a href="/regions" style="color: var(--amber-gold);">Regions</a> → {{ region.name }}
+  </div>
+  <h1 style="font-size: 2.75rem; color: #ffffff; margin-bottom: 0.75rem;">{{ region.name }}</h1>
+  <p style="color: var(--amber-gold); font-weight: bold; font-size: 1.05rem;">
+    State: {{ region.state }} | Verified B2B Sourcing Hub
+  </p>
+</div>
+
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 3rem;">
+  <div class="glass-card" style="padding: 2rem; color: #cbd5e1; font-size: 1.05rem; line-height: 1.8;">
+    <h2 style="color: var(--amber-gold); font-size: 1.4rem; margin-bottom: 0.75rem;">Regional Craft Heritage</h2>
+    <p style="margin-bottom: 1.5rem;">{{ region.description }}</p>
+
+    <h3 style="color: #ffffff; font-size: 1.2rem; margin-bottom: 0.75rem;">Key GI Craft Specializations</h3>
+    <ul style="padding-left: 1.25rem; margin-bottom: 1.5rem;">
+      {% for item in region.highlights %}
+      <li style="margin-bottom: 0.5rem;">{{ item }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="glass-card-amber" style="padding: 1.75rem; height: fit-content;">
+    <h3 style="color: #ffffff; font-size: 1.2rem; margin-bottom: 1rem;">Source From {{ region.state }}</h3>
+    <p style="color: #cbd5e1; font-size: 0.92rem; margin-bottom: 1.25rem; line-height: 1.5;">
+      Query our AI procurement platform to connect with verified artisan collectives in {{ region.state }}.
+    </p>
+    <a href="/procure?q=Source%20artisan%20products%20from%20{{ region.state|urlencode }}" class="btn-amber" style="width: 100%; display: block; text-align: center; padding: 0.75rem 0;">Run AI Sourcing Query →</a>
+  </div>
+</div>
+
+{% endif %}
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if is_index %}
+<div style="margin-bottom: 3rem;">
+  <h1 style="font-size: 2.75rem; color: #ffffff; margin-bottom: 0.75rem;">Authentic Indian Crafts & Artisan Categories</h1>
+  <p style="color: var(--text-muted); font-size: 1.15rem; max-width: 50rem;">
+    Explore verified Geographical Indication (GI) tagged Indian handloom, pottery, metalwork, leather, and tribal art traditions.
+  </p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); gap: 2rem; margin-bottom: 4rem;">
+  {% for slug, craft in crafts.items() %}
+  <div class="glass-card-amber" style="padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between;">
+    <div>
+      <span style="color: var(--amber-gold); font-size: 0.8rem; font-weight: bold;">📍 {{ craft.region }}</span>
+      <h2 style="color: #ffffff; font-size: 1.35rem; margin-top: 0.35rem; margin-bottom: 0.75rem;">
+        <a href="/crafts/{{ craft.slug }}" style="color: #fff;">{{ craft.name }}</a>
+      </h2>
+      <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
+        {{ craft.description }}
+      </p>
+    </div>
+    <div>
+      <a href="/crafts/{{ craft.slug }}" class="btn-outline" style="font-size: 0.9rem; padding: 0.5rem 1rem;">View Craft Guide & Products →</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% else %}
+
+<div style="margin-bottom: 2.5rem;">
+  <div style="color: var(--amber-gold); font-size: 0.9rem; font-weight: bold; margin-bottom: 0.5rem;">
+    <a href="/crafts" style="color: var(--amber-gold);">Crafts</a> → {{ craft.name }}
+  </div>
+  <h1 style="font-size: 2.75rem; color: #ffffff; margin-bottom: 0.75rem;">{{ craft.name }}</h1>
+  <p style="color: var(--amber-gold); font-weight: bold; font-size: 1.05rem;">
+    📍 Craft Hub: {{ craft.region }} | Category: {{ craft.category }}
+  </p>
+</div>
+
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 3rem;">
+  <div class="glass-card" style="padding: 2rem; color: #cbd5e1; font-size: 1.05rem; line-height: 1.8;">
+    <h2 style="color: var(--amber-gold); font-size: 1.4rem; margin-bottom: 0.75rem;">Craft Overview & Cultural Heritage</h2>
+    <p style="margin-bottom: 1.5rem;">{{ craft.description }}</p>
+
+    <h3 style="color: #ffffff; font-size: 1.2rem; margin-bottom: 0.5rem;">Historical Origins</h3>
+    <p style="margin-bottom: 1.5rem;">{{ craft.history }}</p>
+
+    <h3 style="color: #ffffff; font-size: 1.2rem; margin-bottom: 0.5rem;">BharatLink Procurement Verification</h3>
+    <p style="margin-bottom: 1.5rem;">{{ craft.sourcing_note }}</p>
+  </div>
+
+  <div class="glass-card-amber" style="padding: 1.75rem; height: fit-content;">
+    <h3 style="color: #ffffff; font-size: 1.2rem; margin-bottom: 1rem;">Procure This Craft</h3>
+    <p style="color: #cbd5e1; font-size: 0.92rem; margin-bottom: 1.25rem; line-height: 1.5;">
+      Query our multi-agent AI procurement engine to compare prices, verify active stock, and map route lead times for {{ craft.name }}.
+    </p>
+    <a href="/procure?q=Source%20{{ craft.name|urlencode }}" class="btn-amber" style="width: 100%; display: block; text-align: center; padding: 0.75rem 0;">Run AI Sourcing Query →</a>
+  </div>
+</div>
+
+{% if products %}
+<h2 style="color: #ffffff; font-size: 1.75rem; margin-bottom: 1.5rem;">Matching Catalog Products in {{ craft.name }}</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1.5rem; margin-bottom: 4rem;">
+  {% for p in products %}
+  <div class="glass-card" style="padding: 1.25rem;">
+    {% if p.image_url %}
+    <img src="{{ p.image_url }}" alt="{{ p.name }}" style="width: 100%; height: 10rem; object-fit: cover; border-radius: 0.5rem; margin-bottom: 0.85rem;" />
+    {% endif %}
+    <h3 style="color: #ffffff; font-size: 1.1rem; margin-bottom: 0.35rem;"><a href="/products/{{ p.id }}" style="color: #fff;">{{ p.name }}</a></h3>
+    <p style="color: var(--amber-gold); font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem;">₹{{ "{:,.2f}".format(p.price|float) }}</p>
+    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Seller: {{ p.seller_name }} ({{ p.region }})</p>
+    <a href="/products/{{ p.id }}" class="btn-outline" style="font-size: 0.82rem; padding: 0.4rem 0.75rem; width: 100%; text-align: center; box-sizing: border-box;">View Product Details →</a>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% endif %}
+{% endblock %}

@@ -1,24 +1,64 @@
 {% extends "seller/base_seller.html" %}
 
-{% block title %}Portal Home — BharatLink Seller Central{% endblock %}
-
 {% block content %}
-<div style="text-align: center; padding: 2.5rem 0.5rem;">
+<div style="text-align: center; padding: 2.5rem 0.5rem 2rem;">
   <span class="hero-badge">
-    OFFICIAL ARTISAN SELLER GATEWAY
+    🏬 BHARATLINK SELLER CENTRAL — ARTISAN & MSME PLATFORM
   </span>
 
-  <h1 style="font-size: clamp(1.75rem, 4.5vw, 3.5rem); color: #ffffff; margin: 1.25rem 0 0.85rem; line-height: 1.25;">
-    Empowering Indian Artisans with<br class="desktop-only"> AI-Driven Global Sourcing
+  <h1 style="font-size: clamp(1.85rem, 4.5vw, 3.5rem); color: #ffffff; margin: 1.25rem 0 0.85rem; line-height: 1.25;">
+    Sell Authentic Indian Handicrafts Internationally<br class="desktop-only"> with AI Procurement Discovery
   </h1>
 
-  <p style="font-size: clamp(0.95rem, 2vw, 1.25rem); color: var(--text-muted); max-width: 45rem; margin: 0 auto 2rem; line-height: 1.6;">
-    List GI-tagged handicraft products, publish real-time inventory levels, and calculate multi-modal freight quotes for global institutional buyers.
+  <p style="font-size: clamp(0.98rem, 2vw, 1.25rem); color: var(--text-muted); max-width: 48rem; margin: 0 auto 2rem; line-height: 1.6;">
+    BharatLink Seller Central enables Indian artisan collectives, weavers, and MSMEs to list authentic handicraft inventory, receive direct buyer inquiries, and access multi-modal logistics intelligence.
   </p>
 
   <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
-    <a href="/seller-central/dashboard" class="btn-amber" style="font-size: 1rem; padding: 0.85rem 1.75rem;">Enter Seller Dashboard →</a>
-    <a href="/seller-central/products/new" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); color: #ffffff; padding: 0.85rem 1.5rem; border-radius: 0.5rem; font-weight: bold; text-decoration: none;">Add New Product</a>
+    <a href="/seller-central/signup" class="btn-amber" style="font-size: 1rem; padding: 0.85rem 1.75rem;">Register Artisan Guild Account →</a>
+    <a href="/seller-central/login" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); color: #ffffff; padding: 0.85rem 1.5rem; border-radius: 0.5rem; font-weight: bold; text-decoration: none;">Seller Sign In</a>
+  </div>
+</div>
+
+<!-- Key Features for Sellers -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1.5rem; margin-bottom: 4rem;">
+  <div class="glass-card-amber" style="padding: 1.75rem;">
+    <h3 style="color: #ffffff; font-size: 1.25rem; margin-bottom: 0.5rem;">📦 Catalog Inventory Control</h3>
+    <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6;">
+      Manage product pricing, weight specifications, images, and live available stock levels instantly from your seller dashboard.
+    </p>
+  </div>
+
+  <div class="glass-card-amber" style="padding: 1.75rem;">
+    <h3 style="color: #ffffff; font-size: 1.25rem; margin-bottom: 0.5rem;">🤖 AI Sourcing Exposure</h3>
+    <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6;">
+      Your products become immediately discoverable to international B2B buyers querying our 6-agent AI procurement workflow.
+    </p>
+  </div>
+
+  <div class="glass-card-amber" style="padding: 1.75rem;">
+    <h3 style="color: #ffffff; font-size: 1.25rem; margin-bottom: 0.5rem;">📊 Real-Time Analytics</h3>
+    <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6;">
+      Track product impressions, buyer inquiries, WhatsApp contact events, and fulfillment statistics with real database metrics.
+    </p>
+  </div>
+</div>
+
+<div class="glass-card" style="padding: 2.25rem; margin-bottom: 3rem;">
+  <h2 style="color: #ffffff; font-size: 1.6rem; margin-bottom: 1rem;">How Artisan Seller Onboarding Works</h2>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1.5rem;">
+    <div>
+      <h4 style="color: var(--amber-gold); font-size: 1.1rem; margin-bottom: 0.35rem;">1. Register Account</h4>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Fill in business name, contact person, state, city, craft category, and WhatsApp dispatch number.</p>
+    </div>
+    <div>
+      <h4 style="color: var(--amber-gold); font-size: 1.1rem; margin-bottom: 0.35rem;">2. Add Products</h4>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Publish items with GI certification status, unit price, stock availability, and catalog images.</p>
+    </div>
+    <div>
+      <h4 style="color: var(--amber-gold); font-size: 1.1rem; margin-bottom: 0.35rem;">3. Receive Orders</h4>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Receive direct B2B buyer inquiries and WhatsApp procurement orders from global buyers.</p>
+    </div>
   </div>
 </div>
 {% endblock %}
