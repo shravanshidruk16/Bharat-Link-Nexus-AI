@@ -59,10 +59,15 @@ function installPwaApp() {
   }
 }
 
-// Robust Markdown Parser for multi-line text & bold/italic formatting
+// Robust & Secure Markdown Parser with HTML Entity Escaping (Anti-XSS)
 function parseMarkdownToHtml(md) {
   if (!md) return '';
-  let str = String(md);
+  let str = String(md)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 
   // Replace double asterisks (bold) across newlines
   str = str.replace(/\*\*([\s\S]*?)\*\*/g, '<strong>$1</strong>');

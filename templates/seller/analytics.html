@@ -1,154 +1,228 @@
 {% extends "seller/base_seller.html" %}
 
-{% block title %}Seller Analytics & Sourcing Performance — BharatLink Seller Central{% endblock %}
+{% block title %}Retail Analytics, Demand Forecasting & Business AI — BharatLink Seller Central{% endblock %}
 
 {% block content %}
 <div style="margin-bottom: 2rem;">
   <h1 style="font-size: clamp(1.6rem, 3.5vw, 2.5rem); color: #ffffff; margin-bottom: 0.5rem;">
-    {% if is_admin %}👑 Global Platform Revenue & Seller Performance Analytics{% else %}Seller Sourcing & Revenue Analytics{% endif %}
+    {% if is_admin %}👑 Global Platform Commerce Analytics & Decision Support{% else %}Retail Commerce Intelligence & Demand Forecasting{% endif %}
   </h1>
   <p style="color: var(--amber-gold); font-size: clamp(0.9rem, 1.8vw, 1.1rem); font-weight: bold;">
-    {% if is_admin %}Platform-Wide Monitoring of Products, Total Sourced Value & Top Selling Artisan Sellers{% else %}Real-Time Sourcing Inquiries, Active Catalog Items, and Sourced Value from Database{% endif %}
+    Real-Time Inventory Health, Baseline Demand Projections, Market Basket Analysis & Grounded Business AI Assistant
   </p>
 </div>
 
 <!-- Key Metrics Overview Cards -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1.25rem; margin-bottom: 2rem;">
   <div class="glass-card">
-    <span style="color: var(--text-muted); font-size: 0.85rem;">Buyer Sourcing Inquiries</span>
-    <h2 style="font-size: 2.5rem; color: var(--amber-gold); margin-top: 0.5rem;">{{ analytics.inquiries_count }}</h2>
-    <span style="color: var(--text-muted); font-size: 0.8rem;">Real-time AI Match Count</span>
+    <span style="color: var(--text-muted); font-size: 0.85rem;">Total Sourced Revenue</span>
+    <h2 style="font-size: 2.2rem; color: #34d399; margin-top: 0.5rem;">₹{{ "{:,.2f}".format(analytics.total_revenue or analytics.total_sourced_value or 0.0) }}</h2>
+    <span style="color: #34d399; font-size: 0.8rem;">Catalog Transaction Ledger</span>
   </div>
 
   <div class="glass-card">
-    <span style="color: var(--text-muted); font-size: 0.85rem;">Total Sourced Value</span>
-    <h2 style="font-size: 2.5rem; color: #34d399; margin-top: 0.5rem;">₹{{ "{:,.2f}".format(analytics.total_sourced_value) }}</h2>
-    <span style="color: #34d399; font-size: 0.8rem;">Total Buyer Inquiry Value</span>
+    <span style="color: var(--text-muted); font-size: 0.85rem;">Total Orders Tracked</span>
+    <h2 style="font-size: 2.2rem; color: var(--amber-gold); margin-top: 0.5rem;">{{ analytics.total_orders or analytics.inquiries_count or 0 }}</h2>
+    <span style="color: var(--text-muted); font-size: 0.8rem;">Historical Procurement Runs</span>
   </div>
 
   <div class="glass-card">
-    <span style="color: var(--text-muted); font-size: 0.85rem;">{% if is_admin %}Total Platform Products{% else %}Active Published Products{% endif %}</span>
-    <h2 style="font-size: 2.5rem; color: #ffffff; margin-top: 0.5rem;">{% if is_admin %}{{ analytics.total_products_count }}{% else %}{{ analytics.active_products_count }}{% endif %}</h2>
-    <span style="color: var(--text-muted); font-size: 0.8rem;">Catalog Items Active</span>
+    <span style="color: var(--text-muted); font-size: 0.85rem;">Inventory Units Tracked</span>
+    <h2 style="font-size: 2.2rem; color: #ffffff; margin-top: 0.5rem;">{{ inventory.total_inventory_units or 0 }}</h2>
+    <span style="color: var(--text-muted); font-size: 0.8rem;">Active Stock In Warehouses</span>
   </div>
 
   <div class="glass-card">
-    <span style="color: var(--text-muted); font-size: 0.85rem;">{% if is_admin %}Registered Artisan Network{% else %}Delivery Success Rate{% endif %}</span>
-    <h2 style="font-size: 2.5rem; color: #38bdf8; margin-top: 0.5rem;">{% if is_admin %}{{ analytics.total_sellers_count }}{% else %}{{ analytics.delivery_success_rate }}%{% endif %}</h2>
-    <span style="color: #38bdf8; font-size: 0.8rem;">{% if is_admin %}Verified Sellers{% else %}Orders Delivered Rate{% endif %}</span>
+    <span style="color: var(--text-muted); font-size: 0.85rem;">Low Stock Alerts (&lt; 15 units)</span>
+    <h2 style="font-size: 2.2rem; color: #f87171; margin-top: 0.5rem;">{{ inventory.low_stock_count or 0 }}</h2>
+    <span style="color: #f87171; font-size: 0.8rem;">Critical Replenishment Needed</span>
   </div>
 </div>
 
-{% if is_admin %}
-<!-- Admin Leaderboard: Top Selling Artisan Sellers -->
-<div class="glass-card-amber" style="margin-bottom: 2.5rem;">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+<!-- FEATURE F: BUSINESS DECISION ASSISTANT (INTERACTIVE SELLER AI) -->
+<div class="glass-card-amber" style="margin-bottom: 2.5rem; background: rgba(9, 15, 33, 0.95); border: 1px solid var(--border-amber); box-shadow: 0 0 25px rgba(245, 158, 11, 0.15); padding: 1.75rem;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
     <div>
       <span style="background: rgba(245, 158, 11, 0.2); border: 1px solid var(--border-amber); color: var(--amber-gold); padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase;">
-        👑 Global Admin Platform Leaderboard
+        🤖 Google Gemini Business Decision Assistant
       </span>
-      <h2 style="font-size: 1.6rem; color: #ffffff; margin-top: 0.5rem;">Top Selling Artisan Guilds & Sellers Breakdown</h2>
+      <h2 style="font-size: 1.5rem; color: #ffffff; margin-top: 0.5rem;">Ask Your Retail & Inventory Intelligence Assistant</h2>
     </div>
+    <span style="color: #34d399; font-size: 0.85rem; font-weight: bold;">● Grounded in Real Firestore Records</span>
   </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Artisan Guild / Seller Name</th>
-        <th>Total Sourced Orders</th>
-        <th>Delivered Orders</th>
-        <th>Total Sourced Revenue (INR)</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for s in analytics.top_selling_sellers %}
-      <tr>
-        <td style="font-weight: bold; color: #ffffff;">🏬 {{ s.seller_name }}</td>
-        <td style="color: var(--amber-gold); font-weight: bold;">{{ s.total_orders }} Orders</td>
-        <td style="color: #34d399; font-weight: bold;">{{ s.delivered_orders }} Delivered</td>
-        <td style="color: #34d399; font-weight: bold; font-size: 1.1rem;">₹{{ "{:,.2f}".format(s.total_value) }}</td>
-      </tr>
-      {% else %}
-      <tr>
-        <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No seller sales recorded yet.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
-{% endif %}
+  <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">
+    Ask strategic questions regarding stockout risks, demand trends, and replenishment priorities. All answers are computed deterministically from verified sales and inventory data.
+  </p>
 
-<!-- Successfully Delivered Orders & Revenue Progress Section -->
-<div class="glass-card-amber" style="margin-bottom: 3rem;">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-amber); padding-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+  <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
+    <button type="button" onclick="setBusinessQuery('Which products are at risk of going out of stock?')" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); color: #cbd5e1; padding: 0.35rem 0.75rem; border-radius: 0.4rem; font-size: 0.82rem; cursor: pointer;">
+      ⚠️ Stockout Risks?
+    </button>
+    <button type="button" onclick="setBusinessQuery('What inventory should be replenished first?')" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); color: #cbd5e1; padding: 0.35rem 0.75rem; border-radius: 0.4rem; font-size: 0.82rem; cursor: pointer;">
+      🔄 Replenishment Priorities?
+    </button>
+    <button type="button" onclick="setBusinessQuery('Which product categories are generating the most revenue?')" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); color: #cbd5e1; padding: 0.35rem 0.75rem; border-radius: 0.4rem; font-size: 0.82rem; cursor: pointer;">
+      📊 Top Revenue Categories?
+    </button>
+  </div>
+
+  <form id="business-assistant-form" style="display: flex; gap: 0.75rem; margin-bottom: 1.25rem;">
+    <input type="text" id="business-query-input" placeholder="e.g., Which artisan crafts have the highest demand velocity this month?" style="flex: 1; background: rgba(9, 15, 33, 0.85); border: 1px solid var(--border-amber); border-radius: 0.5rem; color: #ffffff; padding: 0.75rem 1rem; font-size: 0.95rem;" required />
+    <button type="submit" class="btn-amber" style="padding: 0.75rem 1.5rem; font-size: 0.95rem; white-space: nowrap;">Ask Assistant →</button>
+  </form>
+
+  <div id="assistant-loading" style="display: none; padding: 1rem; text-align: center; color: var(--amber-gold);">
+    ⚡ Analyzing catalog records & inferencing via Google Gemini...
+  </div>
+
+  <div id="assistant-response-card" style="display: none; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-amber); border-radius: 0.75rem; padding: 1.25rem;">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+      <span style="color: var(--amber-gold); font-weight: bold; font-size: 0.85rem;">Assistant Analysis</span>
+      <span id="assistant-meta" style="color: #94a3b8; font-size: 0.78rem;"></span>
+    </div>
+    <div id="assistant-response-content" style="color: #e2e8f0; font-size: 0.95rem; line-height: 1.6;"></div>
+  </div>
+</div>
+
+<!-- FEATURE D: DEMAND FORECASTING SERVICE -->
+<div class="glass-card" style="margin-bottom: 2.5rem;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem;">
     <div>
-      <span style="background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #34d399; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase;">
-        ✓ Verified Progress Tracker
+      <span style="background: rgba(56, 189, 248, 0.15); border: 1px solid #38bdf8; color: #38bdf8; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase;">
+        📈 Feature D: Predictive Demand Intelligence
       </span>
-      <h2 style="font-size: 1.8rem; color: #ffffff; margin-top: 0.5rem;">Successfully Delivered Orders & Verified Revenue</h2>
+      <h2 style="font-size: 1.5rem; color: #ffffff; margin-top: 0.5rem;">30-Day Forward Demand Projection</h2>
     </div>
-    <a href="/seller-central/inventory" class="btn-amber" style="font-size: 0.85rem; padding: 0.5rem 1rem;">Go to Inventory & Deliver Orders →</a>
+    <span style="color: var(--text-muted); font-size: 0.85rem;">Confidence Level: <strong style="color: {% if forecast.confidence == 'HIGH' %}#34d399{% elif forecast.confidence == 'MEDIUM' %}#38bdf8{% else %}var(--amber-gold){% endif %};">{{ forecast.confidence }}</strong> (±{{ forecast.confidence_interval_pct }}%)</span>
   </div>
 
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
-    <div style="background: rgba(9, 15, 33, 0.7); padding: 1.25rem; border-radius: 0.75rem; border: 1px solid var(--border-amber);">
-      <span style="color: var(--text-muted); font-size: 0.85rem;">Delivered Orders Revenue</span>
-      <div style="color: #34d399; font-size: 1.8rem; font-weight: bold; margin-top: 0.25rem;">
-        ₹{{ "{:,.2f}".format(analytics.delivered_sourced_value) }}
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem;">
+    <div style="background: rgba(9, 15, 33, 0.7); padding: 1rem; border-radius: 0.5rem; border: 1px solid var(--border-amber);">
+      <span style="color: var(--text-muted); font-size: 0.8rem;">Projected Units Demanded</span>
+      <div style="color: var(--amber-gold); font-size: 1.7rem; font-weight: bold; margin-top: 0.25rem;">
+        {{ forecast.projected_units_demanded }} Units
       </div>
+      <span style="color: var(--text-muted); font-size: 0.75rem;">Next 30 Days</span>
     </div>
 
-    <div style="background: rgba(9, 15, 33, 0.7); padding: 1.25rem; border-radius: 0.75rem; border: 1px solid var(--border-amber);">
-      <span style="color: var(--text-muted); font-size: 0.85rem;">Delivered Orders Count</span>
-      <div style="color: #ffffff; font-size: 1.8rem; font-weight: bold; margin-top: 0.25rem;">
-        {{ analytics.delivered_orders_count }} <span style="font-size: 1rem; color: #34d399;">Orders</span>
+    <div style="background: rgba(9, 15, 33, 0.7); padding: 1rem; border-radius: 0.5rem; border: 1px solid var(--border-amber);">
+      <span style="color: var(--text-muted); font-size: 0.8rem;">Projected Gross Revenue</span>
+      <div style="color: #34d399; font-size: 1.7rem; font-weight: bold; margin-top: 0.25rem;">
+        ₹{{ "{:,.2f}".format(forecast.projected_revenue_inr) }}
       </div>
+      <span style="color: #34d399; font-size: 0.75rem;">Estimated Sourced Value</span>
     </div>
 
-    <div style="background: rgba(9, 15, 33, 0.7); padding: 1.25rem; border-radius: 0.75rem; border: 1px solid var(--border-amber);">
-      <span style="color: var(--text-muted); font-size: 0.85rem;">Pending Dispatch Orders</span>
-      <div style="color: var(--amber-gold); font-size: 1.8rem; font-weight: bold; margin-top: 0.25rem;">
-        {{ analytics.pending_orders_count }} <span style="font-size: 1rem; color: var(--amber-gold);">Orders</span>
+    <div style="background: rgba(9, 15, 33, 0.7); padding: 1rem; border-radius: 0.5rem; border: 1px solid var(--border-amber);">
+      <span style="color: var(--text-muted); font-size: 0.8rem;">Sales Velocity & Trend</span>
+      <div style="color: {% if forecast.trend_direction == 'INCREASING' %}#34d399{% elif forecast.trend_direction == 'DECREASING' %}#f87171{% else %}#38bdf8{% endif %}; font-size: 1.7rem; font-weight: bold; margin-top: 0.25rem;">
+        {{ forecast.trend_direction }}
       </div>
+      <span style="color: var(--text-muted); font-size: 0.75rem;">{{ forecast.historical_daily_average }} units/day velocity</span>
     </div>
   </div>
 
-  {% if analytics.orders and analytics.orders|length > 0 %}
-  <h4 style="color: #ffffff; font-size: 1.1rem; margin-bottom: 1rem;">Fulfillment Order Log Status</h4>
-  <table>
-    <thead>
-      <tr>
-        <th>Date & Buyer Prompt</th>
-        <th>Supplier & Product Sourced</th>
-        <th>Quantity</th>
-        <th>Total Cost</th>
-        <th>Lead Time</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for o in analytics.orders %}
-      <tr>
-        <td>
-          <div style="font-size: 0.85rem; color: var(--text-muted);">{{ o.createdAt[:10] }}</div>
-          <div style="font-weight: bold; color: #ffffff;">{{ o.rawPrompt[:45] }}...</div>
-        </td>
-        <td>
-          <div style="font-weight: bold; color: var(--amber-gold);">🏬 {{ o.supplierName or 'Artisan Guild' }}</div>
-          <div style="color: #ffffff;">{{ o.productName }}</div>
-        </td>
-        <td style="color: var(--amber-gold); font-weight: bold;">{{ o.quantity }} units</td>
-        <td style="color: #34d399; font-weight: bold;">₹{{ "{:,.2f}".format(o.totalCost) }}</td>
-        <td>{{ o.deliveryDays }} Days</td>
-        <td>
-          <span style="background: {% if o.status == 'Stock Delivered' %}rgba(16, 185, 129, 0.2){% elif o.status in ['Not Accepted', 'Cancelled'] %}rgba(239, 68, 68, 0.2){% else %}rgba(245, 158, 11, 0.2){% endif %}; border: 1px solid {% if o.status == 'Stock Delivered' %}#10b981{% elif o.status in ['Not Accepted', 'Cancelled'] %}#ef4444{% else %}var(--border-amber){% endif %}; color: {% if o.status == 'Stock Delivered' %}#34d399{% elif o.status in ['Not Accepted', 'Cancelled'] %}#fca5a5{% else %}var(--amber-gold){% endif %}; padding: 0.2rem 0.6rem; border-radius: 0.4rem; font-size: 0.82rem; font-weight: bold;">
-            {{ o.status }}
-          </span>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% endif %}
+  <div style="background: rgba(15, 23, 42, 0.6); padding: 0.85rem 1rem; border-radius: 0.5rem; border-left: 3px solid #38bdf8; font-size: 0.85rem; color: #cbd5e1;">
+    ℹ️ <strong>Methodology & Limitations Disclosure:</strong> {{ forecast.notes }} (Historical Sample Size: {{ forecast.sample_size }} transactions).
+  </div>
 </div>
+
+<!-- FEATURE E: MARKET BASKET ANALYSIS & CUSTOMER SEGMENTS -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;">
+  <!-- Market Basket Analysis -->
+  <div class="glass-card">
+    <span style="background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #34d399; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase;">
+      🛒 Market Basket Analysis
+    </span>
+    <h3 style="font-size: 1.25rem; color: #ffffff; margin-top: 0.5rem; margin-bottom: 1rem;">Frequently Co-Purchased Artisan Pairings</h3>
+    
+    <ul style="list-style: none; padding: 0; margin: 0;">
+      {% for pair in analytics.market_basket_pairings %}
+      <li style="background: rgba(9, 15, 33, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <strong style="color: #ffffff; font-size: 0.9rem;">{{ pair.pairing }}</strong>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">{{ pair.confidence_note }}</div>
+        </div>
+        <span style="background: rgba(245, 158, 11, 0.15); color: var(--amber-gold); padding: 0.2rem 0.5rem; border-radius: 0.3rem; font-size: 0.8rem; font-weight: bold;">
+          {{ pair.frequency }} co-orders
+        </span>
+      </li>
+      {% else %}
+      <li style="color: var(--text-muted); font-size: 0.85rem;">No multi-item baskets recorded yet.</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <!-- Behavioral Customer Segmentation -->
+  <div class="glass-card">
+    <span style="background: rgba(168, 85, 247, 0.15); border: 1px solid #a855f7; color: #c084fc; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase;">
+      👥 Customer Segmentation
+    </span>
+    <h3 style="font-size: 1.25rem; color: #ffffff; margin-top: 0.5rem; margin-bottom: 1rem;">Behavioral Buyer Cohorts</h3>
+
+    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+      <div style="background: rgba(9, 15, 33, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <strong style="color: #ffffff; font-size: 0.9rem;">🏛️ Bulk Institutional Buyers</strong>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">High-volume corporate, export, and retail chain buyers (&gt; ₹100,000 spend)</div>
+        </div>
+        <span style="color: #34d399; font-weight: bold; font-size: 1.1rem;">{{ analytics.customer_segments['Bulk Institutional Buyers'] or 0 }}</span>
+      </div>
+
+      <div style="background: rgba(9, 15, 33, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <strong style="color: #ffffff; font-size: 0.9rem;">🛍️ Boutique Retailers</strong>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">Specialty craft boutiques & repeat design buyers (2+ orders)</div>
+        </div>
+        <span style="color: var(--amber-gold); font-weight: bold; font-size: 1.1rem;">{{ analytics.customer_segments['Boutique Retailers'] or 0 }}</span>
+      </div>
+
+      <div style="background: rgba(9, 15, 33, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <strong style="color: #ffffff; font-size: 0.9rem;">🎯 Single-Order Buyers</strong>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">First-time artisan procurement sample orders</div>
+        </div>
+        <span style="color: #38bdf8; font-weight: bold; font-size: 1.1rem;">{{ analytics.customer_segments['Single-Order Buyers'] or 0 }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function setBusinessQuery(text) {
+  document.getElementById('business-query-input').value = text;
+}
+
+document.getElementById('business-assistant-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const input = document.getElementById('business-query-input');
+  const q = input.value.trim();
+  if (!q) return;
+
+  const loading = document.getElementById('assistant-loading');
+  const card = document.getElementById('assistant-response-card');
+  const content = document.getElementById('assistant-response-content');
+  const meta = document.getElementById('assistant-meta');
+
+  loading.style.display = 'block';
+  card.style.display = 'none';
+
+  try {
+    const res = await fetch('/api/business-assistant', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: q })
+    });
+    const data = await res.json();
+    loading.style.display = 'none';
+    card.style.display = 'block';
+    content.innerHTML = (window.parseMarkdownToHtml ? window.parseMarkdownToHtml(data.answer) : data.answer.replace(/\n/g, '<br/>'));
+    meta.textContent = `Provider: ${data.provider_used || 'Gemini'} (${data.model_used || 'gemini-3.8-flash'})`;
+  } catch (err) {
+    loading.style.display = 'none';
+    alert("Error communicating with Business Decision Assistant.");
+  }
+});
+</script>
 {% endblock %}
