@@ -7,19 +7,45 @@ ENV/
 .env.local
 .env.*
 
-# Python Cache
+# Service Account Credentials & Private Keys (CRITICAL SECURITY)
+*service-account*.json
+*service_account*.json
+*firebase*.json
+!firebase.json
+!firestore.indexes.json
+*.pem
+*.key
+credentials/
+
+# Python Cache & Testing
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
+.pytest_cache/
+.coverage
+htmlcov/
 
-# Scratch files
+# Scratch & Log files
 scratch/
 scratch_*.txt
 *.log
+
+# Database Backups, Dumps & Migration Manifests (CRITICAL PRIVACY)
+*.backup
+*.dump
+*.sql
+*.sqlite*
+*.db
+data/*.backup
+data/*.dump
+data/*.sql
+data/*manifest*.json
+data/*checkpoint*.json
 
 # IDE & OS
 .idea/
 .vscode/
 .DS_Store
 Thumbs.db
+

@@ -1,0 +1,53 @@
+# Git
+.git
+.gitignore
+
+# Environment & Credentials
+.env
+.env.*
+*service-account*.json
+*service_account*.json
+*firebase*.json
+!firebase.json
+!firestore.indexes.json
+*.pem
+*.key
+credentials/
+
+# Python cache & tests
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+tests/
+
+# Virtual Environments
+venv/
+.venv/
+env/
+
+# Scratch & Logs
+scratch/
+scratch_*.txt
+*.log
+
+# Database Backups, Dumps & Migration Manifests (CRITICAL PRIVACY)
+*.backup
+*.dump
+*.sql
+*.sqlite*
+*.db
+data/*.backup
+data/*.dump
+data/*.sql
+data/*manifest*.json
+data/*checkpoint*.json
+
+# IDE & OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
