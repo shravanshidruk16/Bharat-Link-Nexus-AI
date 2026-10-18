@@ -1,0 +1,48 @@
+# Google Cloud Build Pipeline for BharatLink Nexus AI
+# Deploys directly from GitHub repository to Google Cloud Run
+steps:
+  # 1. Build Container Image via Docker
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/bharatlink-nexus-ai:$COMMIT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/bharatlink-nexus-ai:latest'
+      - '.'
+
+  # 2. Push Container Image to Container Registry / Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/bharatlink-nexus-ai:$COMMIT_SHA'
+
+  # 3. Deploy Service to Google Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'bharatlink-nexus-ai'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/bharatlink-nexus-ai:$COMMIT_SHA'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--port'
+      - '8080'
+      - '--memory'
+      - '1Gi'
+      - '--cpu'
+      - '1'
+      - '--set-env-vars'
+      - 'ENVIRONMENT=production,AI_PROVIDER=gemini,GEMINI_MODEL=gemini-2.5-flash'
+
+images:
+  - 'gcr.io/$PROJECT_ID/bharatlink-nexus-ai:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/bharatlink-nexus-ai:latest'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
