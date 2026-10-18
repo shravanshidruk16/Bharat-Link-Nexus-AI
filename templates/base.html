@@ -209,9 +209,123 @@
     </div>
   </footer>
 
+  <!-- Floating Conversational AI Shopping Assistant -->
+  <div id="ai-chat-widget" style="position: fixed; bottom: 2rem; right: 2rem; z-index: 9999;">
+    <!-- Toggle Button -->
+    <button id="ai-chat-btn" onclick="toggleAiChat()" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #090f21; border: none; border-radius: 9999px; padding: 0.85rem 1.4rem; font-weight: bold; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 8px 24px rgba(245, 158, 11, 0.4); transition: transform 0.2s;">
+      <span style="font-size: 1.2rem;">🤖</span>
+      <span>AI Sourcing Assistant</span>
+    </button>
+
+    <!-- Chat Modal Window -->
+    <div id="ai-chat-panel" style="display: none; position: absolute; bottom: 4rem; right: 0; width: 24rem; max-width: 90vw; height: 32rem; max-height: 80vh; background: rgba(9, 15, 33, 0.98); backdrop-filter: blur(25px); border: 1px solid var(--border-amber); border-radius: 1rem; box-shadow: 0 16px 40px rgba(0,0,0,0.8); flex-direction: column; overflow: hidden;">
+      
+      <!-- Panel Header -->
+      <div style="background: rgba(15, 23, 42, 0.9); padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-amber); display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span style="font-size: 1.3rem;">🤖</span>
+          <div>
+            <h4 style="margin: 0; color: #ffffff; font-size: 0.95rem;">Mira — Artisan Shopping Guide</h4>
+            <span style="font-size: 0.72rem; color: #34d399;">● Powered by Google Gemini</span>
+          </div>
+        </div>
+        <button onclick="toggleAiChat()" style="background: none; border: none; color: #94a3b8; font-size: 1.2rem; cursor: pointer;">✕</button>
+      </div>
+
+      <!-- Messages Stream -->
+      <div id="ai-chat-messages" style="flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem;">
+        <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); padding: 0.75rem 1rem; border-radius: 0.75rem; color: #cbd5e1; font-size: 0.85rem; line-height: 1.5;">
+          🙏 Namaste! I'm Mira, your friendly Indian artisan shopping guide. Ask me about heritage sarees like Paithani, handcrafted pottery, brass decor, or traditional gift ideas. How may I help you today?
+        </div>
+      </div>
+
+      <!-- Chat Input Area -->
+      <form id="ai-chat-form" onsubmit="handleSendAiChat(event)" style="display: flex; gap: 0.5rem; padding: 0.75rem 1rem; background: rgba(15, 23, 42, 0.9); border-top: 1px solid var(--border-amber);">
+        <input type="text" id="ai-chat-input" placeholder="Ask Mira about sarees, craft stories, or gifts..." style="flex: 1; background: rgba(9, 15, 33, 0.85); border: 1px solid var(--border-amber); border-radius: 0.5rem; color: #ffffff; padding: 0.5rem 0.75rem; font-size: 0.85rem;" required />
+        <button type="submit" class="btn-amber" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Send</button>
+      </form>
+    </div>
+  </div>
+
   <script>
     window.currentUser = {% if user %}{{ user|tojson }}{% else %}null{% endif %};
+
+    function toggleAiChat() {
+      const panel = document.getElementById('ai-chat-panel');
+      if (panel.style.display === 'none' || panel.style.display === '') {
+        panel.style.display = 'flex';
+        document.getElementById('ai-chat-input').focus();
+      } else {
+        panel.style.display = 'none';
+      }
+    }
+
+    async function handleSendAiChat(e) {
+      e.preventDefault();
+      const input = document.getElementById('ai-chat-input');
+      const msg = input.value.trim();
+      if (!msg) return;
+
+      const container = document.getElementById('ai-chat-messages');
+
+      // Append user bubble
+      container.innerHTML += `
+        <div style="align-self: flex-end; background: rgba(245, 158, 11, 0.2); border: 1px solid var(--border-amber); padding: 0.6rem 0.85rem; border-radius: 0.75rem; color: #ffffff; font-size: 0.85rem; max-width: 80%;">
+          ${msg}
+        </div>
+      `;
+      input.value = '';
+      container.scrollTop = container.scrollHeight;
+
+      // Append typing indicator
+      const typingId = 'typing-' + Date.now();
+      container.innerHTML += `
+        <div id="${typingId}" style="align-self: flex-start; background: rgba(15, 23, 42, 0.7); padding: 0.6rem 0.85rem; border-radius: 0.75rem; color: var(--amber-gold); font-size: 0.8rem;">
+          ⚡ Searching catalog & inferencing via Gemini...
+        </div>
+      `;
+      container.scrollTop = container.scrollHeight;
+
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: msg })
+        });
+        const data = await res.json();
+        document.getElementById(typingId)?.remove();
+
+        let prodCardsHtml = '';
+        if (data.recommended_products && data.recommended_products.length > 0) {
+          prodCardsHtml = '<div style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.4rem;">';
+          data.recommended_products.forEach(p => {
+            prodCardsHtml += `
+              <div style="background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.5rem; border-radius: 0.4rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem;">
+                <div>
+                  <strong style="color: #ffffff;">${p.name}</strong>
+                  <div style="color: var(--amber-gold);">₹${Number(p.price).toLocaleString()} | Stock: ${p.available_stock}</div>
+                </div>
+                <a href="/products/${p.id}" style="color: #38bdf8; font-weight: bold; text-decoration: none;">View →</a>
+              </div>
+            `;
+          });
+          prodCardsHtml += '</div>';
+        }
+
+        container.innerHTML += `
+          <div style="align-self: flex-start; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); padding: 0.75rem; border-radius: 0.75rem; color: #cbd5e1; font-size: 0.85rem; line-height: 1.5; max-width: 90%;">
+            <div>${data.reply.replace(/\n/g, '<br/>')}</div>
+            ${prodCardsHtml}
+          </div>
+        `;
+        container.scrollTop = container.scrollHeight;
+      } catch (err) {
+        document.getElementById(typingId)?.remove();
+        container.innerHTML += `<div style="color: #f87171; font-size: 0.8rem;">Error retrieving assistant response.</div>`;
+      }
+    }
   </script>
   <script src="/static/js/app.js"></script>
 </body>
 </html>
+
