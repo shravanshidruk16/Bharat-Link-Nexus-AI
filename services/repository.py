@@ -343,6 +343,7 @@ class RepositoryService:
                 "company_name": user_data.get("company_name", ""),
                 "role": user_data.get("role", "buyer"),
                 "country": user_data.get("country", "India"),
+                "password_hash": user_data.get("password_hash", ""),
                 "created_at": datetime.utcnow().isoformat(),
                 "updated_at": datetime.utcnow().isoformat()
             }
@@ -356,6 +357,25 @@ class RepositoryService:
 
             cls.add_audit_log("USER_REGISTERED", uid, record["role"], "users", {"email": record["email"]})
             return dict(record)
+
+    @classmethod
+    def update_user_password(cls, user_id: str, password_hash: str) -> bool:
+        cls.initialize()
+        with cls._lock:
+            user = cls._db["users"].get(user_id)
+            if not user:
+                return False
+            user["password_hash"] = password_hash
+            user["updated_at"] = datetime.utcnow().isoformat()
+            if cls._firestore_client:
+                try:
+                    cls._firestore_client.collection("users").document(user_id).set({
+                        "password_hash": password_hash,
+                        "updated_at": user["updated_at"]
+                    }, merge=True)
+                except Exception as e:
+                    print("Notice updating user password in Firestore:", e)
+            return True
 
     @classmethod
     def update_user_role(cls, user_id: str, new_role: str, admin_user_id: str) -> bool:

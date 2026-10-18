@@ -14,15 +14,24 @@
     </div>
     {% endif %}
 
-    <form action="/login" method="POST">
+    <!-- Quick Demo Accounts Banner -->
+    <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid var(--border-amber); border-radius: 0.5rem; padding: 0.75rem 1rem; margin-bottom: 1.5rem;">
+      <div style="color: var(--amber-gold); font-size: 0.8rem; font-weight: bold; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">⚡ Demo Accounts (Click to Fill)</div>
+      <div style="display: flex; gap: 0.5rem;">
+        <button type="button" onclick="fillCredentials('buyer@bharatlink.com', 'Buyer@12345')" style="flex: 1; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); color: #ffffff; padding: 0.45rem 0.5rem; border-radius: 0.375rem; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='rgba(245,158,11,0.2)'" onmouseout="this.style.background='rgba(9,15,33,0.8)'">👤 Buyer Demo</button>
+        <button type="button" onclick="fillCredentials('admin@bharatlink.com', 'BharatLink@Admin2026#Sec')" style="flex: 1; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); color: #ffffff; padding: 0.45rem 0.5rem; border-radius: 0.375rem; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='rgba(245,158,11,0.2)'" onmouseout="this.style.background='rgba(9,15,33,0.8)'">🛡️ Admin Demo</button>
+      </div>
+    </div>
+
+    <form action="/login" method="POST" id="loginForm">
       <div style="margin-bottom: 1.25rem;">
         <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">Email Address</label>
-        <input type="email" name="email" required placeholder="your.email@example.com" style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
+        <input type="email" id="emailInput" name="email" required placeholder="your.email@example.com" style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
       </div>
 
       <div style="margin-bottom: 2rem;">
         <label style="display: block; color: var(--amber-gold); font-weight: bold; margin-bottom: 0.5rem;">Password</label>
-        <input type="password" name="password" required placeholder="••••••••" style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
+        <input type="password" id="passwordInput" name="password" required placeholder="••••••••" style="width: 100%; background: rgba(9, 15, 33, 0.8); border: 1px solid var(--border-amber); padding: 0.75rem; border-radius: 0.5rem; color: #ffffff;">
       </div>
 
       <button type="submit" class="btn-amber" style="width: 100%; padding: 0.85rem; font-size: 1.1rem;">Sign In →</button>
@@ -33,4 +42,16 @@
     </div>
   </div>
 </div>
+
+<script>
+function fillCredentials(email, password) {
+  const emailEl = document.getElementById('emailInput');
+  const passEl = document.getElementById('passwordInput');
+  if (emailEl && passEl) {
+    emailEl.value = email;
+    passEl.value = password;
+    emailEl.focus();
+  }
+}
+</script>
 {% endblock %}
