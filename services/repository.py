@@ -441,12 +441,15 @@ class RepositoryService:
         return None
 
     @classmethod
-    def get_sellers(cls, active_only: bool = True) -> List[Dict[str, Any]]:
+    def get_sellers(cls, active_only: bool = True, limit: Optional[int] = None) -> List[Dict[str, Any]]:
         cls.initialize()
         sellers = list(cls._db["seller_profiles"].values())
         if active_only:
             sellers = [s for s in sellers if s.get("active", False)]
-        return [dict(s) for s in sellers]
+        res = [dict(s) for s in sellers]
+        if limit is not None and limit > 0:
+            return res[:limit]
+        return res
 
     @classmethod
     def create_seller(cls, seller_data: Dict[str, Any]) -> Dict[str, Any]:

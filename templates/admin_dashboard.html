@@ -22,7 +22,7 @@
   </div>
   <div class="glass-card">
     <span style="color: var(--text-muted); font-size: 0.9rem;">Total Value Sourced</span>
-    <h2 style="font-size: 2.5rem; color: #34d399; margin-top: 0.5rem;">₹{{ "{:,.2f}".format(total_spending) }}</h2>
+    <h2 style="font-size: 2.5rem; color: #34d399; margin-top: 0.5rem;">₹{{ "{:,.2f}".format(total_spending or 0.0) }}</h2>
   </div>
 </div>
 
@@ -75,11 +75,11 @@
     <tbody>
       {% for item in history %}
       <tr>
-        <td style="color: #ffffff;">"{{ item.rawPrompt }}"</td>
-        <td style="font-weight: bold; color: var(--amber-gold);">{{ item.productName }}</td>
-        <td>{{ item.supplierName }}</td>
-        <td>{{ item.quantity }} units (₹{{ "{:,.2f}".format(item.totalCost) }})</td>
-        <td style="color: #34d399; font-weight: bold;">{{ item.deliveryDays }} Days</td>
+        <td style="color: #ffffff;">"{{ item.rawPrompt or item.prompt or '' }}"</td>
+        <td style="font-weight: bold; color: var(--amber-gold);">{{ item.productName or item.product_name or 'Heritage Craft' }}</td>
+        <td>{{ item.supplierName or item.supplier_name or 'Artisan Guild' }}</td>
+        <td>{{ item.quantity or 1 }} units (₹{{ "{:,.2f}".format(item.totalCost or item.total_cost or 0.0) }})</td>
+        <td style="color: #34d399; font-weight: bold;">{{ item.deliveryDays or item.delivery_days or 3 }} Days</td>
       </tr>
       {% else %}
       <tr>

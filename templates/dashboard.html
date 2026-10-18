@@ -42,9 +42,9 @@
           <div style="font-weight: bold; color: #ffffff;">{{ item.productName }}</div>
           <div style="font-size: 0.85rem; color: var(--text-muted);">Supplier: {{ item.supplierName }}</div>
         </td>
-        <td style="color: var(--amber-gold); font-weight: bold;">{{ item.quantity }} units</td>
-        <td>₹{{ "{:,.2f}".format(item.totalCost) }}</td>
-        <td>{{ item.deliveryDays }} Days</td>
+        <td style="color: var(--amber-gold); font-weight: bold;">{{ item.quantity or 1 }} units</td>
+        <td>₹{{ "{:,.2f}".format(item.totalCost or item.total_cost or 0.0) }}</td>
+        <td>{{ item.deliveryDays or 3 }} Days</td>
         <td>
           <span style="background: rgba(16, 185, 129, 0.2); color: #34d399; padding: 0.25rem 0.6rem; border-radius: 0.4rem; font-size: 0.8rem; font-weight: bold;">
             {{ item.riskLevel }}

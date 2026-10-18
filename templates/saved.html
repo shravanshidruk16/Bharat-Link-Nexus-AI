@@ -28,7 +28,7 @@
       </div>
       <div>
         <span style="color: var(--text-muted); font-size: 0.8rem;">Total Cost</span>
-        <div style="color: var(--amber-gold); font-weight: bold;">₹{{ "{:,.2f}".format(item.totalCost) }}</div>
+        <div style="color: var(--amber-gold); font-weight: bold;">₹{{ "{:,.2f}".format(item.totalCost or item.total_cost or 0.0) }}</div>
       </div>
       <div>
         <span style="color: var(--text-muted); font-size: 0.8rem;">ETA</span>

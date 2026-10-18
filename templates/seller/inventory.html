@@ -75,8 +75,8 @@
           <div style="color: #ffffff; font-size: 0.95rem; margin-top: 0.2rem;">"{{ o.rawPrompt }}"</div>
         </td>
         <td style="font-weight: bold; color: #ffffff;">{{ o.productName }}</td>
-        <td style="color: var(--amber-gold); font-weight: bold;">{{ o.quantity }} units</td>
-        <td style="color: #34d399; font-weight: bold;">₹{{ "{:,.2f}".format(o.totalCost) }}</td>
+        <td style="color: var(--amber-gold); font-weight: bold;">{{ o.quantity or 1 }} units</td>
+        <td style="color: #34d399; font-weight: bold;">₹{{ "{:,.2f}".format(o.totalCost or o.total_cost or 0.0) }}</td>
         <td>
           {% if o.status == "Stock Delivered" %}
             <span style="background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #34d399; padding: 0.35rem 0.75rem; border-radius: 9999px; font-weight: bold; font-size: 0.85rem;">✓ Stock Delivered</span>
